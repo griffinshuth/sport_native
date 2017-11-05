@@ -1,0 +1,9 @@
+rootProject.name = 'sportdream'
+include ':react-native-ble-manager'
+project(':react-native-ble-manager').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-ble-manager/android')
+include ':react-native-image-crop-picker'
+project(':react-native-image-crop-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-crop-picker/android')
+include ':react-native-bluetooth-cross-platform'
+project(':react-native-bluetooth-cross-platform').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bluetooth-cross-platform/android')
+include ':app', ':toastexample', ':chateaseui'
+project(':chateaseui').projectDir = new File('easeui/easeui')
