@@ -1,4 +1,4 @@
-var server = "http://192.168.0.105:3000"
+var server = "http://192.168.0.105"
 
 export async function get(url,params){
     var str = "";
