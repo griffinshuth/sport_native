@@ -1,0 +1,123 @@
+PODS:
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
+    - AFNetworking/NSURLSession
+  - DACircularProgress (2.3.1)
+  - EaseUILite (3.3.2):
+    - HyphenateLite (~> 3.3.2)
+    - MJRefresh (~> 3.1.0)
+    - MWPhotoBrowser (~> 2.1.1)
+  - GPUImage (0.1.7)
+  - HappyDNS (0.3.10)
+  - HyphenateLite (3.3.4.1)
+  - MBProgressHUD (0.9.2)
+  - MJRefresh (3.1.13)
+  - MWPhotoBrowser (2.1.2):
+    - DACircularProgress (~> 2.3)
+    - MBProgressHUD (~> 0.9)
+    - SDWebImage (!= 3.7.2, ~> 3.7)
+  - pili-librtmp (1.0.7)
+  - PLMediaStreamingKit (2.2.3):
+    - HappyDNS (= 0.3.10)
+    - pili-librtmp (= 1.0.7)
+    - PLMediaStreamingKit/Common (= 2.2.3)
+    - PLMediaStreamingKit/PLCameraStreamingKit (= 2.2.3)
+    - PLMediaStreamingKit/PLMediaStreamingKit (= 2.2.3)
+    - PLMediaStreamingKit/PLRTCStreamingKit (= 2.2.3)
+    - PLMediaStreamingKit/PLStreamingKit (= 2.2.3)
+    - QNNetDiag (= 0.0.6)
+  - PLMediaStreamingKit/Common (2.2.3):
+    - HappyDNS (= 0.3.10)
+    - pili-librtmp (= 1.0.7)
+    - QNNetDiag (= 0.0.6)
+  - PLMediaStreamingKit/PLCameraStreamingKit (2.2.3):
+    - HappyDNS (= 0.3.10)
+    - pili-librtmp (= 1.0.7)
+    - PLMediaStreamingKit/PLStreamingKit
+    - QNNetDiag (= 0.0.6)
+  - PLMediaStreamingKit/PLMediaStreamingKit (2.2.3):
+    - HappyDNS (= 0.3.10)
+    - pili-librtmp (= 1.0.7)
+    - PLMediaStreamingKit/PLCameraStreamingKit
+    - PLMediaStreamingKit/PLRTCStreamingKit
+    - QNNetDiag (= 0.0.6)
+  - PLMediaStreamingKit/PLRTCStreamingKit (2.2.3):
+    - HappyDNS (= 0.3.10)
+    - pili-librtmp (= 1.0.7)
+    - PLMediaStreamingKit/PLStreamingKit
+    - QNNetDiag (= 0.0.6)
+  - PLMediaStreamingKit/PLStreamingKit (2.2.3):
+    - HappyDNS (= 0.3.10)
+    - pili-librtmp (= 1.0.7)
+    - PLMediaStreamingKit/Common
+    - QNNetDiag (= 0.0.6)
+  - PLPlayerKit (2.4.3):
+    - HappyDNS (~> 0.3.10)
+  - PLShortVideoKit/ex-libMuseProcessor (1.4.1):
+    - Qiniu (= 7.1.7)
+  - QBImagePickerController (3.4.0)
+  - Qiniu (7.1.7):
+    - AFNetworking (~> 3)
+    - HappyDNS (~> 0.3)
+  - QNNetDiag (0.0.6)
+  - RSKImageCropper (1.6.3)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+
+DEPENDENCIES:
+  - EaseUILite (from `https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git`, tag `3.3.2`)
+  - GPUImage
+  - HyphenateLite
+  - PLMediaStreamingKit
+  - PLPlayerKit (~> 2.4.0)
+  - PLShortVideoKit/ex-libMuseProcessor
+  - QBImagePickerController
+  - Qiniu
+  - RSKImageCropper
+
+EXTERNAL SOURCES:
+  EaseUILite:
+    :git: https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git
+    :tag: 3.3.2
+
+CHECKOUT OPTIONS:
+  EaseUILite:
+    :git: https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git
+    :tag: 3.3.2
+
+SPEC CHECKSUMS:
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  EaseUILite: b30865415dfea22b5453c6d7eb5c737f84e5ed84
+  GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
+  HappyDNS: 06a9fed2796663fd87626dbf02552933265bf059
+  HyphenateLite: 19e216404a15ed9b41906da00e2c1a7012e816a6
+  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
+  MJRefresh: 56a28aa628c9895e97a518dabaecf70b18f92f32
+  MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
+  pili-librtmp: e8a06a45b0a1a166c48ae6dc718171c0963f32ea
+  PLMediaStreamingKit: 9da4338a1cb2159925ac9587e78b1f27b60033f2
+  PLPlayerKit: 6575f900d3a1c3680e3fd8907338683d0eedcd79
+  PLShortVideoKit: efa2035c374a99ea112342427afff4b63881e6ca
+  QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
+  Qiniu: 56ea8b9d785326e45e3a6fdd45bdbc84f78d0eff
+  QNNetDiag: 6f7bbafa34c1b020e51d440f25044fe5ee10145d
+  RSKImageCropper: 356e36fc58c57c371b5d8b23d603936d6a73df6c
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+
+PODFILE CHECKSUM: ca5a2956e5f5790956f1fd87db00f5639e90122a
+
+COCOAPODS: 1.2.1

@@ -1,0 +1,17 @@
+platform :ios, '8.0'
+
+# Import CocoaPods sources
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'sportdream' do
+	pod 'HyphenateLite'
+	pod 'EaseUILite', :git =>'https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git', :tag => '3.3.2'
+	pod 'RSKImageCropper'
+    pod 'QBImagePickerController'
+    pod 'Qiniu'
+    pod 'PLShortVideoKit/ex-libMuseProcessor'
+    pod 'PLMediaStreamingKit'
+    pod 'PLPlayerKit','~> 2.4.0'
+    pod 'GPUImage'
+end
+
