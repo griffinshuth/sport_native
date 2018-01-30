@@ -1,0 +1,6 @@
+framework module AgoraVideoChat {
+  umbrella header "AgoraVideoChat.h"
+
+  export *
+  module * { export * }
+}

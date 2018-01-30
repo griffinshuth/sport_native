@@ -5,6 +5,9 @@ import {
     Image,
     Text
 } from 'react-native'
+import {
+    Button
+} from 'antd-mobile'
 
 import {NavigationActions} from 'react-navigation'
 import {connect} from 'dva'
@@ -24,6 +27,9 @@ export default class Tab4Page extends Component{
         return (
             <View style={styles.container}>
                 <Text>力量训练，投篮，三步上篮，防守步法，吹罚规则等</Text>
+                <Button onClick={()=>{
+                    this.props.dispatch(NavigationActions.navigate({routeName:'ShootTrain'}))
+                }}>投篮训练</Button>
             </View>
         )
     }

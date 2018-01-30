@@ -14,6 +14,7 @@ import {
     AsyncStorage
 } from 'react-native'
 
+
 import {StackNavigator} from 'react-navigation'
 import IndexModel from './models/IndexModel'
 import routerModel from './models/routerModel'
@@ -46,6 +47,7 @@ const AppWithPersist =  () =>
 persistStore(store, { storage: AsyncStorage ,blacklist:['temp']},function(){
     console.log("persistStore finished:"+JSON.stringify(arguments))
     store.dispatch({type:'temp/storeloaded'})
+    store.dispatch({type:'appNS/genClientID'})
 })
 
 class HomeScreen extends React.Component{

@@ -16,15 +16,24 @@
 #import <HyphenateLite/HyphenateLite.h>
 #import "ChatMessageContainerViewController.h"
 //#import "BaiduMapViewManager.h"
-#import "ShortvideoRecordViewController.h"
 #import "ZhiboAnchorViewController.h"
 #import "H264EncodeViewController.h"
 #import "LocalNetworkViewController.h"
+#import "VideoChatViewController.h"
+#import "QiniuPlayerViewController.h"
+#import "MatchDirectorViewController.h"
+#import "ARCameraViewController.h"
+#import "CameraOnStandViewController.h"
+#import "DirectorServerViewController.h"
+#import "CommentatorsViewController.h"
+#import "LiveCommentatorsViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  self.allowRotation = FALSE;
+  self.allowBothRotation = FALSE;
   [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
   [PLStreamingEnv initEnv];
   //[BaiduMapViewManager initSDK:@"u3e18PQCuxvarQxcGGVXj6Tz38bG9qL0"];
@@ -52,6 +61,15 @@
   return YES;
 }
 
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+  if(self.allowRotation)
+    return UIInterfaceOrientationMaskLandscapeLeft;
+  else if(self.allowBothRotation)
+    return UIInterfaceOrientationMaskLandscapeLeft|UIInterfaceOrientationMaskPortrait;
+  else
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (void)goToReactNative
 {
   [self.window.rootViewController dismissViewControllerAnimated:TRUE completion:nil];
@@ -70,27 +88,29 @@
     [self.window.rootViewController presentViewController:cvc animated:true completion:nil];
   });
 }
-
-- (void)gotoShortRecordViewController
-{
-  dispatch_async(dispatch_get_main_queue(), ^{
-    ShortvideoRecordViewController* shortRecord = [[ShortvideoRecordViewController alloc] init];
-    [self.window.rootViewController presentViewController:shortRecord animated:true completion:nil];
-  });
-}
-
-- (void)gotoZhiboViewController
+- (void)gotoZhiboViewController:(NSString*)url
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     ZhiboAnchorViewController* zhiboViewController = [[ZhiboAnchorViewController alloc] init];
+    zhiboViewController.url = url;
     [self.window.rootViewController presentViewController:zhiboViewController animated:true completion:nil];
   });
 }
 
--(void)gotoH264ViewController
+- (void)gotoQiniuPlayerViewController:(NSString*)url
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    QiniuPlayerViewController* qiniuPlayerViewController = [[QiniuPlayerViewController alloc] init];
+    qiniuPlayerViewController.url = url;
+    [self.window.rootViewController presentViewController:qiniuPlayerViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoH264ViewController:(NSString*)url
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     H264EncodeViewController* h264ViewController = [[H264EncodeViewController alloc] init];
+    h264ViewController.rtmpUrl = url;
     [self.window.rootViewController presentViewController:h264ViewController animated:true completion:nil];
   });
 }
@@ -107,6 +127,62 @@
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     [self.window.rootViewController presentViewController:vc animated:true completion:nil];
+  });
+}
+
+-(void)gotoVideoChatViewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    VideoChatViewController* localVideoChatViewController = [[VideoChatViewController alloc] init];
+    [self.window.rootViewController presentViewController:localVideoChatViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoMatchDirectorViewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    MatchDirectorViewController* matchDirectorViewController = [[MatchDirectorViewController alloc] init];
+    [self.window.rootViewController presentViewController:matchDirectorViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoARCameraViewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    ARCameraViewController* aRCameraViewController = [[ARCameraViewController alloc] init];
+    [self.window.rootViewController presentViewController:aRCameraViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoCameraOnStandViewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    CameraOnStandViewController* cameraOnStandViewController = [[CameraOnStandViewController alloc] init];
+    [self.window.rootViewController presentViewController:cameraOnStandViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoDirectorServerViewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    DirectorServerViewController* directorServerViewController = [[DirectorServerViewController alloc] init];
+    [self.window.rootViewController presentViewController:directorServerViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoCommentatorsViewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    CommentatorsViewController* commentatorsViewController = [[CommentatorsViewController alloc] init];
+    [self.window.rootViewController presentViewController:commentatorsViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoLiveCommentatorsViewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    LiveCommentatorsViewController* liveCommentatorsViewController = [[LiveCommentatorsViewController alloc] init];
+    [self.window.rootViewController presentViewController:liveCommentatorsViewController animated:true completion:nil];
   });
 }
 

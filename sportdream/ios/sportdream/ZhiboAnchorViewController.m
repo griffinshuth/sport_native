@@ -9,53 +9,43 @@
 #import "ZhiboAnchorViewController.h"
 #import <PLMediaStreamingKit/PLMediaStreamingKit.h>
 #import <PLPlayerKit/PLPlayerKit.h>
-
-#define PLS_SCREEN_WIDTH CGRectGetWidth([UIScreen mainScreen].bounds)
-#define PLS_SCREEN_HEIGHT CGRectGetHeight([UIScreen mainScreen].bounds)
-#define TitleView_HEIGHT 64
+#import "AppDelegate.h"
 
 @interface ZhiboAnchorViewController ()
 @property (nonatomic, strong) PLMediaStreamingSession *session;
-@property (strong, nonatomic) UIView* titleView;
 @property (strong, nonatomic) PLPlayer* player;
 @end
 
 @implementation ZhiboAnchorViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-  
-  self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, PLS_SCREEN_WIDTH, TitleView_HEIGHT)];
-  self.titleView.backgroundColor = [UIColor blueColor];
-  [self.view addSubview:self.titleView];
-  
+-(void)initUI
+{
   //关闭按钮
   UIButton* backButton = [UIButton buttonWithType:UIButtonTypeCustom];
   backButton.frame = CGRectMake(10, 25, 35, 35);
   [backButton setBackgroundImage:[UIImage imageNamed:@"btn_camera_cancel_a"] forState:UIControlStateNormal];
   [backButton setBackgroundImage:[UIImage imageNamed:@"btn_camera_cancel_b"] forState:UIControlStateHighlighted];
   [backButton addTarget:self action:@selector(backButtonEvent:) forControlEvents:UIControlEventTouchUpInside];
-  [self.titleView addSubview:backButton];
-    // Do any additional setup after loading the view.
+  
+  // Do any additional setup after loading the view.
   PLVideoCaptureConfiguration *videoCaptureConfiguration = [PLVideoCaptureConfiguration defaultConfiguration];
+  videoCaptureConfiguration.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+  videoCaptureConfiguration.sessionPreset = AVCaptureSessionPreset1280x720;
   PLAudioCaptureConfiguration *audioCaptureConfiguration = [PLAudioCaptureConfiguration defaultConfiguration];
   PLVideoStreamingConfiguration *videoStreamingConfiguration = [PLVideoStreamingConfiguration defaultConfiguration];
+  videoStreamingConfiguration.videoSize = CGSizeMake(1280, 720);
   PLAudioStreamingConfiguration *audioStreamingConfiguration = [PLAudioStreamingConfiguration defaultConfiguration];
   
   self.session = [[PLMediaStreamingSession alloc] initWithVideoCaptureConfiguration:videoCaptureConfiguration audioCaptureConfiguration:audioCaptureConfiguration videoStreamingConfiguration:videoStreamingConfiguration audioStreamingConfiguration:audioStreamingConfiguration stream:nil];
   [self.view addSubview:self.session.previewView];
-  [self.view addSubview:self.titleView];
+  [self.view addSubview:backButton];
   
   UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-  [button setTitle:@"start" forState:UIControlStateNormal];
+  [button setTitle:@"横屏" forState:UIControlStateNormal];
   button.frame = CGRectMake(0, 0, 100, 44);
   button.center = CGPointMake(CGRectGetMidX([UIScreen mainScreen].bounds), CGRectGetHeight([UIScreen mainScreen].bounds) - 80);
   [button addTarget:self action:@selector(actionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
   [self.view addSubview:button];
-}
-
-- (void)actionButtonPressed:(id)sender {
-  NSURL *pushURL = [NSURL URLWithString:@"rtmp://pili-publish.2310live.com/grasslive/audiotest"];
+  NSURL *pushURL = [NSURL URLWithString:self.url];
   [self.session startStreamingWithPushURL:pushURL feedback:^(PLStreamStartStateFeedback feedback) {
     if (feedback == PLStreamStartStateSuccess) {
       NSLog(@"Streaming started.");
@@ -66,8 +56,50 @@
   }];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    //允许横屏
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.allowRotation = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+      SEL selector = NSSelectorFromString(@"setOrientation:");
+      NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
+      [invocation setSelector:selector];
+      [invocation setTarget:[UIDevice currentDevice]];
+      int val =UIInterfaceOrientationLandscapeLeft;
+      [invocation setArgument:&val atIndex:2];
+      [invocation invoke];
+    }
+}
+
+- (void)actionButtonPressed:(id)sender {
+  
+}
+
+//一开始的方向  很重要
+
+/*-(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+  
+  return UIInterfaceOrientationLandscapeLeft;
+  
+}*/
+
 -(void)backButtonEvent:(id)sender
 {
+  [self.session stopStreaming];
+  if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+    SEL selector = NSSelectorFromString(@"setOrientation:");
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
+    [invocation setSelector:selector];
+    [invocation setTarget:[UIDevice currentDevice]];
+    int val =UIInterfaceOrientationPortrait;
+    [invocation setArgument:&val atIndex:2];
+    [invocation invoke];
+  }
+  //禁止横屏
+  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  appDelegate.allowRotation = NO;
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -75,6 +107,16 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+  UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+  if(orientation == UIInterfaceOrientationLandscapeLeft){
+    [self initUI];
+  }
+}
+
+
 
 /*
 #pragma mark - Navigation

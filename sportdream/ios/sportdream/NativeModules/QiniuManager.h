@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 #import <QiniuSDK.h>
 
-@interface QiniuManager : NSObject <RCTBridgeModule>
+@interface QiniuManager : RCTEventEmitter <RCTBridgeModule>
 
 @end

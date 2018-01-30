@@ -15,12 +15,21 @@
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UIViewController* reactNativeViewController;
+@property (nonatomic,assign)BOOL allowRotation;
+@property (nonatomic,assign)BOOL allowBothRotation;
 
 - (void)goToReactNative;
 - (void)goToSingleEaseChat:(NSString*)friendname;
-- (void)gotoShortRecordViewController;
-- (void)gotoZhiboViewController;
--(void)gotoH264ViewController;
+- (void)gotoZhiboViewController:(NSString*)url;
+- (void)gotoQiniuPlayerViewController:(NSString*)url;
+-(void)gotoH264ViewController:(NSString*)url;
 -(void)gotoLocalNetworkViewController;
 -(void)gotoMCBrowserViewController:(MCBrowserViewController*) vc;
+-(void)gotoVideoChatViewController;
+-(void)gotoMatchDirectorViewController;
+-(void)gotoARCameraViewController;
+-(void)gotoCameraOnStandViewController;
+-(void)gotoDirectorServerViewController;
+-(void)gotoCommentatorsViewController;
+-(void)gotoLiveCommentatorsViewController;
 @end

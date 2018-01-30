@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - CocoaAsyncSocket (7.6.2)
   - DACircularProgress (2.3.1)
   - EaseUILite (3.3.2):
     - HyphenateLite (~> 3.3.2)
@@ -28,6 +29,17 @@ PODS:
     - DACircularProgress (~> 2.3)
     - MBProgressHUD (~> 0.9)
     - SDWebImage (!= 3.7.2, ~> 3.7)
+  - MyLayout (1.5.0)
+  - NerdyUI (1.2.1):
+    - NerdyUI/Chainable (= 1.2.1)
+    - NerdyUI/Private (= 1.2.1)
+    - NerdyUI/Public (= 1.2.1)
+  - NerdyUI/Chainable (1.2.1):
+    - NerdyUI/Private
+    - NerdyUI/Public
+  - NerdyUI/Private (1.2.1)
+  - NerdyUI/Public (1.2.1):
+    - NerdyUI/Private
   - pili-librtmp (1.0.7)
   - PLMediaStreamingKit (2.2.3):
     - HappyDNS (= 0.3.10)
@@ -65,8 +77,6 @@ PODS:
     - QNNetDiag (= 0.0.6)
   - PLPlayerKit (2.4.3):
     - HappyDNS (~> 0.3.10)
-  - PLShortVideoKit/ex-libMuseProcessor (1.4.1):
-    - Qiniu (= 7.1.7)
   - QBImagePickerController (3.4.0)
   - Qiniu (7.1.7):
     - AFNetworking (~> 3)
@@ -78,12 +88,14 @@ PODS:
   - SDWebImage/Core (3.8.2)
 
 DEPENDENCIES:
+  - CocoaAsyncSocket
   - EaseUILite (from `https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git`, tag `3.3.2`)
   - GPUImage
   - HyphenateLite
+  - MyLayout
+  - NerdyUI
   - PLMediaStreamingKit
   - PLPlayerKit (~> 2.4.0)
-  - PLShortVideoKit/ex-libMuseProcessor
   - QBImagePickerController
   - Qiniu
   - RSKImageCropper
@@ -100,6 +112,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  CocoaAsyncSocket: 3541e024f48c54b251638ef72d51dd42808de932
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   EaseUILite: b30865415dfea22b5453c6d7eb5c737f84e5ed84
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
@@ -108,16 +121,17 @@ SPEC CHECKSUMS:
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MJRefresh: 56a28aa628c9895e97a518dabaecf70b18f92f32
   MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
+  MyLayout: a80c782879ab1d689b737f7f3373fbf66407941d
+  NerdyUI: ae4506046b544a5cdc0873a58c1ece61b29631d0
   pili-librtmp: e8a06a45b0a1a166c48ae6dc718171c0963f32ea
   PLMediaStreamingKit: 9da4338a1cb2159925ac9587e78b1f27b60033f2
   PLPlayerKit: 6575f900d3a1c3680e3fd8907338683d0eedcd79
-  PLShortVideoKit: efa2035c374a99ea112342427afff4b63881e6ca
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   Qiniu: 56ea8b9d785326e45e3a6fdd45bdbc84f78d0eff
   QNNetDiag: 6f7bbafa34c1b020e51d440f25044fe5ee10145d
   RSKImageCropper: 356e36fc58c57c371b5d8b23d603936d6a73df6c
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
-PODFILE CHECKSUM: ca5a2956e5f5790956f1fd87db00f5639e90122a
+PODFILE CHECKSUM: 7a035a0b29c1d438c5724b4401b29229a2805d71
 
 COCOAPODS: 1.2.1

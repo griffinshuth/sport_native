@@ -6,10 +6,13 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.baidu.location.c.a;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.qiniu.android.http.ResponseInfo;
@@ -47,7 +50,7 @@ public class QiniuModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void upload(final String filepath){
+    public void upload(final String filepath, final Promise promise){
 
         new Thread(){
             @Override
@@ -56,7 +59,7 @@ public class QiniuModule extends ReactContextBaseJavaModule {
                 String token = null;
                 byte[] b = null;
                 try {
-                    URL url = new URL("http://192.168.0.105:3000/getUploadToken?bucket=grassroot");
+                    URL url = new URL("http://192.168.0.105/getUploadToken?bucket=grassroot");
                     URLConnection conn = url.openConnection();
                     HttpURLConnection httpconn = (HttpURLConnection)conn;
                     httpconn.setConnectTimeout(6000);
@@ -113,6 +116,15 @@ public class QiniuModule extends ReactContextBaseJavaModule {
                             //如果失败，这里可以把info信息上报自己的服务器，便于后面分析上传错误原因
                         }
                         Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + res);
+                        WritableMap map = Arguments.createMap();
+                        try {
+                            map.putString("name",res.getString("key"));
+                            promise.resolve(map);
+                        }catch (Exception e){
+
+                        }
+
+
                     }
                 },new UploadOptions(null, null, false,
                         new UpProgressHandler(){
@@ -135,7 +147,18 @@ public class QiniuModule extends ReactContextBaseJavaModule {
             throw new JSApplicationIllegalArgumentException(
                     "无法打开activity页面: "+e.getMessage());
         }
+    }
 
-
+    @ReactMethod
+    public void agoraRemoteCamera(){
+        Activity currentActivity = getCurrentActivity();
+        try{
+            Class recordActivity = Class.forName("com.sportdream.Activity.AgoraRemoteCamera");
+            Intent intent = new Intent(currentActivity,recordActivity);
+            currentActivity.startActivity(intent);
+        }catch (Exception e){
+            throw new JSApplicationIllegalArgumentException(
+                    "无法打开activity页面: "+e.getMessage());
+        }
     }
 }

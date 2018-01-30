@@ -8,21 +8,34 @@ import {
     Dimensions,
     Platform,
     ScrollView,
-    ListView
+    ListView,
+    NativeModules,
+    NativeEventEmitter
 } from 'react-native'
 import {
     WhiteSpace,
     WingBlank,
     Button,
     Tabs,
-    List
+    List,
+    Toast
 } from 'antd-mobile'
 import ToolBar from '../../Components/ToolBar'
+import ImagePicker from 'react-native-image-crop-picker';
+var QiniuModule = NativeModules.QiniuModule;
+const QiniuModuleEmitter = new NativeEventEmitter(QiniuModule);
+
+import {get,post} from '../../fetch'
+const createAction = type => payload => ({type,payload})
+
+var domain = "http://grassroot.qiniudn.com/"
 
 import {NavigationActions} from 'react-navigation'
 import {connect} from 'dva'
 
-@connect()
+const defaultHeaderImage = "http://img2.woyaogexing.com/2017/09/14/d3216711f89a1fa8!400x400_big.jpg";
+
+@connect(({appNS,user})=>({appNS,user}))
 export default class Tab5Page extends Component{
     static navigationOptions = {
         tabBarLabel:'我',
@@ -37,8 +50,16 @@ export default class Tab5Page extends Component{
         super(props);
         const ds = new ListView.DataSource({rowHasChanged:(r1,r2)=> r1 !== r2});
         this.state = {
-            dataSource:ds.cloneWithRows(['John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie', 'Devin'])
+            dataSource:ds.cloneWithRows(['John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie', 'Devin']),
         }
+    }
+
+    componentDidMount(){
+
+    }
+
+    componentWillUnmount(){
+
     }
 
     logout = () => {
@@ -47,6 +68,14 @@ export default class Tab5Page extends Component{
 
     gotoDemo = () => {
         this.props.dispatch(NavigationActions.navigate({routeName:'Demo'}))
+    }
+
+    headImageUpload = async(nativepath)=>{
+        var result = await QiniuModule.upload(nativepath);
+        var url = domain + result.name;
+        //Toast.info(result.name);
+        var result = await post("/updateHeaderImage",{token:this.props.appNS.token,url:url})
+        this.props.dispatch(createAction('user/updateHeaderImage')({headerimage:url}))
     }
 
     render(){
@@ -76,9 +105,26 @@ export default class Tab5Page extends Component{
                             </View>
                             <View style={{height:200,width:100,backgroundColor:'red'}}></View>
                             <View style={{flex:1,alignItems:'center'}}>
-                                <Image source={{uri:"http://img2.woyaogexing.com/2017/09/14/d3216711f89a1fa8!400x400_big.jpg"}}
+                                <TouchableHighlight onPress={()=>{
+                                    //Toast.info("上传头像")
+                                    ImagePicker.openPicker({
+                                        //multiple: true
+                                        //cropping: true
+                                        compressImageQuality:0.5
+                                    }).then(image => {
+                                        //Toast.info(JSON.stringify(image));
+                                        if(image){
+                                            var nativepath = Platform.OS == 'ios'?image.path:image.path.substr(7);
+                                            this.headImageUpload(nativepath,image);
+                                        }
+                                    });
+                                }}>
+                                <Image source={{uri:this.props.user.headerimage?this.props.user.headerimage:defaultHeaderImage}}
                                        style={{height:88,width:88,borderRadius:44,marginTop:20,borderWidth:2,borderColor:'white'}}
                                 ></Image>
+                                </TouchableHighlight>
+                                <WhiteSpace/>
+                                <Button size="small" type="primary">{this.props.user.nickname}</Button>
                             </View>
                             <View style={{height:200,width:100,backgroundColor:'blue'}}></View>
                         </View>

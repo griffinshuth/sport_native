@@ -122,6 +122,7 @@ public class EncoderDebugger {
     }
 
     public String getEncoderName() {
+        Log.w("sportdream","mEncoderName:"+mEncoderName);
         return mEncoderName;
     }
 

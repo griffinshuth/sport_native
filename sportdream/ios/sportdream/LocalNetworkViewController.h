@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CameraRecord.h"
+#import "mp4Push.h"
+#import "h264encode.h"
+#import "LocalWifiNetwork.h"
 
-@interface LocalNetworkViewController : UIViewController
-- (IBAction)back:(UIBarButtonItem *)sender;
-- (IBAction)openWifi:(UIButton *)sender;
+@interface LocalNetworkViewController : UIViewController<CameraRecordDelegate,h264encodeDelegate,LocalWifiNetworkDelegate>
+
 @end

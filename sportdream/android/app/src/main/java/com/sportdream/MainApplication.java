@@ -24,8 +24,10 @@ import com.sportdream.NativeModule.EaseChatModuleReactPackage;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.sportdream.NativeModule.QiniuModuleReactPackage;
+import com.sportdream.NativeModule.WiFiAPModuleReactPackage;
 import com.sportdream.NativeModule.WiFiDirectModuleReactPackage;
 import com.rctunderdark.NetworkManagerPackage;
+import com.reactnativecomponent.barcode.RCTCapturePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +53,9 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
           new QiniuModuleReactPackage(),
               new ClassicBlueToothModuleReactPackage(),
               new WiFiDirectModuleReactPackage(),
-              new NetworkManagerPackage()
+              new NetworkManagerPackage(),
+              new RCTCapturePackage(),
+              new WiFiAPModuleReactPackage()
       );
     }
   };

@@ -33,7 +33,8 @@ import {
     Card,
     Carousel,
     Grid,
-    Toast
+    Toast,
+    WhiteSpace
 } from 'antd-mobile'
 import ToolBar from '../../Components/ToolBar'
 
@@ -53,6 +54,12 @@ const griddata = Array.from(new Array(9)).map((_val, i) => ({
     icon: 'https://os.alipayobjects.com/rmsportal/IptWdCkrtkAUfjE.png',
     text: `名字${i}`,
 }));
+
+const tabs = [
+    { title: 'First Tab' },
+    { title: 'Second Tab' },
+    { title: 'Third Tab' },
+];
 
 
 @connect(({count})=>({count}))
@@ -123,6 +130,10 @@ export default class Count extends Component{
         QiniuModule.h264Record();
     }
 
+    agoraRemoteCamera(){
+        QiniuModule.agoraRemoteCamera();
+    }
+
     render(){
         var windowHeight = Dimensions.get('window').height;
         var contentHeight = windowHeight - 41 - (Platform.OS == 'ios'?60:48);
@@ -154,8 +165,9 @@ export default class Count extends Component{
                     drawerBackgroundColor="#ccc"
                 >
                 <View style={{ flex: 1}}>
-                    <Tabs swipeable={false} defaultActiveKey="1" onChange={this.onChange} onTabClick={this.onTabClick}>
-                        <Tabs.TabPane tab="选项卡一" key="1">
+                    <Tabs swipeable={false} tabs={tabs}
+                          initialPage={1} onChange={this.onChange} onTabClick={this.onTabClick}>
+
                             <View style={{ height:contentHeight,backgroundColor:'white' }}>
                                 <ScrollView style={{flex:1}}>
                                     <Carousel
@@ -193,21 +205,27 @@ export default class Count extends Component{
                                         <Text>Delay Add</Text>
                                     </TouchableHighlight>
                                     <Text>{JSON.stringify(this.props.navigation)}</Text>
+                                    <WhiteSpace/>
                                     <Button onClick={this.onGetLocation}>获得地理位置</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.H264Record}>Android H264 Record</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.agoraRemoteCamera}>比赛远程摄像头</Button>
+                                    <WhiteSpace/>
+                                    <WhiteSpace/>
                                 </ScrollView>
                             </View>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab="选项卡二" key="2">
+
+
                             <View style={{ alignItems: 'center', justifyContent: 'center', height: 400 }}>
                                 <Text>选项卡二内容</Text>
                             </View>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab="选项卡三" key="3">
+
+
                             <View style={{ alignItems: 'center', justifyContent: 'center', height: 100 }}>
                                 <Text>选项卡三内容</Text>
                             </View>
-                        </Tabs.TabPane>
+
                     </Tabs>
                 </View>
                 </Drawer>

@@ -9,6 +9,9 @@ export default {
     reducers:{
         initUserInfo(state,{payload}){
             return {...state,...payload}
+        },
+        updateHeaderImage(state,{payload}){
+            return {...state,...payload}
         }
     },
     effects:{

@@ -26,6 +26,7 @@
   AAPLEAGLLayer* _glLayer;
 }
 @property (strong, nonatomic) UIView* titleView;
+@property (strong,nonatomic) UIView* playView;
 @end
 
 static void didDecompress( void *decompressionOutputRefCon, void *sourceFrameRefCon, OSStatus status, VTDecodeInfoFlags infoFlags, CVImageBufferRef pixelBuffer, CMTime presentationTimeStamp, CMTime presentationDuration ){
@@ -176,8 +177,10 @@ static void didDecompress( void *decompressionOutputRefCon, void *sourceFrameRef
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-  _glLayer = [[AAPLEAGLLayer alloc] initWithFrame:self.view.bounds];
-  [self.view.layer addSublayer:_glLayer];
+  self.playView = [[UIView alloc] initWithFrame:CGRectMake(0, TitleView_HEIGHT, 128, 72)];
+  [self.view addSubview:self.playView];
+  _glLayer = [[AAPLEAGLLayer alloc] initWithFrame:CGRectMake(0, 0, 128, 72)];
+  [self.playView.layer addSublayer:_glLayer];
   UIButton* recordButton = [UIButton buttonWithType:UIButtonTypeSystem];
   [recordButton setTitle:@"播放" forState:UIControlStateNormal];
   recordButton.frame = CGRectMake(0, 0, 100, 44);

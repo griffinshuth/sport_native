@@ -1,11 +1,13 @@
 import {NavigationActions} from 'react-navigation'
 const createAction = type => payload => ({type,payload})
 import {get,post} from '../fetch.js'
+var genUuid = require('uuid/v4')
 
 export default {
     namespace:'appNS',
     state:{
         token:"",
+        clientID:"",
     },
     reducers:{
         loginSuccessed(state,{payload}){
@@ -19,7 +21,22 @@ export default {
                 ...state,
                 token:"",
             }
+        },
+
+        genClientID(state,{payload}){
+            if(state.clientID){
+                return {
+                    ...state
+                }
+            }else{
+                var uuid = genUuid();
+                return {
+                    ...state,
+                    clientID:uuid
+                }
+            }
         }
+
     },
     effects:{
         *login({payload},{put,call}){

@@ -6,7 +6,9 @@ import {
     Text,
     TextInput,
     Platform,
-    ScrollView
+    ScrollView,
+    Alert,
+    TouchableHighlight
 } from 'react-native'
 import {
     WhiteSpace,
@@ -17,8 +19,10 @@ import {
     List,
     InputItem,
     SearchBar,
-    Popover,
-    Modal
+    Modal,
+    Drawer,
+    Tabs,
+    Badge
 } from 'antd-mobile'
 
 import {NativeModules} from 'react-native'
@@ -32,28 +36,22 @@ import {
 import {connect} from 'dva'
 import TabBarTest from '../test/TabBarTest'
 import ToolBar from '../../Components/ToolBar'
+import emitter from '../../utils/SingleEventEmitter'
 
 const createAction = type => payload => ({type,payload})
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        //alignItems:'center',
-        //justifyContent:'center'
-    },
     icon:{
         width:32,
         height:32
     },
 })
 
-let overlay = [1, 2, 3].map((i, index) => (
-    <Popover.Item key={index} value={`option ${i}`}><Text>option {i}</Text></Popover.Item>
-));
-overlay = overlay.concat([
-    <Popover.Item key="4" value="disabled" disabled><Text style={{ color: '#ddd' }}>disabled opt</Text></Popover.Item>,
-    <Popover.Item key="6" value="button ct" style={{ backgroundColor: '#efeff4' }}><Text>关闭</Text></Popover.Item>,
-]);
+const tabs = [
+    { title: '热门比赛' },
+    { title: '热门球队' },
+    { title: '热门球员' },
+];
 
 @connect(({appNS,user})=>({appNS,user}))
 class Main extends Component{
@@ -70,9 +68,15 @@ class Main extends Component{
             password:'123',
             friendname:'',
             modal1:false,
+            drawerOpen:false,
         }
-        //this.easeChatRegister = this.easeChatRegister.bind(this);
+        this.drawer = null;
     }
+
+    onDrawOpenChange = (isOpen) => {
+        this.state.drawerOpen = isOpen;
+    }
+
     gotoCount = ()=>{
         //this.props.navigation.navigate('Count')
         this.props.dispatch(NavigationActions.navigate({routeName:'Count'}))
@@ -86,8 +90,39 @@ class Main extends Component{
     gotoCrossPlatformP2P=()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'BluetoothCrossPlatform'}))
     }
+    gotoReactArtTest = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'ReactArtTest'}))
+    }
+    gotoScanBar = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'BarCodeTest'}))
+    }
+    gotoQrcode = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'QrCodeTest'}))
+    }
+    gotoSocketIO = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'SocketIOTest'}))
+    }
+    gotoQiniuLive = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'QiniuLiveTest'}))
+    }
+    gotoQiniuPlay = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'QiniuPlayTest'}))
+    }
+    gotoCreateAp = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'CreateWiFiAP'}))
+    }
     componentDidMount(){
         this.props.dispatch(createAction('user/getUserInfo')({token:this.props.appNS.token}))
+        //监听二维码扫码事件
+        emitter.on("scanQRCode",(msg)=>{
+            /*Alert.alert("msg", msg, [
+                {text: 'OK', onPress: () => {}},
+            ])*/
+            setTimeout(()=>{
+                this.props.dispatch(NavigationActions.navigate({routeName:'ReactArtTest'}))
+            },0)
+
+        })
     }
 
     easeChatRegister = async () => {
@@ -125,90 +160,165 @@ class Main extends Component{
     }
 
     render(){
+        const sidebar = (<List>
+
+            <List.Item key={1}
+
+            >
+                <TouchableHighlight onPress={()=>{
+                    this.gotoScanBar();
+                }}>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                <Image source={require('../../assets/images/sao.png')} style={{width:28,height:28,marginRight:10}}/>
+                <Text>扫一扫</Text>
+            </View>
+                </TouchableHighlight>
+            </List.Item>
+
+            <List.Item key={2}
+            ><View style={{flexDirection:'row',alignItems:'center'}}>
+                <Image source={require('../../assets/images/qrcode.png')} style={{width:28,height:28,marginRight:10}}/>
+                <Text>扫码连接热点</Text>
+            </View></List.Item>
+            <List.Item key={3}
+            >
+                <TouchableHighlight onPress={()=>{
+                    this.gotoCreateAp();
+                }}>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                    <Image source={require('../../assets/images/wi-fi.png')} style={{width:28,height:28,marginRight:10}}/>
+                    <Text>设置Wi-Fi热点</Text>
+            </View>
+                </TouchableHighlight>
+            </List.Item>
+        </List>);
+
         return (
             <View style={{flex:1}}>
                 <ToolBar
                     title="首页"
-                    headerLeft={<Image source={require('../../assets/images/sao.png')} style={{width:28,height:28}}/>}
+                    headerLeft={<Image source={require('../../assets/images/qrcode.png')} style={{width:28,height:28}}/>}
                     navigation={this.props.navigation}
                     headerRight={
-                            <Image source={require('../../assets/images/sao.png')} style={{width:28,height:28}}/>
-                    } />
-                <ScrollView style={styles.container}>
-                <WhiteSpace/>
-                <WingBlank>
-                    <View style={{height:100,backgroundColor:'red',transform:[{scale:1}]}}>
-                        <Button onClick={()=>this.setState({modal1:true})}>对话框</Button>
-                        <Modal
-                            title="这是 title"
-                            transparent
-                            maskClosable={true}
-                            visible={this.state.modal1}
-                            onClose={()=>this.setState({modal1:false})}
-                            footer={[{ text: '确定', onPress: () => {  this.setState({modal1:false}) } }]}
-                        >
-                            <Text>这是内容...</Text>
-                            <Text>这是内容...</Text>
-                        </Modal>
-                    </View>
-                    <Text>即将开始和进行中的比赛，热门推荐，未读消息</Text>
-                    <Text>{JSON.stringify(this.props.user)}</Text>
-                    <WhiteSpace/>
-                    <Button onClick={this.gotoCount}>计数页面</Button>
-                    <Button onClick={this.gotoBTDiscover}>蓝牙搜索</Button>
-                    <Button onClick={this.gotoBle}>BLE</Button>
-                    <Button onClick={this.gotoCrossPlatformP2P}>跨平台P2P</Button>
-                </WingBlank>
-
-                <WhiteSpace size="lg"/>
-                <WingBlank>
-                <Card>
-                    <Card.Header
-                        title="聊天"
-                        thumb="https://www.easemob.com/themes/official_v3/Public/img/logo.png"
-
-                    />
-                    <Card.Body style={{backgroundColor:'#ccc'}}>
-                        <WingBlank>
-                            {
-                                this.state.chatlogin?
-                                    <List>
-                                        <InputItem
-                                            labelNumber="5"
-                                            value={this.state.friendname}
-                                            onChange={value=>this.setState({friendname:value})}
-                                        >好友账号：</InputItem>
-                                        <Button
-                                        onClick={this.chatWithFriends}
-                                        >聊天</Button>
-                                        <Button
-                                        onClick={this.easeChatLogout}
-                                        >注销</Button>
-                                    </List>
-                                    :
-                                    <List>
-                                    <InputItem
-                                        value={this.state.username}
-                                        onChange={value=>this.setState({username:value})}
-                                    >用户名：</InputItem>
-                                    <InputItem
-                                        value={this.state.password}
-                                        onChange={value=>this.setState({password:value})}
-                                    >密码：</InputItem>
-                                    <Button
-                                    onClick={this.easeChatRegister}
-                                    >注册</Button>
-                                    <Button
-                                    onClick={this.easeChatLogin}
-                                    >登陆</Button>
-                                </List>
+                        <Badge text={9}>
+                        <TouchableHighlight onPress={() => {
+                            if(this.drawer){
+                                if(this.state.drawerOpen){
+                                    this.drawer.closeDrawer();
+                                }else{
+                                    this.drawer.openDrawer();
+                                }
                             }
-                        </WingBlank>
-                    </Card.Body>
-                    <Card.Footer content="" />
-                </Card>
-                </WingBlank>
-            </ScrollView>
+                        }}>
+                        <Image source={require('../../assets/images/add.png')} style={{width:28,height:28}}/>
+                        </TouchableHighlight>
+                        </Badge>
+                    } />
+                <Drawer
+                    sidebar={sidebar}
+                    position="right"
+                    open={false}
+                    drawerRef={(el) => this.drawer = el}
+                    onOpenChange={this.onDrawOpenChange}
+                    drawerBackgroundColor="#ccc"
+                >
+                <Tabs
+                    tabs={tabs}
+                    initialPage={1}
+                >
+                    <View style={{flex:1}}>
+                        <Text>
+                            Content of First Tab
+                        </Text>
+                    </View>
+                    <View style={{flex:1}}>
+                        <ScrollView style={{flex:1}}>
+                                <WhiteSpace/>
+                                <WingBlank>
+                                    <View>
+                                        <Button onClick={()=>this.setState({modal1:true})}>对话框</Button>
+                                        <Modal
+                                            title="这是 title"
+                                            transparent
+                                            maskClosable={true}
+                                            visible={this.state.modal1}
+                                            onClose={()=>this.setState({modal1:false})}
+                                            footer={[{ text: '确定', onPress: () => {  this.setState({modal1:false}) } }]}
+                                        >
+                                            <Text>这是内容...</Text>
+                                            <Text>这是内容...</Text>
+                                        </Modal>
+                                    </View>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoCount}>计数页面</Button>
+                                    <Button onClick={this.gotoBTDiscover}>蓝牙搜索</Button>
+                                    <Button onClick={this.gotoBle}>BLE</Button>
+                                    <Button onClick={this.gotoCrossPlatformP2P}>跨平台P2P</Button>
+                                    <Button onClick={this.gotoReactArtTest}>ReactArt测试</Button>
+                                    <Button onClick={this.gotoScanBar}>扫一扫</Button>
+                                    <Button onClick={this.gotoQrcode}>二维码</Button>
+                                    <Button onClick={this.gotoSocketIO}>SocketIO</Button>
+                                    <Button onClick={this.gotoQiniuLive}>七牛直播</Button>
+                                    <Button onClick={this.gotoQiniuPlay}>七牛观看</Button>
+                                </WingBlank>
+
+                                <WhiteSpace size="lg"/>
+                                <WingBlank>
+                                    <Card>
+                                        <Card.Header
+                                            title="聊天"
+                                            thumb="https://www.easemob.com/themes/official_v3/Public/img/logo.png"
+
+                                        />
+                                        <Card.Body style={{backgroundColor:'#ccc'}}>
+                                            <WingBlank>
+                                                {
+                                                    this.state.chatlogin?
+                                                        <List>
+                                                            <InputItem
+                                                                labelNumber="5"
+                                                                value={this.state.friendname}
+                                                                onChange={value=>this.setState({friendname:value})}
+                                                            >好友账号：</InputItem>
+                                                            <Button
+                                                                onClick={this.chatWithFriends}
+                                                            >聊天</Button>
+                                                            <Button
+                                                                onClick={this.easeChatLogout}
+                                                            >注销</Button>
+                                                        </List>
+                                                        :
+                                                        <List>
+                                                            <InputItem
+                                                                value={this.state.username}
+                                                                onChange={value=>this.setState({username:value})}
+                                                            >用户名：</InputItem>
+                                                            <InputItem
+                                                                value={this.state.password}
+                                                                onChange={value=>this.setState({password:value})}
+                                                            >密码：</InputItem>
+                                                            <Button
+                                                                onClick={this.easeChatRegister}
+                                                            >注册</Button>
+                                                            <Button
+                                                                onClick={this.easeChatLogin}
+                                                            >登陆</Button>
+                                                        </List>
+                                                }
+                                            </WingBlank>
+                                        </Card.Body>
+                                        <Card.Footer content="" />
+                                    </Card>
+                                </WingBlank>
+                            </ScrollView>
+                    </View>
+                    <View style={{flex:1}}>
+                        <Text>
+                            Content of Third Tab
+                        </Text>
+                    </View>
+                </Tabs>
+                </Drawer>
             </View>
         )
     }

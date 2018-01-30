@@ -9,9 +9,11 @@ target 'sportdream' do
 	pod 'RSKImageCropper'
     pod 'QBImagePickerController'
     pod 'Qiniu'
-    pod 'PLShortVideoKit/ex-libMuseProcessor'
     pod 'PLMediaStreamingKit'
     pod 'PLPlayerKit','~> 2.4.0'
     pod 'GPUImage'
+    pod 'CocoaAsyncSocket'
+    pod 'NerdyUI'
+    pod 'MyLayout'
 end
 

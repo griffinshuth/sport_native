@@ -1,4 +1,8 @@
-var server = "http://192.168.0.105"
+var release = "http://sportlive.2310live.com"
+var debug = "http://192.168.0.105"
+var server = debug;
+
+export var serverurl = debug;
 
 export async function get(url,params){
     var str = "";
@@ -23,7 +27,7 @@ export async function get(url,params){
 }
 
 export async function post(url,body){
-    const uri = server + encodeURI(url+str);
+    const uri = server + encodeURI(url);
     return fetch(uri,{
         method:'POST',
         headers:{

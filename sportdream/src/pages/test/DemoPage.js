@@ -14,11 +14,17 @@ import {
     NativeEventEmitter
 } from 'react-native'
 
-import {Button,Toast} from 'antd-mobile'
+import {
+    Button,
+    Toast,
+    WhiteSpace,
+    WingBlank
+} from 'antd-mobile'
 import ImagePicker from 'react-native-image-crop-picker';
 
 
 import ToolBar from '../../Components/ToolBar'
+import {get,post} from '../../fetch'
 
 var deviceHeight = require('Dimensions').get('window').height;
 var deviceWidth = require('Dimensions').get('window').width;
@@ -122,18 +128,41 @@ export default class DemoPage extends Component{
         Toast.info(CalendarManager.TeamSize);
     }
 
-    goToShortRecord(){
-        QiniuModule.shortRecord();
+    goToZhibo = async()=>{
+        var push = await post("/getPublishURL",{streamname:"test2"})
+        QiniuModule.Zhibo(push.url);
     }
-
-    goToZhibo(){
-        QiniuModule.Zhibo();
+    goToZhiboPlay = async()=>{
+        var play = await post("/getRTMPPlayURL",{streamname:"test2"})
+        QiniuModule.playZhibo(play.url);
     }
-    goToH264Record(){
-        QiniuModule.h264Record();
+    goToH264Record = async()=>{
+        //var push = await post("/getPublishURL",{streamname:"test2"})
+        QiniuModule.h264Record(""/*push.url*/);
     }
     goToLocalNetwork(){
         QiniuModule.gotoLocalNetwork();
+    }
+    gotoVideoChat(){
+        QiniuModule.gotoVideoChat();
+    }
+    gotoMatchDirector(){
+        QiniuModule.gotoMatchDirector();
+    }
+    gotoARCameraView(){
+        QiniuModule.gotoARCameraView();
+    }
+    gotoCameraOnStand(){
+        QiniuModule.gotoCameraOnStand();
+    }
+    gotoDirectorServer(){
+        QiniuModule.gotoDirectorServer();
+    }
+    gotoCommentators(){
+        QiniuModule.gotoCommentators();
+    }
+    gotoLiveCommentators(){
+        QiniuModule.gotoLiveCommentators();
     }
     async getBlueToothInfo(){
         var info = await ClassicBlueToothModule.getBlueToothInfo();
@@ -254,18 +283,44 @@ export default class DemoPage extends Component{
                     </View>
                     <Text>{this.state.imageurl}</Text>
                     <Button onClick={()=>this.pickImage()}>选择图片</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.testPromise()}>ios promise</Button>
-                    <Button onClick={()=>this.goToShortRecord()}>短视频录制</Button>
-                    <Button onClick={()=>this.goToZhibo()}>直播</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.goToZhibo()}>七牛直播</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.goToZhiboPlay()}>七牛直播播放</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.goToH264Record()}>H264录制</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.goToLocalNetwork()}>本地网络</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.getBlueToothInfo()}>Android 获得蓝牙信息</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.openBluetooth()}>打开蓝牙</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.openDiscoverable()}>打开可发现性</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.testInit()}>测试IOS模块初始化</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.advertise()}>广播服务</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.browser()}>浏览服务</Button>
+                    <WhiteSpace/>
                     <Button onClick={()=>this.sendData()}>发送数据</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.gotoVideoChat()}>视频聊天</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.gotoMatchDirector()}>导播系统</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.gotoARCameraView()}>多主播切换系统</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.gotoCameraOnStand()}>三脚架机位</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.gotoDirectorServer()}>导播服务器</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.gotoCommentators()}>演播室解说</Button>
+                    <WhiteSpace/>
+                    <Button onClick={()=>this.gotoLiveCommentators()}>现场解说</Button>
                 </ScrollView>
             </View>
         )

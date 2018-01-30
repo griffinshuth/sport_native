@@ -53,6 +53,7 @@ export default class IndexPage extends Component {
         });
     }
 
+    //
     gotoCount = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'Count'}))
     }

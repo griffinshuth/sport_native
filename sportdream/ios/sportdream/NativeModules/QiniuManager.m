@@ -12,9 +12,15 @@
 @implementation QiniuManager
 RCT_EXPORT_MODULE(QiniuModule);
 
-RCT_EXPORT_METHOD(upload:(NSString*)filepath)
+- (NSArray<NSString *> *)supportedEvents
 {
-  NSURL *url = [NSURL URLWithString:@"http://192.168.0.105:3000/getUploadToken?bucket=grassroot"];
+  return @[@"uploadsuccessed"];
+}
+
+RCT_EXPORT_METHOD(upload:(NSString*)filepath resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSURL *url = [NSURL URLWithString:@"http://192.168.0.105/getUploadToken?bucket=grassroot"];
   NSMutableURLRequest * theRequest = [NSMutableURLRequest requestWithURL:url];
   NSURLResponse *response = nil;
   NSError *error = nil;
@@ -30,32 +36,78 @@ RCT_EXPORT_METHOD(upload:(NSString*)filepath)
   [upManager putFile:filepath key:nil token:token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
     NSLog(@"info ===== %@", info);
     NSLog(@"resp ===== %@", resp);
+      //[self sendEventWithName:@"uploadsuccessed" body:@{@"name": resp[@"key"]}];
+    resolve(@{@"name": resp[@"key"]});
   }
               option:uploadOption];
 }
 
-RCT_EXPORT_METHOD(shortRecord)
+RCT_EXPORT_METHOD(Zhibo:(NSString*)url)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
-  [delegate gotoShortRecordViewController];
+  [delegate gotoZhiboViewController:url];
 }
 
-RCT_EXPORT_METHOD(Zhibo)
+RCT_EXPORT_METHOD(playZhibo:(NSString*)url)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
-  [delegate gotoZhiboViewController];
+  [delegate gotoQiniuPlayerViewController:url];
 }
 
-RCT_EXPORT_METHOD(h264Record)
+RCT_EXPORT_METHOD(h264Record:(NSString*)url)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
-  [delegate gotoH264ViewController];
+  [delegate gotoH264ViewController:url];
 }
 RCT_EXPORT_METHOD(gotoLocalNetwork)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
   [delegate gotoLocalNetworkViewController];
 }
+
+RCT_EXPORT_METHOD(gotoVideoChat)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoVideoChatViewController];
+}
+
+RCT_EXPORT_METHOD(gotoMatchDirector)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoMatchDirectorViewController];
+}
+
+RCT_EXPORT_METHOD(gotoARCameraView)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoARCameraViewController];
+}
+
+RCT_EXPORT_METHOD(gotoCameraOnStand)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoCameraOnStandViewController];
+}
+
+RCT_EXPORT_METHOD(gotoDirectorServer)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoDirectorServerViewController];
+}
+
+RCT_EXPORT_METHOD(gotoCommentators)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoCommentatorsViewController];
+}
+
+RCT_EXPORT_METHOD(gotoLiveCommentators)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoLiveCommentatorsViewController];
+}
+
+
 
 
 

@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "EaseUI.h"
+#import <AgoraVideoChat/AgoraVideoChat.h>
 
 @interface EaseMessageView : UIView
+@property (strong, nonatomic) AgoraRtcEngineKit *agoraKit;
+@property (strong, nonatomic) AgoraRtcVideoCanvas *videoCanvas;
+@property (nonatomic, copy) NSNumber * uid;
 @end

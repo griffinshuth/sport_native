@@ -7,8 +7,10 @@ import {
     Platform,
     requireNativeComponent,
     NativeModules,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    NativeAppEventEmitter
 } from 'react-native'
+var EaseMessageView = requireNativeComponent('EaseMessageView', null);
 
 import Dimensions from 'Dimensions';
 
@@ -35,17 +37,41 @@ export default class Tab2Page extends Component{
     constructor(props){
         super(props);
         this.state = {
-
+            players : []
         }
 
     }
 
     componentDidMount(){
+        if(Platform.OS != 'ios'){
+            return;
+        }
+        NativeModules.EaseMessageViewManager.joinChannel("test")
+        this.firstRemoteVideoDecoded_subscription = NativeAppEventEmitter.addListener(
+            'firstRemoteVideoDecoded',
+            (data) => {
+                this.state.players.push(data.uid);
+                this.setState({players:this.state.players})
+            }
+        );
 
+        this.didOffline_subscription = NativeAppEventEmitter.addListener(
+            'didOffline',
+            (data) => {
+                var index = this.state.players.indexOf(data.uid);
+                if(index>0){
+                    this.state.players.splice(index,1);
+                    this.setState({players:this.state.players})
+                }
+            }
+        );
     }
 
     componentWillUnmount(){
-
+        if(Platform.OS != 'ios'){
+            return;
+        }
+        this.firstRemoteVideoDecoded_subscription.remove();
     }
 
     render(){
@@ -58,6 +84,15 @@ export default class Tab2Page extends Component{
                         rotate:"45deg"
                     }]}}></View>
                     <View style={{width:100,height:100,backgroundColor:'blue'}}></View>
+                    <EaseMessageView uid={0} style={{width:60,height:90}}/>
+                    {
+                        this.state.players.map((item)=>{
+                            return <View>
+                                <WhiteSpace/>
+                                <EaseMessageView uid={item} style={{width:60,height:90}}/>
+                            </View>
+                        })
+                    }
                 </View>
 
             </View>

@@ -14,6 +14,8 @@
 #import "rtmp.h"
 #import "rtmp_sys.h"
 #import "amf.h"
+#import "MBProgressHUD.h"
+#import "SocketClient.h"
 
 #define PLS_SCREEN_WIDTH CGRectGetWidth([UIScreen mainScreen].bounds)
 #define PLS_SCREEN_HEIGHT CGRectGetHeight([UIScreen mainScreen].bounds)
@@ -49,8 +51,13 @@
   int nH264TimeStamp; //h264帧时间戳
   int nH264FrameDuration; //每帧的持续时间，和编码的帧率有关
   int nH264FrameRate; //H264编码帧率
-  bool _isReadyPushRtmp; //是否准备推流
+  bool _isReadyPushRtmp; //是否允许推流
   bool _isAudioHeaderSend; //AAC音频同步包是否已经发送
+  
+  //
+    MBProgressHUD *HUD;
+    NSString* localIP;
+    NSString* serverIP;
 }
 @property (nonatomic,strong) NSString *documentDictionary;
 @property (nonatomic,strong) NSString *h264FileName;
@@ -80,10 +87,200 @@
 
 @property (atomic) uint32_t sendtimestamp;
 
-
+@property (nonatomic,strong) GCDAsyncUdpSocket* broadcastSocketOfSend;
+@property (nonatomic,strong) GCDAsyncUdpSocket* broadcastSocketOfReceive;
+@property (nonatomic,strong) GCDAsyncSocket *tcpSocket;
+@property (nonatomic,strong) SocketClient* socketClient;
 @end
 
 @implementation H264EncodeViewController
+//广播UDP初始化
+-(void)initBroadcastUDP
+{
+  self.broadcastSocketOfSend = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+  NSError * error = nil;
+  //[self.broadcastSocketOfSend bindToPort:8888 error:&error];
+  if (error) {
+    NSLog(@"error:%@",error);
+  }else {
+    [self.broadcastSocketOfSend enableBroadcast:YES error:&error];
+    if (error) {
+      NSLog(@"error:%@",error);
+    }
+  }
+  
+  self.broadcastSocketOfReceive = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+  [self.broadcastSocketOfReceive bindToPort:8888 error:&error];
+  if (error) {
+    NSLog(@"error:%@",error);
+  }else {
+    [self.broadcastSocketOfReceive beginReceiving:&error];// 一直接收
+    // [self.broadcastSocketOfReceive receiveOnce:&error]; (只接收一次)
+    NSString *deviceUUID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSString* string = [@"hand:" stringByAppendingString:deviceUUID];
+    [self sendBroadcastUDPData:string];
+    
+  }
+}
+
+// 发送UDP
+-(void)sendBroadcastUDPData:(NSString *)str
+{
+  NSLog(@"to ddc : %@",str);
+  NSData *data =[str dataUsingEncoding:NSUTF8StringEncoding];
+  [self.broadcastSocketOfSend sendData:data toHost:@"255.255.255.255" port:8888 withTimeout:-1 tag:0];   // 注意：这里的发送也是异步的,"255.255.255.255",是组播方式,withTimeout设置成-1代表超时时间为-1，即永不超时；
+}
+
+-(void)sendUDPData:(NSString*)str ip:(NSString*)ip
+{
+  NSLog(@"to ddc : %@",str);
+  NSData *data =[str dataUsingEncoding:NSUTF8StringEncoding];
+  [self.broadcastSocketOfSend sendData:data toHost:ip port:8888 withTimeout:-1 tag:0];   // 注意：这里的发送也是异步的,"255.255.255.255",是组播方式,withTimeout设置成-1代表超时时间为-1，即永不超时；
+  
+}
+
+-(void)sendUDPVideoData:(Byte*)bytes length:(size_t)length ip:(NSString*)ip
+{
+  NSData *data = [[NSData alloc] initWithBytes:bytes length:length];
+  [self.broadcastSocketOfSend sendData:data toHost:ip port:9888 withTimeout:-1 tag:0];   // 注意：这里的发送也是异步的,"255.255.255.255",是组播方式,withTimeout设置成-1代表超时时间为-1，即永不超时；
+
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didSendDataWithTag:(long)tag
+{
+  NSLog(@"发送信息成功");
+}
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
+{
+  NSLog(@"发送信息失败");
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext
+{
+  NSString *aStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+  NSString * ip = [GCDAsyncUdpSocket hostFromAddress:address];
+  NSString *deviceUUID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+  NSLog(@"接收到消息: %@,%@",aStr,ip);
+  if([aStr containsString:@"hand"]){
+    if([aStr containsString:deviceUUID]){
+      localIP = [[NSString alloc] initWithFormat:@"%@",ip];
+    }
+  }
+  if([aStr isEqualToString:@"echo"]){
+    serverIP = [[NSString alloc] initWithFormat:@"%@",ip];
+    NSError *error = nil;
+    if (![self.tcpSocket connectToHost:serverIP onPort:6666 error:&error])
+    {
+      NSLog(@"Error connecting: %@", error);
+    }
+    dispatch_async(dispatch_get_main_queue(), ^(){
+      //初始化进度框，置于当前的View当中
+      HUD = [[MBProgressHUD alloc] initWithView:self.view];
+      [self.view addSubview:HUD];
+      
+      //如果设置此属性则当前的view置于后台
+      HUD.dimBackground = NO;
+      
+      //设置对话框文字
+      HUD.labelText = ip;
+      
+      //显示对话框
+      [HUD showAnimated:YES whileExecutingBlock:^{
+        //对话框显示时需要执行的操作
+        sleep(1);
+      } completionBlock:^{
+        //操作执行完后取消对话框
+        [HUD removeFromSuperview];
+        HUD = nil;
+      }];
+    });
+  }
+}
+
+//TCP委托
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+{
+  NSLog(@"socket:%p didConnectToHost:%@ port:%hu", sock, host, port);
+  self.socketClient = [[SocketClient alloc] init];
+  self.socketClient.socket = self.tcpSocket;
+  [sock readDataWithTimeout:-1 tag:0];
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
+{
+  NSLog(@"socket:%p didWriteDataWithTag:%ld", sock, tag);
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
+{
+  //处理数据包
+  //NSString *aStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+  //[self Toast:aStr];
+  [self.socketClient addData:data];
+  PacketInfo* packet = [self.socketClient nextPacket:nil];
+  PacketInfo* last  = nil;
+  while(packet){
+    //开始处理包
+    uint32_t len = packet.len;
+    uint16_t ID = packet.packetID;
+    uint8_t* content = packet.data;
+    NSLog(@"packet length:%d",len);
+    NSLog(@"packet ID:%d",ID);
+    if(ID == 1){
+      NSData *contentData = [[NSData alloc] initWithBytes:content length:len];
+      NSString *aStr = [[NSString alloc] initWithData:contentData encoding:NSUTF8StringEncoding];
+      [self Toast:aStr];
+    }
+    //处理完毕
+    last = packet;
+    packet = [self.socketClient nextPacket:last];
+  }
+  //发送数据
+  NSString* c = @"camera1";
+  NSData *info =[c dataUsingEncoding:NSUTF8StringEncoding];
+  uint32_t len = (uint32_t)[info length];
+  uint16_t packetID = 1;
+  NSData* sendPacket = [SocketClient createPacket:len ID:packetID bytes:[info bytes]];
+  [self.tcpSocket writeData:sendPacket withTimeout:-1 tag:0];
+  //接着读取数据
+  [self.tcpSocket readDataWithTimeout:-1 tag:0];
+}
+
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
+{
+  NSLog(@"socketDidDisconnect:%p withError: %@", sock, err);
+}
+
+-(void) Toast:(NSString*)str
+{
+  dispatch_async(dispatch_get_main_queue(), ^(){
+    //初始化进度框，置于当前的View当中
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    //如果设置此属性则当前的view置于后台
+    HUD.dimBackground = NO;
+    
+    //设置对话框文字
+    HUD.labelText = str;
+    
+    //显示对话框
+    [HUD showAnimated:YES whileExecutingBlock:^{
+      //对话框显示时需要执行的操作
+      sleep(3);
+    } completionBlock:^{
+      //操作执行完后取消对话框
+      [HUD removeFromSuperview];
+      HUD = nil;
+    }];
+  });
+}
+
+-(void)dealloc
+{
+  [self.broadcastSocketOfReceive close];
+  [self.tcpSocket disconnect];
+}
 
 //切换前后摄像头
 -(void)setVideoInputDevice:(AVCaptureDeviceInput *)videoInputDevice
@@ -228,7 +425,7 @@
   nH264TimeStamp = 0; //h264帧时间戳
   nH264FrameRate = 25; //H264编码帧率
   nH264FrameDuration = 1000/nH264FrameRate; //每帧的持续时间，和编码的帧率有关
-  _isReadyPushRtmp = true; //是否允许进行rtmp推送
+  _isReadyPushRtmp = false; //是否允许进行rtmp推送
   _isAudioHeaderSend = false;
   self.sendtimestamp = 0;
   /////////////////////////////////
@@ -302,6 +499,11 @@
   _sendRtmpQueue = dispatch_queue_create("sendrtmpqueue", DISPATCH_QUEUE_SERIAL);
   self.documentDictionary = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   
+  //UDP相关
+  [self initBroadcastUDP];
+  //TCP
+  dispatch_queue_t mainQueue = dispatch_get_main_queue();
+  self.tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:mainQueue];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -412,7 +614,7 @@
     [self startAACEncodeSession];
     if(_isReadyPushRtmp){
       //开始推流
-      [self startRtmp:@"rtmp://pili-publish.2310live.com/grasslive/test1"];
+      [self startRtmp:self.rtmpUrl];
     }
     _isStartRecord = true;
   }else{
@@ -468,8 +670,8 @@
 {
   if(m_pRtmp){
     PILI_RTMP_Close(m_pRtmp, NULL);
-    PILI_RTMP_Free(m_pRtmp);
-    m_pRtmp = NULL;
+    //PILI_RTMP_Free(m_pRtmp);
+    //m_pRtmp = NULL;
   }
 }
 
@@ -649,7 +851,7 @@
     if(statusCode != noErr){
       NSLog(@"H264: VTCompressionSessionEncodeFrame failed with %d", (int)statusCode);
       [self stopH264EncodeSession];
-      [self.recordButton setTitle:@"开始" forState:UIControlStateNormal];
+      _processCount++;
       _isStartRecord = false;
       return;
     }else{
@@ -729,10 +931,9 @@ void encodeOutputCallback(void *userData, void *sourceFrameRefCon, OSStatus stat
         naluLength = CFSwapInt32BigToHost(naluLength);
         //开始推流
         if(vc->_isReadyPushRtmp){
-          vc->nH264TimeStamp += vc->nH264FrameDuration;
-          NSLog(@"videotimestamp:%d",vc->nH264TimeStamp);
-          [vc sendH264Packet:data+offset+lengthInfoSize size:naluLength isKeyFrame:keyframe nTimeStamp:vc->nH264TimeStamp];
-          
+            vc->nH264TimeStamp += vc->nH264FrameDuration;
+            NSLog(@"videotimestamp:%d",vc->nH264TimeStamp);
+            [vc sendH264Packet:data+offset+lengthInfoSize size:naluLength isKeyFrame:keyframe nTimeStamp:vc->nH264TimeStamp];
         }
         //结束推流
         //NSLog(@"got nalu data, length=%d, totalLength=%zu", naluLength, totalLength);
@@ -892,7 +1093,7 @@ void encodeOutputCallback(void *userData, void *sourceFrameRefCon, OSStatus stat
 //推送rtmp包
 -(int)sendRtmpPacket:(int)packetType data:(uint8_t*)data size:(int)size nTimeStamp:(int)nTimeStamp
 {
-  dispatch_sync(_sendRtmpQueue, ^{
+  
     PILI_RTMPPacket* packet;
     packet = (PILI_RTMPPacket*)malloc(RTMP_HEAD_SIZE+size);
     memset(packet, 0, RTMP_HEAD_SIZE);
@@ -915,13 +1116,16 @@ void encodeOutputCallback(void *userData, void *sourceFrameRefCon, OSStatus stat
     }
     
     packet->m_nTimeStamp = self.sendtimestamp; //nTimeStamp;
-    int nRet = 0;
     if(PILI_RTMP_IsConnected(m_pRtmp)){
-      nRet = PILI_RTMP_SendPacket(m_pRtmp, packet, true, NULL);
+      dispatch_async(_sendRtmpQueue, ^{
+        if(!m_pRtmp){
+          return;
+        }
+          int nRet = 0;
+          nRet = PILI_RTMP_SendPacket(m_pRtmp, packet, true, NULL);
+          free(packet);
+      });
     }
-    free(packet);
-  });
-  
   //NSLog(@"send packet");
   return 1;
 }
@@ -930,6 +1134,17 @@ void encodeOutputCallback(void *userData, void *sourceFrameRefCon, OSStatus stat
 -(void)writeH264Data:(void*)data length:(size_t)length addStartCode:(BOOL)b
 {
   const Byte bytes[] = "\x00\x00\x00\x01";
+  //发送到导播设备
+  Byte* udpdata = (Byte*)malloc(length+4);
+  memcpy(udpdata, bytes, 4);
+  memcpy(udpdata+4, data, length);
+  //[self sendUDPVideoData:udpdata length:length+4 ip:serverIP];
+  uint32_t len = (uint32_t)(length+4);
+  uint16_t packetID = 9999;
+  NSData* packet = [SocketClient createPacket:len ID:packetID bytes:udpdata];
+  [self.tcpSocket writeData:packet withTimeout:-1 tag:0];
+  free(udpdata);
+  //本地存储
   if(_h264File){
     if(b)
       fwrite(bytes, 1, 4, _h264File);

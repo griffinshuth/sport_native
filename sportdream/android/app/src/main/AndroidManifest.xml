@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -52,6 +53,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <!--蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
@@ -76,6 +78,7 @@
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <activity android:name=".ChatActivity"></activity>
         <activity android:name="com.sportdream.H264AACHWEncode.RecordActivity"></activity>
+        <activity android:name=".Activity.AgoraRemoteCamera"></activity>
 
         <!-- 设置环信应用的AppKey -->
         <meta-data

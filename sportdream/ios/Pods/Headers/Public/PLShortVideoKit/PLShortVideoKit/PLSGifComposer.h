@@ -1,1 +1,0 @@
-../../../../PLShortVideoKit/Pod/Library/PLShortVideoKit.framework/Headers/PLSGifComposer.h

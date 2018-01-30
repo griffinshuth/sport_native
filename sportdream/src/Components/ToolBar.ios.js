@@ -5,6 +5,7 @@ import {
     StyleSheet,
     TouchableHighlight
 } from 'react-native'
+import {ifIphoneX} from 'react-native-iphone-x-helper'
 
 export default class ToolBar extends React.Component{
     render(){
@@ -23,7 +24,7 @@ export default class ToolBar extends React.Component{
                 </TouchableHighlight>
             </View>:null}
             {this.props.headerLeft?<View style={styles.left}>{this.props.headerLeft}</View>:showBack?null:<View style={styles.left}></View>}
-            <View style={styles.center}><Text style={{fontSize:24,fontWeight:"bold"}}>{this.props.title}</Text></View>
+            <View style={styles.center}><Text style={{fontSize:20,fontWeight:"bold"}}>{this.props.title}</Text></View>
             {this.props.headerRight?<View style={styles.right}>{this.props.headerRight}</View>:showBack?<View style={styles.right}></View>:null}
 
         </View>
@@ -32,20 +33,27 @@ export default class ToolBar extends React.Component{
 
 const styles = StyleSheet.create({
     container:{
-        height:60,
         backgroundColor:"#0099FF",
-        paddingTop:16,
-        flexDirection:'row'
+        flexDirection:'row',
+        ...ifIphoneX({
+            height:74,
+            paddingTop:30,
+        },{
+            height:60,
+            paddingTop:16,
+        })
     },
     back:{
         width:44,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        marginLeft:10
     },
     left:{
-        width:44,
+        width:32,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        marginLeft:15
     },
     center:{
         flex:1,
@@ -53,8 +61,9 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     right:{
-        width:44,
+        width:32,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        marginRight:15
     }
 })

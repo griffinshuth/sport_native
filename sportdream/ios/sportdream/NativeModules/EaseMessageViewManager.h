@@ -7,7 +7,9 @@
 //
 
 #import <React/RCTViewManager.h>
+#import <AgoraVideoChat/AgoraVideoChat.h>
+#import "../AgoraPush/AGVideoProcessing.h"
 
-@interface EaseMessageViewManager : RCTViewManager
-
+@interface EaseMessageViewManager : RCTViewManager <AgoraRtcEngineDelegate>
+@property (strong, nonatomic) AgoraRtcEngineKit *agoraKit;
 @end
