@@ -67,7 +67,7 @@ static OSStatus mixerRenderNotify(void *							inRefCon,
     //将字节写入文件
     if (*ioActionFlags & kAudioUnitRenderAction_PostRender) {
         
-//        result = ExtAudioFileWriteAsync(THIS->audioOrigianlAudioFile, inNumberFrames, ioData);
+        result = ExtAudioFileWriteAsync(THIS->audioOrigianlAudioFile, inNumberFrames, ioData);
         if (THIS.delegate)
         {
             AudioBuffer buffer = ioData->mBuffers[0];
@@ -132,7 +132,7 @@ static void propListener_routechange(void *                  inClientData,
     UInt32 playedFrames;
     UInt32 totalFramesToPlay;
     
-//    NSString *_destinationFilePath;
+    NSString *_destinationFilePath;
     
     //伴奏相关
     NSString *_musicFilePath;
@@ -158,7 +158,7 @@ static void propListener_routechange(void *                  inClientData,
 {
     self = [super init];
     if (self) {
-//        _destinationFilePath = filePath;
+        _destinationFilePath = filePath;
         _humanVolumeDB  = 0;
         _musicVolumeDB = 0;
         _effectMode = KTVEffectModeMake(KTVEffectCategoryPlayOrigin, EQ_LEVEL_DEAULT);
@@ -179,6 +179,7 @@ static void propListener_routechange(void *                  inClientData,
         [self initHarmonic];
         [self initDynamicDelays];
         [self prepareForRecord];
+        [self prepareAudioOrigianlWriteFile];
     }
     
     return self;
@@ -194,9 +195,9 @@ static void propListener_routechange(void *                  inClientData,
 - (void)dealloc
 {
     try {
-//        if (audioOrigianlAudioFile) {
-//            XThrowIfError(ExtAudioFileDispose(audioOrigianlAudioFile), "augraph recorder closing human voice file failed");
-//        }
+        if (audioOrigianlAudioFile) {
+            XThrowIfError(ExtAudioFileDispose(audioOrigianlAudioFile), "augraph recorder closing human voice file failed");
+        }
         if (_musicExtFileRef) {
             XThrowIfError(ExtAudioFileDispose(_musicExtFileRef), "augraph recorder dispose music file failed");
         }
@@ -362,50 +363,50 @@ static void propListener_routechange(void *                  inClientData,
 
 #pragma mark - Utilities
 
-//- (void)prepareAudioOrigianlWriteFile
-//{
-//    try {
-//        
-//        
-//        CFURLRef destinationURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-//                                                                (CFStringRef)_destinationFilePath,
-//                                                                kCFURLPOSIXPathStyle,
-//                                                                false);
-//        // specify codec Saving the output in .m4a format
-//        AudioStreamBasicDescription ima4DataFormat;
-//        UInt32 formatSize = sizeof(ima4DataFormat);
-//        memset(&ima4DataFormat, 0, sizeof(ima4DataFormat));
-//        ima4DataFormat.mSampleRate = _clientFormat32float.mSampleRate;
-//        ima4DataFormat.mChannelsPerFrame = 2;
-//        ima4DataFormat.mFormatID = kAudioFormatAppleIMA4;
-//        XThrowIfError(AudioFormatGetProperty(kAudioFormatProperty_FormatInfo, 0, NULL, &formatSize, &ima4DataFormat), "couldn't create IMA4 destination data format");
-//        XThrowIfError(ExtAudioFileCreateWithURL(destinationURL,
-//                                                kAudioFileCAFType,
-//                                                &ima4DataFormat,
-//                                                NULL,
-//                                                kAudioFileFlags_EraseFile,
-//                                                &audioOrigianlAudioFile), "augraph recorder create url error");
-//        CFRelease(destinationURL);
-//        
-//        // set the audio data format of mixer Unit
-//        XThrowIfError(ExtAudioFileSetProperty(audioOrigianlAudioFile,
-//                                              kExtAudioFileProperty_ClientDataFormat,
-//                                              sizeof(_clientFormat16int),
-//                                              &_clientFormat16int), "augraph recorder set file format error");
-//        
-//        // specify codec
-//        UInt32 codec = kAppleHardwareAudioCodecManufacturer;
-//        XThrowIfError(ExtAudioFileSetProperty(audioOrigianlAudioFile,
-//                                              kExtAudioFileProperty_CodecManufacturer,
-//                                              sizeof(codec),
-//                                              &codec), "augraph recorder set file codec error");
-//        
-//        XThrowIfError(ExtAudioFileWriteAsync(audioOrigianlAudioFile, 0, NULL), "augraph recorder write file error");
-//    } catch (CAXException e) {
-//        char buf[256];
-//        fprintf(stderr, "Error: %s (%s)\n", e.mOperation, e.FormatError(buf));
-//    }
-//}
+- (void)prepareAudioOrigianlWriteFile
+{
+    try {
+      
+      
+        CFURLRef destinationURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
+                                                                (CFStringRef)_destinationFilePath,
+                                                                kCFURLPOSIXPathStyle,
+                                                                false);
+        // specify codec Saving the output in .m4a format
+        AudioStreamBasicDescription ima4DataFormat;
+        UInt32 formatSize = sizeof(ima4DataFormat);
+        memset(&ima4DataFormat, 0, sizeof(ima4DataFormat));
+        ima4DataFormat.mSampleRate = _clientFormat32float.mSampleRate;
+        ima4DataFormat.mChannelsPerFrame = 2;
+        ima4DataFormat.mFormatID = kAudioFormatAppleIMA4;
+        XThrowIfError(AudioFormatGetProperty(kAudioFormatProperty_FormatInfo, 0, NULL, &formatSize, &ima4DataFormat), "couldn't create IMA4 destination data format");
+        XThrowIfError(ExtAudioFileCreateWithURL(destinationURL,
+                                                kAudioFileCAFType,
+                                                &ima4DataFormat,
+                                                NULL,
+                                                kAudioFileFlags_EraseFile,
+                                                &audioOrigianlAudioFile), "augraph recorder create url error");
+        CFRelease(destinationURL);
+      
+        // set the audio data format of mixer Unit
+        XThrowIfError(ExtAudioFileSetProperty(audioOrigianlAudioFile,
+                                              kExtAudioFileProperty_ClientDataFormat,
+                                              sizeof(_clientFormat16int),
+                                              &_clientFormat16int), "augraph recorder set file format error");
+      
+        // specify codec
+        UInt32 codec = kAppleHardwareAudioCodecManufacturer;
+        XThrowIfError(ExtAudioFileSetProperty(audioOrigianlAudioFile,
+                                              kExtAudioFileProperty_CodecManufacturer,
+                                              sizeof(codec),
+                                              &codec), "augraph recorder set file codec error");
+      
+        XThrowIfError(ExtAudioFileWriteAsync(audioOrigianlAudioFile, 0, NULL), "augraph recorder write file error");
+    } catch (CAXException e) {
+        char buf[256];
+        fprintf(stderr, "Error: %s (%s)\n", e.mOperation, e.FormatError(buf));
+    }
+}
 
 - (void)addMixerRenderNofity
 {

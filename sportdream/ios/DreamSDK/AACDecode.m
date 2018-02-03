@@ -21,43 +21,38 @@
 
 @implementation AACDecode
 {
-  AudioConverterRef _audioConverter;
-  dispatch_queue_t _decodeQueue;
-  AudioBufferList outAudioBufferList;
-
+  AVCodecContext  *codecCtx;
+  AVCodec * codec;
+  SwrContext*                 _swrContext;
+  void*                       _swrBuffer;
+  NSUInteger                  _swrBufferSize;
+  AVFrame *_audioFrame;
 }
 
 -(id)init
 {
   self = [super init];
   if(self){
-    _decodeQueue = dispatch_queue_create("audiodecodequeue", DISPATCH_QUEUE_SERIAL);
-    UInt32 bytesPerSample = sizeof (SInt16);
-    AudioStreamBasicDescription outputAudioDes = {
-      .mFormatID = kAudioFormatLinearPCM,
-      .mSampleRate = 44100,
-      .mBitsPerChannel = bytesPerSample*8,
-      .mFramesPerPacket = 1,
-      .mBytesPerFrame = bytesPerSample,
-      .mBytesPerPacket = bytesPerSample,
-      .mChannelsPerFrame = 1, //单通道 mono
-      .mFormatFlags = kLinearPCMFormatFlagIsPacked | kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsNonInterleaved,
-      .mReserved = 0
-    };
-    AudioStreamBasicDescription inFormat;
-    memset(&inFormat, 0, sizeof(inFormat));
-    inFormat.mSampleRate        = 44100;
-    inFormat.mFormatID          = kAudioFormatMPEG4AAC;
-    inFormat.mFormatFlags       = kMPEG4Object_AAC_LC;
-    inFormat.mBytesPerPacket    = 0;
-    inFormat.mFramesPerPacket   = 1024;
-    inFormat.mBytesPerFrame     = 0;
-    inFormat.mChannelsPerFrame  = 1;
-    inFormat.mBitsPerChannel    = 0;
-    inFormat.mReserved          = 0;
-    OSStatus status = AudioConverterNew(&inFormat, &outputAudioDes, &_audioConverter);
-    if (status != noErr) {
-      NSLog(@"初始化硬解码AAC创建失败");
+    //1.注册组件
+    av_register_all();
+    codec = avcodec_find_decoder(CODEC_ID_AAC);
+    codecCtx = avcodec_alloc_context3(codec);
+    _audioFrame = avcodec_alloc_frame();
+    int openCodecErrCode = 0;
+    if ((openCodecErrCode = avcodec_open2(codecCtx, codec, NULL)) < 0){
+      NSLog(@"Open Audio Codec Failed openCodecErr is %s", av_err2str(openCodecErrCode));
+    }
+    _swrContext = NULL;
+    // 初始化codecCtx
+    codecCtx->codec_type = AVMEDIA_TYPE_AUDIO;
+    codecCtx->sample_rate = 44100;
+    codecCtx->channels = 1;
+    codecCtx->bit_rate = 100000;
+    codecCtx->channel_layout = av_get_default_channel_layout(1);
+    
+    if(codecCtx->sample_fmt != AV_SAMPLE_FMT_S16){
+      _swrContext = swr_alloc_set_opts(NULL, av_get_default_channel_layout(codecCtx->channels), AV_SAMPLE_FMT_S16, codecCtx->sample_rate, av_get_default_channel_layout(codecCtx->channels), codecCtx->sample_fmt, codecCtx->sample_rate, 0, NULL);
+      swr_init(_swrContext);
     }
   }
   return self;
@@ -65,21 +60,95 @@
 
 -(void)startAACEncodeSession
 {
-  //1.注册组件
-  av_register_all();
-  //封装格式上下文
-  AVFormatContext *pFormatCtx = avformat_alloc_context();
   
 }
 
 -(void)stopAACEncodeSession
 {
-
+  if(codecCtx){
+    avcodec_close(codecCtx);
+    codecCtx = NULL;
+  }
+  if(_audioFrame){
+    av_free(_audioFrame);
+    _audioFrame = NULL;
+  }
+  
+  if(_swrContext){
+    swr_free(&_swrContext);
+    _swrContext = NULL;
+  }
+  
+  if(_swrBuffer){
+    free(_swrBuffer);
+    _swrBuffer = NULL;
+    _swrBufferSize = 0;
+  }
 }
 
--(void)decodeAudioFrame:(NSData *)frame{
+-(void)decodeAudioFrame:(NSData *)data SocketName:(NSString*)SocketName{
   
- 
+  AVPacket packet;
+  av_init_packet(&packet);
+  packet.size = (int)data.length;
+  packet.data = (void*)data.bytes;
+  int pktSize = packet.size;
+  while (pktSize>0) {
+    int got_frame = 0;
+    int len = avcodec_decode_audio4(codecCtx, _audioFrame, &got_frame, &packet);
+    if(len<0){
+      NSLog(@"decode audio error, skip packet");
+      break;
+    }
+    if(got_frame>0){
+      NSData* pcmData = [self handleAudioFrame];
+      if(pcmData){
+        [self.delegate AACDecodeToPCM:pcmData SocketName:SocketName];
+      }
+    }
+    if (0 == len)
+      break;
+    pktSize -= len;
+  }
+  av_free_packet(&packet);
+}
+
+-(NSData*)handleAudioFrame
+{
+  if (!_audioFrame->data[0])
+    return nil;
+  const NSUInteger numChannels = codecCtx->channels;
+  NSInteger numFrames;
+  void* audioData;
+  
+  if (_swrContext) {
+    const NSUInteger ratio = 2;
+    const int bufSize =  av_samples_get_buffer_size(NULL, (int)numChannels, (int)(_audioFrame->nb_samples * ratio), AV_SAMPLE_FMT_S16, 1);
+    if (!_swrBuffer || _swrBufferSize < bufSize) {
+      _swrBufferSize = bufSize;
+      _swrBuffer = realloc(_swrBuffer, _swrBufferSize);
+    }
+    
+    Byte *outbuf[2] = { _swrBuffer, 0 };
+    numFrames = swr_convert(_swrContext,
+                            outbuf,
+                            (int)(_audioFrame->nb_samples * ratio),
+                            (const uint8_t **)_audioFrame->data,
+                            _audioFrame->nb_samples);
+    if (numFrames < 0) {
+      NSLog(@"fail resample audio");
+      return nil;
+    }
+    audioData = _swrBuffer;
+  }else{
+    audioData = _audioFrame->data[0];
+    numFrames = _audioFrame->nb_samples;
+  }
+  const NSUInteger numElements = numFrames * numChannels;
+  NSMutableData *pcmData = [NSMutableData dataWithLength:numElements * sizeof(SInt16)];
+  memcpy(pcmData.mutableBytes, audioData, numElements * sizeof(SInt16));
+  
+  return pcmData;
 }
 
 @end

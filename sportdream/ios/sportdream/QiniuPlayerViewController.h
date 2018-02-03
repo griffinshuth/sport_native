@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <PLPlayerKit/PLPlayerKit.h>
 
-@interface QiniuPlayerViewController : UIViewController <PLPlayerDelegate>
-@property (nonatomic,strong) PLPlayer *player;
+
+@interface QiniuPlayerViewController : UIViewController
+//@property (nonatomic,strong) PLPlayer *player;
 @property (nonatomic,strong) NSString *url;
 @end

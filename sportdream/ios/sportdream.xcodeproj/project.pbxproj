@@ -181,8 +181,9 @@
 		22C7180E201CC8840089E69A /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22C71808201CC8840089E69A /* CAXException.cpp */; };
 		22C71811201EA8310089E69A /* AACDecode.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C71810201EA8310089E69A /* AACDecode.m */; };
 		22C71814201EE8FE0089E69A /* LiveCommentatorsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C71813201EE8FE0089E69A /* LiveCommentatorsViewController.m */; };
-		22C71868201F73220089E69A /* libffmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22C71867201F73220089E69A /* libffmpeg.a */; };
 		22C7186C201FFA770089E69A /* libBaiduTTSSpeechSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22C7186B201FFA760089E69A /* libBaiduTTSSpeechSDK.a */; };
+		22C7186D202042670089E69A /* libffmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22C71867201F73220089E69A /* libffmpeg.a */; };
+		22C71884202159120089E69A /* AudioMixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C71883202159120089E69A /* AudioMixer.m */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.mm */; };
@@ -833,6 +834,8 @@
 		22C71866201F73220089E69A /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		22C71867201F73220089E69A /* libffmpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libffmpeg.a; sourceTree = "<group>"; };
 		22C7186B201FFA760089E69A /* libBaiduTTSSpeechSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBaiduTTSSpeechSDK.a; sourceTree = "<group>"; };
+		22C71882202159120089E69A /* AudioMixer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioMixer.h; sourceTree = "<group>"; };
+		22C71883202159120089E69A /* AudioMixer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioMixer.m; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* sportdream-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sportdream-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* sportdream-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "sportdream-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		443FD7BD00B80608339F73CB /* Pods-sportdream.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sportdream.debug.xcconfig"; path = "Pods/Target Support Files/Pods-sportdream/Pods-sportdream.debug.xcconfig"; sourceTree = "<group>"; };
@@ -859,7 +862,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22C71868201F73220089E69A /* libffmpeg.a in Frameworks */,
+				22C7186D202042670089E69A /* libffmpeg.a in Frameworks */,
 				2276CAAC1FDAD741001C66B1 /* AgoraVideoChat.framework in Frameworks */,
 				2276CA6B1FDAAE9E001C66B1 /* libBaiduSpeechSDK.a in Frameworks */,
 				22C7186C201FFA770089E69A /* libBaiduTTSSpeechSDK.a in Frameworks */,
@@ -1142,6 +1145,8 @@
 				22C717BC201AC55C0089E69A /* PCMPlayer.m */,
 				22C7180F201EA8310089E69A /* AACDecode.h */,
 				22C71810201EA8310089E69A /* AACDecode.m */,
+				22C71882202159120089E69A /* AudioMixer.h */,
+				22C71883202159120089E69A /* AudioMixer.m */,
 			);
 			path = DreamSDK;
 			sourceTree = "<group>";
@@ -2391,6 +2396,7 @@
 				22A5E2291F8876EE0088FEE0 /* LocalNetworkViewController.m in Sources */,
 				229443071F998B0D00E845DE /* MessageEncoder.swift in Sources */,
 				22C717F7201CC7E00089E69A /* pitch_bend.cpp in Sources */,
+				22C71884202159120089E69A /* AudioMixer.m in Sources */,
 				22808A681F6C284E0064116F /* ChatMessageContainerViewController.m in Sources */,
 				223A63081FFB351F00E38A0B /* AGAudioBuffer.m in Sources */,
 				22C717EA201CC7E00089E69A /* autotune.cpp in Sources */,

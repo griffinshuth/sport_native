@@ -16,7 +16,7 @@
   @public
     AudioUnit convertUnit;
 }
--(id)initWithFileName:(NSString*)name fileExtension:(NSString*)fileExtension;
+-(id)initWithFileName:(NSString*)name fileExtension:(NSString*)fileExtension channel:(Float64)channel;
 - (BOOL)play;
 - (void)stop;
 -(void)intoAudioData:(NSData*)data;

@@ -80,14 +80,14 @@ static const AudioUnitElement inputElement = 1;
   }
 }
 
--(id)initWithFileName:(NSString*)name fileExtension:(NSString*)fileExtension
+-(id)initWithFileName:(NSString*)name fileExtension:(NSString*)fileExtension channel:(Float64)channel
 {
   self = [super init];
   if(self){
     AVAudioSession *mySession = [AVAudioSession sharedInstance];
     [mySession setCategory: AVAudioSessionCategoryPlayAndRecord error:nil];
     sampleRate = 44100;
-    channels = 1;
+    channels = channel;
     self.audioBuffer = [[NSMutableData alloc] init];
     [self createAUGraph];
     if(name && fileExtension){
@@ -161,7 +161,7 @@ static const AudioUnitElement inputElement = 1;
 -(void)setAudioUnitProperties
 {
   OSStatus status = noErr;
-  AudioStreamBasicDescription streamFormat = [self nonInterleavedPCMFormatWithChannels:channels];
+  AudioStreamBasicDescription streamFormat = [self nonInterleavedPCMFormatWithChannels:1];
   status = AudioUnitSetProperty(remoteIOUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, inputElement, &streamFormat, sizeof(streamFormat));
   CheckStatus(status, @"Could not set stream format on I/O unit output scope");
   
@@ -263,10 +263,10 @@ static const AudioUnitElement inputElement = 1;
     }
     NSUInteger needLen = 0;
     UInt32 bytesPerSample = sizeof (SInt16);
-    if(self.audioBuffer.length<numFrames*bytesPerSample){
+    if(self.audioBuffer.length<numFrames*bytesPerSample*channels){
       needLen = self.audioBuffer.length;
     }else{
-      needLen = numFrames*bytesPerSample;
+      needLen = numFrames*bytesPerSample*channels;
     }
     if(needLen == 0){
       return noErr;

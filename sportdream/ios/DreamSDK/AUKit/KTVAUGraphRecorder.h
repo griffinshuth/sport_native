@@ -28,7 +28,7 @@
 {
 @public
 //    // 录音文件的file ref
-//    ExtAudioFileRef audioOrigianlAudioFile;
+    ExtAudioFileRef audioOrigianlAudioFile;
     // 用户是否插入耳机
     BOOL isHeadSet;
     AudioUnit lastUnit;

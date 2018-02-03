@@ -8,12 +8,12 @@
 
 #import "ZhiboAnchorViewController.h"
 #import <PLMediaStreamingKit/PLMediaStreamingKit.h>
-#import <PLPlayerKit/PLPlayerKit.h>
+//#import <PLPlayerKit/PLPlayerKit.h>
 #import "AppDelegate.h"
 
 @interface ZhiboAnchorViewController ()
 @property (nonatomic, strong) PLMediaStreamingSession *session;
-@property (strong, nonatomic) PLPlayer* player;
+//@property (strong, nonatomic) PLPlayer* player;
 @end
 
 @implementation ZhiboAnchorViewController

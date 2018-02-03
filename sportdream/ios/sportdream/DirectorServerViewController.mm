@@ -15,6 +15,7 @@
 #import "StreamingClient.h"
 #import "PCMPlayer.h"
 #import "KTVAUGraphRecorder.h"
+#import "AudioMixer.h"
 
 
 enum {
@@ -61,6 +62,9 @@ enum {
 @property (nonatomic,strong) PCMPlayer* pcmPLayer;
 @property (nonatomic,strong) KTVAUGraphRecorder* KTVRecorder;
 @property (nonatomic,strong) AACDecode* audioDecoder;
+@property (nonatomic,strong) AACDecode* audioDecoder2;
+@property (nonatomic,strong) AudioMixer* audioMixer;
+@property (nonatomic,strong) FileDecoder* fileDecoder;
 @end
 
 @implementation DirectorServerViewController
@@ -72,15 +76,48 @@ enum {
   FILE *_AACFile;
 }
 
+//FileDecoderDelegate
+- (void)didCompletePlayingMovie
+{
+  
+}
+- (void)didVideoOutput:(CMSampleBufferRef)videoData
+{
+  
+}
+- (void)didAudioOutput:(CMSampleBufferRef)audioData
+{
+  
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
   NSString* documentDictionary = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-  _AACFile = fopen([[NSString stringWithFormat:@"%@/%@",documentDictionary,@"livecomment.aac"] UTF8String], "ab+");
-  self.pcmPLayer = [[PCMPlayer alloc] initWithFileName:nil fileExtension:nil];
-  [self.pcmPLayer play];
+  _AACFile = fopen([[NSString stringWithFormat:@"%@/%@",documentDictionary,@"testmixer.aac"] UTF8String], "ab+");
+  //播放文件
+  //self.pcmPLayer = [[PCMPlayer alloc] initWithFileName:@"1223_1-2" fileExtension:@"mov" channel:2];
+  //现场解说
+  //self.pcmPLayer = [[PCMPlayer alloc] initWithFileName:nil fileExtension:nil channel:1];
+  //[self.pcmPLayer play];
+  //混音
+  self.audioMixer = [[AudioMixer alloc] init];
+  //PCM解码器
   self.audioDecoder = [[AACDecode alloc] init];
   self.audioDecoder.delegate = self;
-  //self.KTVRecorder = [[KTVAUGraphRecorder alloc] initWithRecordFilePath:@""];
+  self.audioDecoder2 = [[AACDecode alloc] init];
+  self.audioDecoder2.delegate = self;
+  //K歌模块
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *documentsDirectory = paths[0];
+  NSString *recordFolderPath = [documentsDirectory stringByAppendingPathComponent:@"record"];
+  NSFileManager *fm = [NSFileManager defaultManager];
+  
+  if (![fm fileExistsAtPath:recordFolderPath isDirectory:NULL])
+  {
+    //if folder notfound, create one
+    [fm createDirectoryAtPath:recordFolderPath withIntermediateDirectories:YES attributes:nil error:nil];
+  }
+  //self.KTVRecorder = [[KTVAUGraphRecorder alloc] initWithRecordFilePath:[recordFolderPath stringByAppendingPathComponent:@"temp.wav"]];
   //[self.KTVRecorder startRecord];
     // Do any additional setup after loading the view.
   //network
@@ -206,8 +243,9 @@ enum {
 
 -(void)dealloc
 {
-  [self.pcmPLayer stop];
+  //[self.pcmPLayer stop];
   [self.audioDecoder stopAACEncodeSession];
+  [self.audioDecoder2 stopAACEncodeSession];
   fclose(_AACFile);
   //[self.KTVRecorder stopRecord];
 }
@@ -315,6 +353,7 @@ enum {
   NSUInteger len = [self.localCameras count];
   c.name = localCameraNames[len-1];
   [self refreshLocalCameras];
+  [self.audioMixer commentorConnected:c.name];
 }
 
 - (void)serverSocketDisconnect:(GCDAsyncSocket *)sock
@@ -325,12 +364,23 @@ enum {
       if(sock == self.cameraOnStandOfLiving.socket){
         self.cameraOnStandOfLiving = nil;
       }
+      [self.audioMixer commentorDisconnected:obj.name];
       [self.localCameras removeObject:obj];
       [self refreshLocalCameras];
       NSLog(@"remove from connectedSockets:num:%zd",[self.localCameras count]);
       break;
     }
   }
+}
+
+-(NSString*)getNameOfLocalSocket:(GCDAsyncSocket*)sock
+{
+  for(CameraOnStand* obj in self.localCameras){
+    if(obj.socket == sock){
+      return obj.name;
+    }
+  }
+  return @"";
 }
 
 -(uint8_t*)addADTStoPacket:(uint32_t)packetlen
@@ -361,28 +411,36 @@ enum {
   }
 }
 
--(void)AACDecodeToPCM:(NSData*)data
+//AACDecodeDelegate
+-(void)AACDecodeToPCM:(NSData*)data  SocketName:(NSString*)SocketName;
 {
-  [self.pcmPLayer intoAudioData:data];
+  //[self.pcmPLayer intoAudioData:data];
+  [self.audioMixer intoAudioData:data ip:SocketName];
+  
+  
 }
 -(void)serverReceiveData:(uint16_t)packetID data:(NSData*)data sock:(GCDAsyncSocket *)sock
 {
+  NSString* name = [self getNameOfLocalSocket:sock];
   if(packetID == SEND_BIG_H264DATA){
     if(sock == self.cameraOnStandOfLiving.socket){
       //收到不含头部的h264帧数据 ，传给解码器进行解码显示
       [self.bigStreamDecode decodeH264WithoutHeader:data];
     }
   }else if(packetID == COMMENT_AUDIO){
-    [self.audioDecoder decodeAudioFrame:data];
-    //写入文件
+  
     uint32_t packetlen = (uint32_t)(data.length+7);
     uint8_t* header = [self addADTStoPacket:packetlen];
-    [self writeAACData:(int8_t*)data.bytes length:data.length adtsHeader:header];
+    //[self writeAACData:(int8_t*)data.bytes length:data.length adtsHeader:header];
     NSData* t = [[NSData alloc] initWithBytes:header length:7];
     NSMutableData* final_result = [[NSMutableData alloc] initWithData:t];
     [final_result appendData:data];
-    
     free(header);
+    if([name isEqualToString:@"左侧镜头"]){
+      [self.audioDecoder2 decodeAudioFrame:final_result SocketName:name];
+      return;
+    }
+    [self.audioDecoder decodeAudioFrame:final_result SocketName:name];
   }
 }
 

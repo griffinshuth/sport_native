@@ -21,8 +21,8 @@
   [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
   CGFloat screen_width = CGRectGetWidth([UIScreen mainScreen].bounds);
   CGFloat screen_height = CGRectGetHeight([UIScreen mainScreen].bounds);
-  self.player.playerView.frame = CGRectMake(0, 0, screen_width, screen_height);
-  [self.view addSubview:self.player.playerView];
+  //self.player.playerView.frame = CGRectMake(0, 0, screen_width, screen_height);
+  //[self.view addSubview:self.player.playerView];
   [self.view addSubview:self.backSmallButton];
 }
 -(void)initPortraitUI
@@ -30,8 +30,8 @@
   [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
   CGFloat screen_width = CGRectGetWidth([UIScreen mainScreen].bounds);
   CGFloat screen_height = CGRectGetHeight([UIScreen mainScreen].bounds);
-  self.player.playerView.frame = CGRectMake(0, 0, screen_width, 200);
-  [self.view addSubview:self.player.playerView];
+  //self.player.playerView.frame = CGRectMake(0, 0, screen_width, 200);
+  //[self.view addSubview:self.player.playerView];
   [self.view addSubview:self.backButton];
   [self.view addSubview:self.fullScreenButton];
 }
@@ -49,14 +49,14 @@
   [self.backButton setBackgroundImage:[UIImage imageNamed:@"btn_camera_cancel_b"] forState:UIControlStateHighlighted];
   [self.backButton addTarget:self action:@selector(backButtonEvent:) forControlEvents:UIControlEventTouchUpInside];
   
-  PLPlayerOption *option = [PLPlayerOption defaultOption];
-  [option setOptionValue:@15 forKey:PLPlayerOptionKeyTimeoutIntervalForMediaPackets];
+  //PLPlayerOption *option = [PLPlayerOption defaultOption];
+  //[option setOptionValue:@15 forKey:PLPlayerOptionKeyTimeoutIntervalForMediaPackets];
   //播放url
   NSURL *url = [NSURL URLWithString:self.url];
   //播放本地文件
   //NSURL *url = [[NSBundle mainBundle] URLForResource:@"本地文件" withExtension:nil];
-  self.player = [PLPlayer playerWithURL:url option:option];
-  self.player.delegate = self;
+  //self.player = [PLPlayer playerWithURL:url option:option];
+  //self.player.delegate = self;
   
   self.fullScreenButton = [UIButton buttonWithType:UIButtonTypeSystem];
   [self.fullScreenButton setTitle:@"横屏" forState:UIControlStateNormal];
@@ -71,7 +71,7 @@
   [self.backSmallButton addTarget:self action:@selector(backSmallButtonEvent:) forControlEvents:UIControlEventTouchUpInside];
   
   [self initPortraitUI];
-  [self.player play];
+  //[self.player play];
 }
 
 /*- (void)updateViewConstraints

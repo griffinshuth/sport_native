@@ -12,7 +12,8 @@
 #import "AgoraKitRemoteCamera.h"
 #import <AVFoundation/AVFoundation.h>
 #import "AACDecode.h"
+#import "FileDecoder.h"
 
-@interface DirectorServerViewController : UIViewController<AACDecodeDelegate,LocalWifiNetworkDelegate,PostProgressDelegate,AgoraKitRemoteCameraDelegate>
+@interface DirectorServerViewController : UIViewController<FileDecoderDelegate,AACDecodeDelegate,LocalWifiNetworkDelegate,PostProgressDelegate,AgoraKitRemoteCameraDelegate>
 
 @end

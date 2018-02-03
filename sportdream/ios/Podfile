@@ -10,7 +10,6 @@ target 'sportdream' do
     pod 'QBImagePickerController'
     pod 'Qiniu'
     pod 'PLMediaStreamingKit'
-    pod 'PLPlayerKit','~> 2.4.0'
     pod 'GPUImage'
     pod 'CocoaAsyncSocket'
     pod 'NerdyUI'

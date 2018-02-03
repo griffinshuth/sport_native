@@ -10,11 +10,11 @@
 #import <AVFoundation/AVFoundation.h>
 
 @protocol AACDecodeDelegate <NSObject>
--(void)AACDecodeToPCM:(NSData*)data;
+-(void)AACDecodeToPCM:(NSData*)data  SocketName:(NSString*)SocketName;
 @end
 
 @interface AACDecode : NSObject
 @property (nonatomic, weak) id <AACDecodeDelegate> delegate;
 -(void)stopAACEncodeSession;
--(void)decodeAudioFrame:(NSData *)frame;
+-(void)decodeAudioFrame:(NSData *)data SocketName:(NSString*)SocketName;
 @end

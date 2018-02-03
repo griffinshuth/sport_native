@@ -4,7 +4,7 @@
 
 @implementation QiniuPlayView{
   RCTEventDispatcher *_eventDispatcher;
-  PLPlayer *_plplayer;
+  //PLPlayer *_plplayer;
   bool _started;
   bool _muted;
 }
@@ -27,7 +27,7 @@ static NSString *status[] = {
     _eventDispatcher = eventDispatcher;
     _started = YES;
     _muted = NO;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    //[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     self.reconnectCount = 0;
   }
   
@@ -36,7 +36,7 @@ static NSString *status[] = {
 
 - (void) setSource:(NSDictionary *)source
 {
-  NSString *uri = source[@"uri"];
+  /*NSString *uri = source[@"uri"];
   bool backgroundPlay = source[@"backgroundPlay"] == nil ? false : source[@"backgroundPlay"];
   
   PLPlayerOption *option = [PLPlayerOption defaultOption];
@@ -58,12 +58,12 @@ static NSString *status[] = {
   }
   [self setupUI];
   
-  [self startPlayer];
+  [self startPlayer];*/
   
 }
 
 - (void)setupUI {
-  if (_plplayer.status != PLPlayerStatusError) {
+  /*if (_plplayer.status != PLPlayerStatusError) {
     // add player view
     UIView *playerView = _plplayer.playerView;
     [self addSubview:playerView];
@@ -76,12 +76,12 @@ static NSString *status[] = {
     
     NSArray *constraints = [NSArray arrayWithObjects:centerX, centerY,width,height, nil];
     [self addConstraints: constraints];
-  }
+  }*/
   
 }
 
 - (void) setStarted:(BOOL) started{
-  if(started != _started){
+  /*if(started != _started){
     if(started){
       [_plplayer resume];
       _started = started;
@@ -89,62 +89,21 @@ static NSString *status[] = {
       [_plplayer pause];
       _started = started;
     }
-  }
+  }*/
 }
 
 - (void) setMuted:(BOOL) muted {
-  _muted = muted;
-  [_plplayer setMute:muted];
+  /*_muted = muted;
+  [_plplayer setMute:muted];*/
   
 }
 
 - (void)startPlayer {
   [UIApplication sharedApplication].idleTimerDisabled = YES;
-  [_plplayer play];
+  //[_plplayer play];
   _started = true;
 }
 
-#pragma mark - <PLPlayerDelegate>
 
-- (void)player:(nonnull PLPlayer *)player statusDidChange:(PLPlayerStatus)state {
-  switch (state) {
-    case PLPlayerStatusCaching:
-      //[_eventDispatcher sendInputEventWithName:@"onLoading" body:@{@"target": @""}];
-      break;
-    case PLPlayerStatusPlaying:
-      //[_eventDispatcher sendInputEventWithName:@"onPlaying" body:@{@"target": @""}];
-      break;
-    case PLPlayerStatusPaused:
-      //[_eventDispatcher sendInputEventWithName:@"onPaused" body:@{@"target": @""}];
-      break;
-    case PLPlayerStatusStopped:
-      //[_eventDispatcher sendInputEventWithName:@"onShutdown" body:@{@"target": @""}];
-      break;
-    case PLPlayerStatusError:
-      //[_eventDispatcher sendInputEventWithName:@"onError" body:@{@"target": @"" , @"errorCode": [NSNumber numberWithUnsignedInt:0]}];
-      break;
-    default:
-      break;
-  }
-  NSLog(@"%@", status[state]);
-}
-
-- (void)player:(nonnull PLPlayer *)player stoppedWithError:(nullable NSError *)error {
-  [self tryReconnect:error];
-}
-
-- (void)tryReconnect:(nullable NSError *)error {
-  if (self.reconnectCount < 3) {
-    _reconnectCount ++;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误" message:[NSString stringWithFormat:@"错误 %@，播放器将在%.1f秒后进行第 %d 次重连", error.localizedDescription,0.5 * pow(2, self.reconnectCount - 1), _reconnectCount] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * pow(2, self.reconnectCount) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-      [_plplayer play];
-    });
-  }else {
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
-    NSLog(@"%@", error);
-  }
-}
 
 @end

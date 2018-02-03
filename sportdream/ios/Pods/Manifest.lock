@@ -75,8 +75,6 @@ PODS:
     - pili-librtmp (= 1.0.7)
     - PLMediaStreamingKit/Common
     - QNNetDiag (= 0.0.6)
-  - PLPlayerKit (2.4.3):
-    - HappyDNS (~> 0.3.10)
   - QBImagePickerController (3.4.0)
   - Qiniu (7.1.7):
     - AFNetworking (~> 3)
@@ -95,7 +93,6 @@ DEPENDENCIES:
   - MyLayout
   - NerdyUI
   - PLMediaStreamingKit
-  - PLPlayerKit (~> 2.4.0)
   - QBImagePickerController
   - Qiniu
   - RSKImageCropper
@@ -125,13 +122,12 @@ SPEC CHECKSUMS:
   NerdyUI: ae4506046b544a5cdc0873a58c1ece61b29631d0
   pili-librtmp: e8a06a45b0a1a166c48ae6dc718171c0963f32ea
   PLMediaStreamingKit: 9da4338a1cb2159925ac9587e78b1f27b60033f2
-  PLPlayerKit: 6575f900d3a1c3680e3fd8907338683d0eedcd79
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   Qiniu: 56ea8b9d785326e45e3a6fdd45bdbc84f78d0eff
   QNNetDiag: 6f7bbafa34c1b020e51d440f25044fe5ee10145d
   RSKImageCropper: 356e36fc58c57c371b5d8b23d603936d6a73df6c
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
-PODFILE CHECKSUM: 7a035a0b29c1d438c5724b4401b29229a2805d71
+PODFILE CHECKSUM: 5ac89e53359e30bc25ad731783c823817efda3b7
 
 COCOAPODS: 1.2.1
