@@ -75,7 +75,6 @@
 		226D35011FB8088600A9D593 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 226D34E21FB8086F00A9D593 /* libART.a */; };
 		226D35081FB8462C00A9D593 /* libRCTBarcode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 226D35071FB8460500A9D593 /* libRCTBarcode.a */; };
 		226D350B1FB84A8900A9D593 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 226D350A1FB846A800A9D593 /* beep.wav */; };
-		227282F71F6A22BF003BB2FD /* libchatmob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 227282F61F6A22B0003BB2FD /* libchatmob.a */; };
 		2272833A1F6B6595003BB2FD /* EaseChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 227283391F6B6595003BB2FD /* EaseChatManager.m */; };
 		2276C9E41FD797F7001C66B1 /* baidu_speech_grammar.bsg in Resources */ = {isa = PBXBuildFile; fileRef = 2276C9E31FD797F7001C66B1 /* baidu_speech_grammar.bsg */; };
 		2276CA121FDA9725001C66B1 /* VideoChatViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2276CA101FDA9725001C66B1 /* VideoChatViewController.mm */; };
@@ -287,13 +286,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9FCCD7581DAC8DA800025BFD;
 			remoteInfo = RCTBarcode;
-		};
-		227282F51F6A22B0003BB2FD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 227282F11F6A22B0003BB2FD /* chatmob.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 227282C31F6A1BDB003BB2FD;
-			remoteInfo = chatmob;
 		};
 		2284888B1F666286001C237B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -586,7 +578,6 @@
 		226D34DD1FB8086F00A9D593 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		226D35021FB8460500A9D593 /* RCTBarCode.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBarCode.xcodeproj; path = "../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarCode.xcodeproj"; sourceTree = "<group>"; };
 		226D350A1FB846A800A9D593 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
-		227282F11F6A22B0003BB2FD /* chatmob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = chatmob.xcodeproj; path = "../node_modules/sport-native-modules/ios/chatmob/chatmob.xcodeproj"; sourceTree = "<group>"; };
 		227283381F6B6595003BB2FD /* EaseChatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EaseChatManager.h; path = sportdream/NativeModules/EaseChatManager.h; sourceTree = "<group>"; };
 		227283391F6B6595003BB2FD /* EaseChatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EaseChatManager.m; path = sportdream/NativeModules/EaseChatManager.m; sourceTree = "<group>"; };
 		2276C9E31FD797F7001C66B1 /* baidu_speech_grammar.bsg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = baidu_speech_grammar.bsg; sourceTree = "<group>"; };
@@ -895,7 +886,6 @@
 				22AC53701F74961600188DFD /* QuartzCore.framework in Frameworks */,
 				22AC53711F74961600188DFD /* Security.framework in Frameworks */,
 				22AC53721F74961600188DFD /* SystemConfiguration.framework in Frameworks */,
-				227282F71F6A22BF003BB2FD /* libchatmob.a in Frameworks */,
 				228488A31F6662FD001C237B /* libRCTCameraRoll.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -1273,14 +1263,6 @@
 			path = "../node_modules/react-native-smart-barcode/ios/raw";
 			sourceTree = "<group>";
 		};
-		227282F21F6A22B0003BB2FD /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				227282F61F6A22B0003BB2FD /* libchatmob.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		227283371F6B6575003BB2FD /* NativeModules */ = {
 			isa = PBXGroup;
 			children = (
@@ -1646,7 +1628,6 @@
 			children = (
 				226D35021FB8460500A9D593 /* RCTBarCode.xcodeproj */,
 				226D34DD1FB8086F00A9D593 /* ART.xcodeproj */,
-				227282F11F6A22B0003BB2FD /* chatmob.xcodeproj */,
 				228488831F666285001C237B /* RCTCameraRoll.xcodeproj */,
 				224AD52A1F64F4A000B32263 /* CalendarManager.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -1887,10 +1868,6 @@
 					ProjectRef = 224AD52A1F64F4A000B32263 /* CalendarManager.xcodeproj */;
 				},
 				{
-					ProductGroup = 227282F21F6A22B0003BB2FD /* Products */;
-					ProjectRef = 227282F11F6A22B0003BB2FD /* chatmob.xcodeproj */;
-				},
-				{
 					ProductGroup = 22D7F2841F7A1D2E009C90C9 /* Products */;
 					ProjectRef = AE27753B7632412AA09433A3 /* imageCropPicker.xcodeproj */;
 				},
@@ -2033,13 +2010,6 @@
 			fileType = archive.ar;
 			path = libRCTBarcode.a;
 			remoteRef = 226D35061FB8460500A9D593 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		227282F61F6A22B0003BB2FD /* libchatmob.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libchatmob.a;
-			remoteRef = 227282F51F6A22B0003BB2FD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2284888C1F666286001C237B /* libRCTCameraRoll.a */ = {
