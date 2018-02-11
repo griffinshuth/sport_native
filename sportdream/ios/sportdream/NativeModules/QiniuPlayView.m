@@ -4,7 +4,7 @@
 
 @implementation QiniuPlayView{
   RCTEventDispatcher *_eventDispatcher;
-  //PLPlayer *_plplayer;
+  PLPlayer *_plplayer;
   bool _started;
   bool _muted;
 }
@@ -27,7 +27,6 @@ static NSString *status[] = {
     _eventDispatcher = eventDispatcher;
     _started = YES;
     _muted = NO;
-    //[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     self.reconnectCount = 0;
   }
   
@@ -36,7 +35,7 @@ static NSString *status[] = {
 
 - (void) setSource:(NSDictionary *)source
 {
-  /*NSString *uri = source[@"uri"];
+  NSString *uri = source[@"uri"];
   bool backgroundPlay = source[@"backgroundPlay"] == nil ? false : source[@"backgroundPlay"];
   
   PLPlayerOption *option = [PLPlayerOption defaultOption];
@@ -58,12 +57,12 @@ static NSString *status[] = {
   }
   [self setupUI];
   
-  [self startPlayer];*/
+  [self startPlayer];
   
 }
 
 - (void)setupUI {
-  /*if (_plplayer.status != PLPlayerStatusError) {
+  if (_plplayer.status != PLPlayerStatusError) {
     // add player view
     UIView *playerView = _plplayer.playerView;
     [self addSubview:playerView];
@@ -76,12 +75,12 @@ static NSString *status[] = {
     
     NSArray *constraints = [NSArray arrayWithObjects:centerX, centerY,width,height, nil];
     [self addConstraints: constraints];
-  }*/
+  }
   
 }
 
 - (void) setStarted:(BOOL) started{
-  /*if(started != _started){
+  if(started != _started){
     if(started){
       [_plplayer resume];
       _started = started;
@@ -89,18 +88,18 @@ static NSString *status[] = {
       [_plplayer pause];
       _started = started;
     }
-  }*/
+  }
 }
 
 - (void) setMuted:(BOOL) muted {
-  /*_muted = muted;
-  [_plplayer setMute:muted];*/
+  _muted = muted;
+  [_plplayer setMute:muted];
   
 }
 
 - (void)startPlayer {
   [UIApplication sharedApplication].idleTimerDisabled = YES;
-  //[_plplayer play];
+  [_plplayer play];
   _started = true;
 }
 

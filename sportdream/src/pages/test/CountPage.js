@@ -133,6 +133,9 @@ export default class Count extends Component{
     agoraRemoteCamera(){
         QiniuModule.agoraRemoteCamera();
     }
+    liveCommentorsActivity(){
+        QiniuModule.liveCommentorsActivity();
+    }
 
     render(){
         var windowHeight = Dimensions.get('window').height;
@@ -210,7 +213,10 @@ export default class Count extends Component{
                                     <WhiteSpace/>
                                     <Button onClick={this.H264Record}>Android H264 Record</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.agoraRemoteCamera}>比赛远程摄像头</Button>
+                                    <Button onClick={this.agoraRemoteCamera}>(Android)比赛远程摄像头</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.liveCommentorsActivity}>(Android)现场解说</Button>
+                                    <WhiteSpace/>
                                     <WhiteSpace/>
                                     <WhiteSpace/>
                                 </ScrollView>

@@ -28,6 +28,7 @@ import com.sportdream.NativeModule.WiFiAPModuleReactPackage;
 import com.sportdream.NativeModule.WiFiDirectModuleReactPackage;
 import com.rctunderdark.NetworkManagerPackage;
 import com.reactnativecomponent.barcode.RCTCapturePackage;
+import com.sportdream.NativeUI.AgoraChatReactPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +56,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
               new WiFiDirectModuleReactPackage(),
               new NetworkManagerPackage(),
               new RCTCapturePackage(),
-              new WiFiAPModuleReactPackage()
+              new WiFiAPModuleReactPackage(),
+              new AgoraChatReactPackage()
       );
     }
   };

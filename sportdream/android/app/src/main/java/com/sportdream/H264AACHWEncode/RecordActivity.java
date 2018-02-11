@@ -1,17 +1,14 @@
 package com.sportdream.H264AACHWEncode;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Looper;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,49 +16,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.koushikdutta.async.AsyncDatagramSocket;
-import com.koushikdutta.async.*;
-import com.koushikdutta.async.AsyncServerSocket;
-import com.koushikdutta.async.AsyncSocket;
-import com.koushikdutta.async.ByteBufferList;
-import com.koushikdutta.async.DataEmitter;
-import com.koushikdutta.async.callback.CompletedCallback;
-import com.koushikdutta.async.callback.ConnectCallback;
-import com.koushikdutta.async.callback.DataCallback;
-import com.koushikdutta.async.callback.ListenCallback;
 import com.sportdream.R;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.List;
 import android.util.Log;
-import com.sportdream.nativec.udp;
-import com.sportdream.network.BufferedPacketInfo;
-import com.sportdream.network.LocalWifiNetworkThread;
-import com.sportdream.network.LocalWifiSocketHandler;
-import com.sportdream.network.SocketBuffer;
 import com.sportdream.network.h264CacheQueue;
-
-/**
- * Created by lili on 2017/10/8.
- */
 
 @SuppressWarnings("deprecation")
 public class RecordActivity extends Activity implements SurfaceHolder.Callback {

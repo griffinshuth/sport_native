@@ -79,6 +79,7 @@
         <activity android:name=".ChatActivity"></activity>
         <activity android:name="com.sportdream.H264AACHWEncode.RecordActivity"></activity>
         <activity android:name=".Activity.AgoraRemoteCamera"></activity>
+        <activity android:name="com.sportdream.H264AACHWEncode.AudioRecordActivity"></activity>
 
         <!-- 设置环信应用的AppKey -->
         <meta-data

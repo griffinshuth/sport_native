@@ -47,6 +47,8 @@ import TeamShootPoint from './pages/match/TeamShootPoint'
 import ShootTrain from './pages/test/ShootTrain'
 import QiniuLiveTest from './pages/test/QiniuLiveTest'
 import QiniuPlayTest from './pages/test/QiniuPlayTest'
+import AgoraChatTest from './pages/test/AgoraChatTest'
+import AgoraChat_AndroidTest from './pages/test/AgoraChat_AndroidTest'
 
 const AppNavigator = StackNavigator(
     {
@@ -75,6 +77,8 @@ const AppNavigator = StackNavigator(
         ShootTrain:{screen:ShootTrain},
         QiniuLiveTest:{screen:QiniuLiveTest},
         QiniuPlayTest:{screen:QiniuPlayTest},
+        AgoraChatTest:{screen:AgoraChatTest},
+        AgoraChat_AndroidTest:{screen:AgoraChat_AndroidTest},
     },
     {
         headerMode: 'none',

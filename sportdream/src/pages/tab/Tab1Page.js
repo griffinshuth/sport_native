@@ -108,6 +108,12 @@ class Main extends Component{
     gotoQiniuPlay = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'QiniuPlayTest'}))
     }
+    gotoAgoraChatTest = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'AgoraChatTest'}))
+    }
+    gotoAgoraChat_AndroidTest = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'AgoraChat_AndroidTest'}))
+    }
     gotoCreateAp = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'CreateWiFiAP'}))
     }
@@ -251,15 +257,28 @@ class Main extends Component{
                                     </View>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoCount}>计数页面</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoBTDiscover}>蓝牙搜索</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoBle}>BLE</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoCrossPlatformP2P}>跨平台P2P</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoReactArtTest}>ReactArt测试</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoScanBar}>扫一扫</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoQrcode}>二维码</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoSocketIO}>SocketIO</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoQiniuLive}>七牛直播</Button>
+                                    <WhiteSpace/>
                                     <Button onClick={this.gotoQiniuPlay}>七牛观看</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoAgoraChatTest}>Agora视频聊天室</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoAgoraChat_AndroidTest}>Agora视频聊天室(Android)</Button>
                                 </WingBlank>
 
                                 <WhiteSpace size="lg"/>

@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <PLPlayerKit/PLPlayerKit.h>
 
 @class RCTEventDispatcher;
 
-@interface QiniuPlayView : UIView
+@interface QiniuPlayView : UIView<PLPlayerDelegate>
 
 @property (nonatomic, assign) int reconnectCount;
 

@@ -161,4 +161,17 @@ public class QiniuModule extends ReactContextBaseJavaModule {
                     "无法打开activity页面: "+e.getMessage());
         }
     }
+
+    @ReactMethod
+    public void liveCommentorsActivity(){
+        Activity currentActivity = getCurrentActivity();
+        try{
+            Class recordActivity = Class.forName("com.sportdream.H264AACHWEncode.AudioRecordActivity");
+            Intent intent = new Intent(currentActivity,recordActivity);
+            currentActivity.startActivity(intent);
+        }catch (Exception e){
+            throw new JSApplicationIllegalArgumentException(
+                    "无法打开activity页面: "+e.getMessage());
+        }
+    }
 }

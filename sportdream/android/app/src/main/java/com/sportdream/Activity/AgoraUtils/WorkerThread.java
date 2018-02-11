@@ -190,6 +190,7 @@ public class WorkerThread extends Thread {
             }
             mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
             mRtcEngine.enableVideo();
+            mRtcEngine.muteLocalAudioStream(true);
             mRtcEngine.setLogFile(Environment.getExternalStorageDirectory()
                     + File.separator + mContext.getPackageName() + "/log/agora-rtc.log");
             mRtcEngine.enableDualStreamMode(true);

@@ -80,7 +80,7 @@ public class AgoraRemoteCamera extends Activity implements AGEventHandler {
 
     public void initUIandEvent(){
         event().addEventHandler(this);
-        String roomName = "mangguo";
+        String roomName = "test";
         doConfigEngine(Constants.CLIENT_ROLE_BROADCASTER);
         mGridVideoViewContainer = (GridVideoViewContainer)findViewById(R.id.grid_video_view_container);
         mGridVideoViewContainer.setItemEventHandler(new VideoViewEventListener() {
