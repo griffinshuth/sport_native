@@ -1,5 +1,5 @@
 var release = "http://sportlive.2310live.com"
-var debug = "http://192.168.0.105"
+var debug = "http://192.168.0.104"
 var server = debug;
 
 export var serverurl = debug;

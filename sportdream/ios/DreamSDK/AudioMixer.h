@@ -10,16 +10,17 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <AudioUnit/AudioUnit.h>
 #import <AVFoundation/AVAudioFormat.h>
+#import "AACDecode.h"
 
-@interface AudioMixer : NSObject
+@interface AudioMixer : NSObject<AACDecodeDelegate>
 - (void)initializeAUGraph;
 
 - (void)enableInput:(UInt32)inputNum isOn:(AudioUnitParameterValue)isONValue;
 - (void)setInputVolume:(UInt32)inputNum value:(AudioUnitParameterValue)value;
 - (void)setOutputVolume:(AudioUnitParameterValue)value;
 
-- (void)startAUGraph;
-- (void)stopAUGraph;
+- (void)startMixer;
+- (void)stopMixer;
 
 -(void)commentorConnected:(NSString*)ip;
 -(void)commentorDisconnected:(NSString*)ip;

@@ -30,8 +30,10 @@ import {get, post,serverurl} from '../../fetch'
 import io from 'socket.io-client'
 import {clientEvent,serverEvent,permissionType,admin_op} from '../../utils/socketEvent'
 import emitter from '../../utils/SingleEventEmitter'
-var BaiduASRModule = NativeModules.BaiduASRModule;
-const BaiduASRModuleEmitter = new NativeEventEmitter(BaiduASRModule);
+
+//component
+import MatchTimer from '../../Components/Match_Timer'
+import CurrentMatchTeam from '../../Components/CurrentMatchTeam'
 
 const styles = StyleSheet.create({
     playerdata:{
@@ -44,6 +46,36 @@ const styles = StyleSheet.create({
         borderColor:'#eee',
         textAlign:'center',
         borderRadius:8,
+    },
+    container:{
+        flex:1
+    },
+    teamlogo:{
+        width:32,height:32
+    },
+    teamname:{
+        marginLeft:10
+    },
+    teamstate:{
+        marginLeft:10,color:'red',fontWeight:"bold",fontSize:20
+    },
+    card_background:{
+        backgroundColor:'white'
+    },
+    data_button:{
+        marginLeft:5,height:30
+    },
+    player_flex_item:{
+        alignItems:"center"
+    },
+    player_image:{
+        width:44,height:54,borderRadius:10,borderColor:'blue',borderWidth:1
+    },
+    comment:{
+        backgroundColor:'white',borderWidth:1,borderColor:'#ccc',borderRadius:5
+    },
+    time_font:{
+        fontSize:20,fontWeight:"bold"
     }
 })
 
@@ -187,7 +219,7 @@ export default class App extends React.Component{
                         })
                         console.log("insquad:",admin_result)
                         if(!admin_result.error)
-                            gameinfo.team1Player = admin_result.team1Player
+                            gameinfo.team1Player = admin_result.team1Player //该字段存储的是队伍1的大名单，类型是数组，里面的元素是唯一ID
                         else{
                             Toast.info(admin_result.errorinfo)
                             return;
@@ -203,8 +235,8 @@ export default class App extends React.Component{
                             meta:{players:startLineUp,teamindex:0}
                         })
                         console.log("insquad:",admin_result)
-                        gameinfo.team1Startup = admin_result.team1Startup;
-                        gameinfo.roomInfo.team1currentplayers = admin_result.team1currentplayers;
+                        gameinfo.team1Startup = admin_result.team1Startup; //队伍1首发数组，元素类型是唯一ID
+                        gameinfo.roomInfo.team1currentplayers = admin_result.team1currentplayers; //队伍1当前在场上的球员数组，元素类型是对象，结构如下:{uid:0,playingtime:0}
                     }
                     if(gameinfo.team2Player.length == 0){
                         var admin_result = await post("/adminGame",{
@@ -214,7 +246,7 @@ export default class App extends React.Component{
                         })
                         console.log("insquad:",admin_result)
                         if(!admin_result.error)
-                            gameinfo.team2Player = admin_result.team2Player
+                            gameinfo.team2Player = admin_result.team2Player  //该字段存储的是队伍2的大名单，类型是数组，里面的元素是唯一ID
                         else{
                             Toast.info(admin_result.errorinfo)
                             return;
@@ -230,8 +262,8 @@ export default class App extends React.Component{
                             meta:{players:startLineUp,teamindex:1}
                         })
                         console.log("insquad:",admin_result)
-                        gameinfo.team2Startup = admin_result.team2Startup;
-                        gameinfo.roomInfo.team2currentplayers = admin_result.team2currentplayers;
+                        gameinfo.team2Startup = admin_result.team2Startup; //队伍2首发数组，元素类型是唯一ID
+                        gameinfo.roomInfo.team2currentplayers = admin_result.team2currentplayers; //队伍2当前在场上的球员数组，元素类型是对象，结构如下:{uid:0,playingtime:0}
                     }
 
                     //获得两队队员的详细信息，并缓存起来
@@ -248,6 +280,8 @@ export default class App extends React.Component{
                         var uid = this.allTeam2Players.players[i].id;
                         this.ID2DataMap[uid] = this.allTeam2Players.players[i];
                     }
+
+                    //ID2DataMap存储唯一ID和队员详细信息的对应关系，详细信息的结构如下:{id:0,image:"",nickname:""}
 
                     this.setState({
                         gameInfo:gameinfo,
@@ -638,22 +672,37 @@ export default class App extends React.Component{
         }
     }
 
-    onVoiceRecognize = (result)=>{
-        //Toast.info(result.data,100);
-        Toast.info(JSON.parse(result.data).results_recognition[0],1);
-        BaiduASRModule.speak("收到")
-        var command = JSON.parse(result.data).results_recognition[0];
-        if(command == "开始"){
-            this.countDown();
-        }else if(command == "停止"){
-            this.countDown();
+    gotoTeamsubstitution = (index)=>{
+        if(index == 0){
+            if(this.state.members1OffCourt.length == 0){
+                Toast.info("无人可换",1)
+                return;
+            }
+            this.props.navigation.navigate("substitution",{
+                team:0,
+                teamMembers:this.state.team1Members,
+                membersOffCourt:this.state.members1OffCourt
+            })
+        }else{
+            if(this.state.members2OffCourt.length == 0){
+                Toast.info("无人可换",1)
+                return;
+            }
+            this.props.navigation.navigate("substitution",{
+                team:1,
+                teamMembers:this.state.team2Members,
+                membersOffCourt:this.state.members2OffCourt
+            })
         }
+
     }
 
-    getBrightness = async()=>{
-        var b = await BaiduASRModule.getBrightness();
-        //Toast.info(b.brightness+"");
-        this.setState({brightness:b.brightness})
+    gotoShootPoint = (item)=>{
+        var game_uid = this.props.navigation.state.params.game_uid;
+        var player = item;
+        var shoot_array = this.state.gameInfo.roomInfo[item.id]?this.state.gameInfo.roomInfo[item.id]['shoot']?this.state.gameInfo.roomInfo[item.id]['shoot']:[]:[];
+        var freethrow_array = this.state.gameInfo.roomInfo[item.id]?this.state.gameInfo.roomInfo[item.id]['freethrow']?this.state.gameInfo.roomInfo[item.id]['freethrow']:[]:[];
+        this.props.navigation.navigate("ShootPoint",{game_uid,player,shoot_array,freethrow_array})
     }
 
     componentDidMount(){
@@ -661,12 +710,6 @@ export default class App extends React.Component{
         emitter.on("onAddShoot",this.addShoot)
         emitter.on("playerChanged",this.playerChanged)
         emitter.on("addFreethrow",this.addFreethrow);
-        //BaiduASRModule.ASRInit();
-        this.subscription = BaiduASRModuleEmitter.addListener(
-            'onVoiceRecognize',
-            this.onVoiceRecognize
-        );
-        this.getBrightness();
     }
 
     componentWillUnmount(){
@@ -676,8 +719,6 @@ export default class App extends React.Component{
         emitter.removeListener("onAddShoot",this.addShoot)
         emitter.removeListener("playerChanged",this.playerChanged)
         emitter.removeListener("addFreethrow",this.addFreethrow)
-        BaiduASRModule.endListen();
-        this.subscription.remove();
     }
 
     dataStatistics = (id,nickname,team) => {
@@ -904,124 +945,62 @@ export default class App extends React.Component{
     render(){
         var team1 = this.props.navigation.state.params.team1;
         var team2 = this.props.navigation.state.params.team2;
+        //设置比赛时间组件需要的属性
+        var MatchTimer_Props = null;
+        var CurrentMatchTeam1_Props = null;
+        var CurrentMatchTeam2_Props = null;
+        if(!this.state.loading){
+            MatchTimer_Props  = {
+                isTimerStart:this.state.isTimerStart,
+                currentsection:this.state.gameInfo.roomInfo.currentsection,
+                currentsectiontime:this.state.gameInfo.roomInfo.currentsectiontime,
+                currentattacktime:this.state.gameInfo.roomInfo.currentattacktime,
+                countDown:this.countDown,
+                ballControlChange:this.ballControlChange,
+                reset24:this.reset24,
+                gotoTeamShootPoint:this.gotoTeamShootPoint
+            }
+
+            CurrentMatchTeam1_Props = {
+                teamindex:0,
+                teaminfo:team1,
+                teamcurrentscore:this.state.gameInfo.roomInfo.team1currentscore,
+                teamMembers:this.state.team1Members,
+                roomInfo:this.state.gameInfo.roomInfo,
+                teamtimeout:this.state.gameInfo.roomInfo.team1timeout,
+                addScore:this.addScore,
+                dataStatistics:this.dataStatistics,
+                gotoShootPoint:this.gotoShootPoint,
+                requestTimeout:this.requestTimeout,
+                gotoTeamsubstitution:this.gotoTeamsubstitution,
+                isBonus:this.isBonus
+            }
+
+            CurrentMatchTeam2_Props = {
+                teamindex:1,
+                teaminfo:team2,
+                teamcurrentscore:this.state.gameInfo.roomInfo.team2currentscore,
+                teamMembers:this.state.team2Members,
+                roomInfo:this.state.gameInfo.roomInfo,
+                teamtimeout:this.state.gameInfo.roomInfo.team2timeout,
+                addScore:this.addScore,
+                dataStatistics:this.dataStatistics,
+                gotoShootPoint:this.gotoShootPoint,
+                requestTimeout:this.requestTimeout,
+                gotoTeamsubstitution:this.gotoTeamsubstitution,
+                isBonus:this.isBonus
+            }
+        }
+
         return (
             <View style={{flex:1}}>
                 <ToolBar title="技术统计" navigation={this.props.navigation} />
-                {this.state.loading?<ActivityIndicator/>:<ScrollView style={{flex:1}}>
-                    <Modal
-                        popup
-                        visible={this.state.modelvisible}
-                        maskClosable={true}
-                        animationType="slide-up"
-                        onClose={this.onModalClose}
-                    >
-                        <View style={{backgroundColor:'white',borderRadius:5,borderColor:'#ccc',borderWidth:1,margin:5}}>
-                    <WhiteSpace/>
-                    <Flex>
-                        {
-                            this.state.team1Members.map((item,index)=>{
-                                if(index<5)
-                                    return <Flex.Item style={{alignItems:"center"}} key={index}>
-                                        <TouchableHighlight onPress={
-                                            ()=>{
-                                                this.props.navigation.navigate("ShootPoint")
-                                                this.onModalClose()
-                                            }
-                                        }>
-                                            <Image style={{width:44,height:54}} source={{uri:item.image}}/>
-                                        </TouchableHighlight>
-                                            <Text>{item.nickname}</Text>
-                                    </Flex.Item>
-                            })
-                        }
-                    </Flex>
-                    <WhiteSpace/>
-                    <Button onClick={this.onModalClose}>完成</Button>
-                    <WhiteSpace/>
-                    </View>
-                    </Modal>
+                {this.state.loading?<ActivityIndicator/>:<ScrollView style={styles.container}>
                     <WingBlank>
-                    <WhiteSpace/>
-                    <Card>
-                        <Card.Header
-                            title={
-                                <Flex>
-                                    <Image source={{uri:team1.logo}} style={{width:32,height:32}} />
-                                    <Text style={{marginLeft:10}}>{team1.name}</Text>
-                                    <Text style={{marginLeft:10,color:'red',fontWeight:"bold",fontSize:20}}>{this.state.gameInfo.roomInfo.ballowner == 1?"攻":""}</Text>
-                                </Flex>
-                            }
-                            extra={"得分:"+this.state.gameInfo.roomInfo.team1currentscore}
-                        />
-                        <Card.Body>
-                            <View style={{backgroundColor:'white'}}>
-                                <WhiteSpace/>
-                                <Flex justify="center">
-                                    <Button style={{height:30}} type="ghost" onClick={()=>{this.addScore(0,1)}}>1分</Button>
-                                    <Button style={{marginLeft:5,height:30}} type="ghost" onClick={()=>{this.addScore(0,2)}}>2分</Button>
-                                    <Button style={{marginLeft:5,height:30}} type="ghost" onClick={()=>{this.addScore(0,3)}}>3分</Button>
-                                </Flex>
-                                <WhiteSpace/>
-                                <Flex>
-                                    {
-                                        this.state.team1Members.map((item,index)=>{
-                                                return <Flex.Item style={{alignItems:"center"}} key={index}>
-                                                    <Flex>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"point")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"rebound")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"assists")}</Text>
-                                                    </Flex>
-                                                    <WhiteSpace/>
-                                                    <Badge text={this.obj2number(this.state.gameInfo.roomInfo[item.id],"foul")}>
-                                                    <TouchableHighlight onPress={
-                                                        ()=>{
-                                                           this.dataStatistics(item.id,item.nickname,0)
-                                                        }
-                                                    }>
-                                                    <Image style={{width:44,height:54,borderRadius:10,borderColor:'blue',borderWidth:1}} source={{uri:item.image}}/>
-                                                    </TouchableHighlight>
-                                                    </Badge>
-                                                    <Flex>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"block")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"steals")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"fault")}</Text>
-                                                    </Flex>
-                                                    <WhiteSpace/>
-                                                    <Button type="ghost"size="small" onClick={
-                                                        ()=>{
-                                                            var game_uid = this.props.navigation.state.params.game_uid;
-                                                            var player = item;
-                                                            var shoot_array = this.state.gameInfo.roomInfo[item.id]?this.state.gameInfo.roomInfo[item.id]['shoot']?this.state.gameInfo.roomInfo[item.id]['shoot']:[]:[];
-                                                            var freethrow_array = this.state.gameInfo.roomInfo[item.id]?this.state.gameInfo.roomInfo[item.id]['freethrow']?this.state.gameInfo.roomInfo[item.id]['freethrow']:[]:[];
-                                                            this.props.navigation.navigate("ShootPoint",{game_uid,player,shoot_array,freethrow_array})
-                                                        }
-                                                    }>投篮点</Button>
-                                                </Flex.Item>
-                                        })
-                                    }
-                                </Flex>
-                                <WhiteSpace/>
-                                <Flex justify="center">
-                                    <Button style={{marginLeft:5,height:30}} type="ghost" onClick={()=>{this.requestTimeout(0)}}>暂停</Button>
-                                    <Button style={{marginLeft:5,height:30}} type="ghost" onClick={
-                                        ()=>{
-                                            if(this.state.members1OffCourt.length == 0){
-                                                return Toast.info("无人可换",1)
-                                            }
-                                            this.props.navigation.navigate("substitution",{
-                                                team:0,
-                                                teamMembers:this.state.team1Members,
-                                                membersOffCourt:this.state.members1OffCourt
-                                            })
-                                        }
-                                    }>换人</Button>
-                                </Flex>
-                            </View>
-                        </Card.Body>
-                        <Card.Footer content={"可用暂停："+this.state.gameInfo.roomInfo.team1timeout} extra={this.isBonus(0)?"BONUS":""} />
-                    </Card>
-                    <WhiteSpace size="xs"/>
-                        <View style={{backgroundColor:'white',borderWidth:1,borderColor:'#ccc',borderRadius:5}}>
+                        <WhiteSpace/>
+                        <CurrentMatchTeam {...CurrentMatchTeam1_Props} />
+                        <WhiteSpace size="xs"/>
+                        <View style={styles.comment}>
                             <WhiteSpace/>
                             <WingBlank>
                                 <Text>注：得分，篮板，助攻，盖帽，抢断，失误</Text>
@@ -1029,128 +1008,11 @@ export default class App extends React.Component{
                             <WhiteSpace/>
                         </View>
                         <WhiteSpace size="xs"/>
-                    <View style={{backgroundColor:'white',borderWidth:1,borderColor:'#ccc',borderRadius:5}}>
+                        <MatchTimer {...MatchTimer_Props} />
+                        <WhiteSpace size="xs"/>
+                        <CurrentMatchTeam {...CurrentMatchTeam2_Props} />
                         <WhiteSpace/>
-                        <Flex>
-                            <Flex.Item><WingBlank><Button onClick={this.countDown} size="small" type="ghost">{this.state.isTimerStart?"停止":"开始"}</Button></WingBlank></Flex.Item>
-                            <Flex.Item><WingBlank><Button onClick={this.ballControlChange} size="small" type="ghost">球权转换</Button></WingBlank></Flex.Item>
-                        </Flex>
-                        <WhiteSpace/>
-                        <Flex>
-                            <Flex.Item style={{alignItems:'center'}}><Text style={{fontSize:20,fontWeight:"bold"}}>第{this.state.gameInfo.roomInfo.currentsection}节</Text></Flex.Item>
-                            <Flex.Item style={{alignItems:'center'}}><Text style={{fontSize:20,fontWeight:"bold"}}>{this.second2time(this.state.gameInfo.roomInfo.currentsectiontime)}</Text></Flex.Item>
-                            <Flex.Item style={{alignItems:'center'}}><Text style={{fontSize:20,fontWeight:"bold"}}>{this.state.gameInfo.roomInfo.currentattacktime}</Text></Flex.Item>
-                        </Flex>
-                        <WhiteSpace/>
-                            <Flex>
-                                <Flex.Item><WingBlank><Button onClick={this.reset24} size="small" type="ghost">24秒重置</Button></WingBlank></Flex.Item>
-                                <Flex.Item><WingBlank><Button onClick={this.gotoTeamShootPoint} size="small" type="ghost">投篮统计</Button></WingBlank></Flex.Item>
-                            </Flex>
-                        <Button onClick={
-                            ()=>{
-                                BaiduASRModule.startListen();
-                            }
-                        }>语音识别</Button>
-                        <Button onClick={
-                            ()=>{
-                                BaiduASRModule.brightness(0);
-                            }
-                        }>变暗</Button>
-                        <Button onClick={
-                            ()=>{
-                                BaiduASRModule.brightness(0.5);
-                            }
-                        }>变亮</Button>
-                        <Slider
-                            style={{ marginLeft: 30, marginRight: 30 }}
-                            defaultValue={Math.floor(this.state.brightness*100)}
-                            min={0}
-                            max={100}
-                            onChange={(value)=>{
-                                var t = value/100;
-                                BaiduASRModule.brightness(t);
-                            }}
-                            onAfterChange={()=>{}}
-                        />
-                        <WhiteSpace/>
-                    </View>
-                    <WhiteSpace size="xs"/>
-                    <Card>
-                        <Card.Header
-                            title={
-                                <Flex>
-                                    <Image source={{uri:team2.logo}} style={{width:32,height:32}} />
-                                    <Text style={{marginLeft:10}}>{team2.name}</Text>
-                                    <Text style={{marginLeft:10,color:'red',fontWeight:"bold",fontSize:20}}>{this.state.gameInfo.roomInfo.ballowner == 2?"攻":""}</Text>
-                                </Flex>
-                            }
-                            extra={"得分:"+this.state.gameInfo.roomInfo.team2currentscore}
-                        />
-                        <Card.Body>
-                            <View style={{backgroundColor:'white'}}>
-                                <WhiteSpace/>
-                                <Flex justify="center">
-                                    <Button style={{height:30}} type="ghost" onClick={()=>{this.addScore(1,1)}}>1分</Button>
-                                    <Button style={{marginLeft:5,height:30}}  type="ghost" onClick={()=>{this.addScore(1,2)}}>2分</Button>
-                                    <Button style={{marginLeft:5,height:30}}  type="ghost" onClick={()=>{this.addScore(1,3)}}>3分</Button>
-                                </Flex>
-                                <WhiteSpace/>
-                                <Flex>
-                                    {
-                                        this.state.team2Members.map((item,index)=>{
-                                                return <Flex.Item style={{alignItems:"center"}} key={index}>
-                                                    <Flex>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"point")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"rebound")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"assists")}</Text>
-                                                    </Flex>
-                                                    <WhiteSpace/>
-                                                    <Badge text={this.obj2number(this.state.gameInfo.roomInfo[item.id],"foul")}>
-                                                    <TouchableHighlight onPress={
-                                                        ()=>{
-                                                            this.dataStatistics(item.id,item.nickname,1)
-                                                        }
-                                                    }>
-                                                    <Image style={{width:44,height:54,borderRadius:10,borderColor:'blue',borderWidth:1}} source={{uri:item.image}}/>
-                                                    </TouchableHighlight>
-                                                    </Badge>
-                                                    <Flex>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"block")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"steals")}</Text>
-                                                        <Text style={styles.playerdata}>{this.obj2number(this.state.gameInfo.roomInfo[item.id],"fault")}</Text>
-                                                    </Flex>
-                                                    <WhiteSpace/>
-                                                    <Button type="ghost"size="small" onClick={
-                                                        ()=>{
-                                                            this.props.navigation.navigate("ShootPoint")
-                                                        }
-                                                    }>投篮点</Button>
-                                                </Flex.Item>
-                                        })
-                                    }
-                                </Flex>
-                                <WhiteSpace/>
-                                <Flex justify="center">
-                                    <Button style={{marginLeft:5,height:30}}  type="ghost" onClick={()=>{this.requestTimeout(1)}}>暂停</Button>
-                                    <Button style={{marginLeft:5,height:30}}  type="ghost" onClick={
-                                        ()=>{
-                                            if(this.state.members2OffCourt.length == 0){
-                                                return Toast.info("无人可换",1)
-                                            }
-                                            this.props.navigation.navigate("substitution",{
-                                                team:1,
-                                                teamMembers:this.state.team2Members,
-                                                membersOffCourt:this.state.members2OffCourt
-                                            })
-                                        }
-                                    }>换人</Button>
-                                </Flex>
-                            </View>
-                        </Card.Body>
-                        <Card.Footer content={"可用暂停："+this.state.gameInfo.roomInfo.team2timeout} extra={this.isBonus(1)?"BONUS":""} />
-                    </Card>
-                        <WhiteSpace/>
-                </WingBlank>
+                    </WingBlank>
                 </ScrollView>}
             </View>
         )

@@ -115,6 +115,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- 百度语音识别和合成 -->
+        <meta-data android:name="com.baidu.speech.APP_ID"
+            android:value="10863068" />
+        <meta-data
+            android:name="com.baidu.speech.API_KEY"
+            android:value="g4DHPjiqRdqmzoZZsF2PxHct" />
+        <meta-data
+            android:name="com.baidu.speech.SECRET_KEY"
+            android:value="3xaV0kkxzv0WqQMKaweuQau7QEKDpGol" />
+        <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" />
     </application>
 
 </manifest>

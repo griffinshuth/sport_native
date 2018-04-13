@@ -1,4 +1,5 @@
 import React from 'react'
+import {connect} from "dva"
 import {
     View,
     Text,
@@ -16,6 +17,7 @@ import {
 import ToolBar from '../../Components/ToolBar'
 import emitter from '../../utils/SingleEventEmitter'
 
+@connect(({CurrentAdminMatchModel})=>({CurrentAdminMatchModel}))
 export default class App extends React.Component{
     constructor(props){
         super(props);
@@ -25,9 +27,10 @@ export default class App extends React.Component{
         }
     }
     render(){
-        var team = this.props.navigation.state.params.team;
-        var teamMembers = this.props.navigation.state.params.teamMembers;
-        var membersOffCourt = this.props.navigation.state.params.membersOffCourt;
+        var teamIndex = this.props.navigation.state.params.teamIndex;
+        const {team1Members,team2Members,members1OffCourt,members2OffCourt} = this.props.CurrentAdminMatchModel;
+        var teamMembers = teamIndex==0?team1Members:team2Members;
+        var membersOffCourt = teamIndex==0?members1OffCourt:members2OffCourt;
         return (
             <View>
                 <ToolBar title="换人" navigation={this.props.navigation} />
@@ -92,24 +95,12 @@ export default class App extends React.Component{
                                 if(this.state.offIndex>=0 && this.state.onIndex >=0){
                                     var off_uid = teamMembers[this.state.offIndex].id;
                                     var on_uid = membersOffCourt[this.state.onIndex].id;
-                                    emitter.emit("playerChanged",{team,off_uid,on_uid})
+                                    this.props.dispatch({type:"CurrentAdminMatchModel/playerChanged",payload:{teamIndex,offIndex:this.state.offIndex,onIndex:this.state.onIndex}})
                                 }else{
                                     Toast.info("请选择球员",1)
                                 }
                             }
                         }>换人</Button>
-                        <WhiteSpace/>
-                        <TouchableHighlight onPress={()=>{
-                            if(this.state.offIndex>=0 && this.state.onIndex >=0){
-                                var off_uid = teamMembers[this.state.offIndex].id;
-                                var on_uid = membersOffCourt[this.state.onIndex].id;
-                                emitter.emit("playerChanged",{team,off_uid,on_uid})
-                            }else{
-                                Toast.info("请选择球员",1)
-                            }
-                        }}>
-                            <Text>换人</Text>
-                        </TouchableHighlight>
                     </WingBlank>
                 </View>
             </View>

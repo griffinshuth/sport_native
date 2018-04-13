@@ -25,7 +25,7 @@
     self.videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
     self.videoCanvas.uid = 0;
     self.videoCanvas.view = self;
-    self.videoCanvas.renderMode = AgoraRtc_Render_Adaptive;
+    self.videoCanvas.renderMode = AgoraRtc_Render_Fit;
   }
   return self;
 }

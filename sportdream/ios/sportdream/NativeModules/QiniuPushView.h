@@ -12,7 +12,7 @@
 #import "Reachability.h"
 #import <React/RCTEventDispatcher.h>
 
-@interface QiniuPushView : UIView <PLCameraStreamingSessionDelegate,PLStreamingSendingBufferDelegate>
+@interface QiniuPushView : UIView <PLMediaStreamingSessionDelegate,PLStreamingSendingBufferDelegate>
 @property (nonatomic, strong) PLMediaStreamingSession  *session;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) Reachability *internetReachability;

@@ -11,13 +11,17 @@ class BarcodeTest extends React.Component{
         this.state = {
             viewAppear:false
         }
+        this.isFirst = true;
     }
 
     _onBarCodeRead = (e) => {
         console.log(`e.nativeEvent.data.type = ${e.nativeEvent.data.type}, e.nativeEvent.data.code = ${e.nativeEvent.data.code}`)
         this._stopScan();
-        emitter.emit("scanQRCode",e.nativeEvent.data.code);
-        this.props.navigation.goBack();
+        if(this.isFirst){
+            this.isFirst = false;
+            emitter.emit("scanQRCode",e.nativeEvent.data.code);
+            this.props.navigation.goBack();
+        }
         /*Alert.alert(e.nativeEvent.data.type, e.nativeEvent.data.code, [
             {text: 'OK', onPress: () => this._startScan()},
         ])*/

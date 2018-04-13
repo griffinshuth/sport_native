@@ -11,9 +11,11 @@
 #import "AGVideoBuffer.h"
 #import "AGAudioBuffer.h"
 #import "StreamingClient.h"
+#import "FFmpegPushClient.h"
 
 @interface LivePusher ()
-@property (strong,nonatomic) StreamingClient* client;
+//@property (strong,nonatomic) StreamingClient* client;
+@property (strong,nonatomic) FFmpegPushClient* client;
 @property (assign,nonatomic) BOOL isPushing;
 
 @property (strong,nonatomic) AGVideoBuffer* localVideoBuffer;
@@ -33,19 +35,30 @@
 @property (assign,nonatomic) int screen_height; //四分屏的屏幕高度
 @end
 
+
 @implementation LivePusher
+{
+  uint8* argb_buffer;
+}
 -(id)init
 {
   self = [super init];
   if(self)
   {
-    self.matchtype = 1; //默认是比赛类型
+    self.matchtype = 2; //默认是比赛类型
     self.uid = 0;       //默认显示现场比赛画面
     self.maxscreen = 4; //每个子屏幕是640*360
     self.screen_width = 1280;
     self.screen_height = 720;
+    argb_buffer = (uint8*)malloc(self.screen_width*self.screen_height*4);
+    memset(argb_buffer, 0, self.screen_width*self.screen_height*4);
   }
   return self;
+}
+
+-(void)dealloc
+{
+  free(argb_buffer);
 }
 
 + (LivePusher *)sharedPusher
@@ -69,10 +82,10 @@
   return queue;
 }
 
-- (StreamingClient *)client
+- (FFmpegPushClient *)client
 {
   if (!_client) {
-    _client = [[StreamingClient alloc] init];
+    _client = [[FFmpegPushClient alloc] init];
   }
   return _client;
 }
@@ -124,7 +137,7 @@
   dispatch_source_t timer2 = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, [LivePusher sharedQueue]);
   dispatch_source_set_timer(timer2, DISPATCH_TIME_NOW, PCMDataSendTimeInterval * NSEC_PER_SEC, 0 * NSEC_PER_SEC);
   dispatch_source_set_event_handler(timer2, ^{
-    [weakSelf mergeAudioToPush];
+    //[weakSelf mergeAudioToPush];
   });
   dispatch_resume(timer2);
   self.audioPublishTimer = timer2;
@@ -141,6 +154,10 @@
   
   [self.client stopStreaming];
   self.isPushing = NO;
+  
+  self.localVideoBuffer = nil;
+  [self.remoteVideoBuffers removeAllObjects];
+  self.remoteVideoBuffers = nil;
 }
 
 #pragma mark add video data
@@ -166,6 +183,10 @@
                   width:(int)width height:(int)height
                rotation:(int)rotation
 {
+  if(!self.isPushing)
+  {
+    return;
+  }
   AGVideoBuffer* buffer = [[AGVideoBuffer alloc] initWithUId:0 yBuffer:yBuffer uBuffer:uBuffer vBuffer:vBuffer yStride:yStride uStride:uStride vStride:vStride width:width height:height rotation:rotation];
   dispatch_async([LivePusher sharedQueue], ^{
     if(self.localVideoBuffer != nil)
@@ -183,6 +204,10 @@
                  width:(int)width height:(int)height
               rotation:(int)rotation
 {
+  if(!self.isPushing)
+  {
+    return;
+  }
   AGVideoBuffer *newRemoteBuffer = [[AGVideoBuffer alloc] initWithUId:uid yBuffer:yBuffer uBuffer:uBuffer vBuffer:vBuffer yStride:yStride uStride:uStride vStride:vStride width:width height:height rotation:rotation];
   
   dispatch_async([LivePusher sharedQueue], ^{
@@ -218,6 +243,10 @@
 #pragma mark push
 -(void)mergeVideoToPush
 {
+  if(!self.isPushing)
+  {
+    return;
+  }
   if(!self.localVideoBuffer)
   {
     return;
@@ -258,7 +287,7 @@
           //push
           int dataLength = remoteYBufferSize + remoteUBufferSize + remoteVBufferSize;
           unsigned char *NV12Data = malloc(dataLength);
-          I420ToNV12(remoteYBuffer, remote.yStride, remoteUBuffer, remote.uStride, remoteVBuffer, remote.vStride, NV12Data, remote.yStride, NV12Data+remoteYBufferSize, remote.uStride, remote.yStride, remote.height);
+          I420ToNV12(remoteYBuffer, remote.yStride, remoteUBuffer, remote.uStride, remoteVBuffer, remote.vStride, NV12Data, remote.yStride, NV12Data+remoteYBufferSize, remote.uStride+remote.vStride, remote.yStride, remote.height);
           
           [self pushVideoYUVData:NV12Data dataLength:dataLength];
           
@@ -266,14 +295,41 @@
           free(remoteUBuffer);
           free(remoteVBuffer);
           
-          free(NV12Data);
+          //free(NV12Data);
         }
       }
     }
     
   }else if(self.matchtype == 2){
     //四分屏
+    //首先把本地画面绘制到缓冲中
+    uint8* local_argb = (uint8*)malloc(self.localVideoBuffer.width*self.localVideoBuffer.height*4);
+    I420ToARGB((const uint8*)self.localVideoBuffer.yBuffer,self.localVideoBuffer.yStride,(const uint8*)self.localVideoBuffer.uBuffer,self.localVideoBuffer.uStride,(const uint8*)self.localVideoBuffer.vBuffer,self.localVideoBuffer.vStride,local_argb,self.localVideoBuffer.yStride*4,self.localVideoBuffer.width,self.localVideoBuffer.height);
+    for(int i=0;i<self.localVideoBuffer.height;i++){
+      uint8* dst = argb_buffer+i*_screen_width*4;
+      uint8* src = local_argb+i*self.localVideoBuffer.width*4;
+      memcpy(dst, src, self.localVideoBuffer.width*4);
+    }
     
+    //绘制远端画面
+    int index = 0;
+    for(AGVideoBuffer* remote in self.remoteVideoBuffers){
+      index++;
+      if(index>=4){
+        break;
+      }
+      I420ToARGB((const uint8*)remote.yBuffer,remote.yStride,(const uint8*)remote.uBuffer,remote.uStride,(const uint8*)remote.vBuffer,remote.vStride,local_argb,remote.yStride*4,remote.width,remote.height);
+      if(index == 1){
+        for(int i=0;i<remote.height;i++){
+          uint8* dst = argb_buffer+i*_screen_width*4+remote.width*4;
+          uint8* src = local_argb+i*remote.width*4;
+          memcpy(dst, src, remote.width*4);
+        }
+      }
+    }
+    
+    [self pushVideoRGBAData:argb_buffer dataLength:_screen_width*_screen_height*4];
+    free(local_argb);
   }
   
 }
@@ -287,10 +343,13 @@
   [self.client sendYUVData:pYUVBuff dataLength:dataLength];
 }
 
-//废弃
--(void)mergeAudioToPush
+-(void)pushVideoRGBAData:(unsigned char *)rgbaData dataLength:(unsigned int)dataLength
 {
-
+  if(!self.isPushing)
+  {
+    return;
+  }
+  [self.client sendRGBAData:rgbaData dataLength:dataLength];
 }
 
 - (void)pushPCMData: (unsigned char*)data length:(int)length

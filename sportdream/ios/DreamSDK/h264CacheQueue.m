@@ -31,7 +31,7 @@
 @property (nonatomic,strong) h264Frame* lastSmallKeyFrame;
 @property (nonatomic,strong) h264Frame* lastSendSmallFrame;
 
-@property (nonatomic,strong) LocalWifiNetwork* network;
+@property (nonatomic,strong) LocalWifiNetwork* localClient;
 @end
 
 @implementation h264CacheQueue
@@ -62,27 +62,27 @@
     self.smallH264Queue = [[NSMutableArray alloc] initWithCapacity:maxCapacity];
     self.smallKeyFrameList = [[NSMutableArray alloc] init];
     
-    self.network = [[LocalWifiNetwork alloc] initWithType:false];
-    self.network.delegate = self;
-    [self.network searchDirectorServer];
+    self.localClient = [[LocalWifiNetwork alloc] initWithType:false];
+    self.localClient.delegate = self;
+    [self.localClient searchDirectorServer];
   }
   return self;
 }
 
 //LocalWifiNetworkDelegate
--(void)serverDiscovered:(NSString*)ip
+-(void)serverDiscovered:(LocalWifiNetwork*)network ip:(NSString*)ip
 {
   
 }
--(void)clientSocketConnected
+-(void)clientSocketConnected:(LocalWifiNetwork*)network
 {
   
 }
-- (void)clientSocketDisconnect:(GCDAsyncSocket *)sock
+- (void)clientSocketDisconnect:(LocalWifiNetwork*)network sock:(GCDAsyncSocket *)sock
 {
   
 }
--(void)clientReceiveData:(uint16_t)packetID data:(NSData*)data
+-(void)clientReceiveData:(LocalWifiNetwork*)network packetID:(uint16_t)packetID data:(NSData*)data
 {
   if(packetID == START_SEND_BIGDATA){
     if(beginRecord){
@@ -103,7 +103,7 @@
 
 -(void)send:(uint16_t)packetID data:(NSData*)data
 {
-  [self.network clientSendPacket:packetID data:data];
+  [self.localClient clientSendPacket:packetID data:data];
 }
 
 -(void)setBigSPSPPS:(const uint8_t*)pps ppsLen:(size_t)ppsLen sps:(const uint8_t*)sps spsLen:(size_t)spsLen

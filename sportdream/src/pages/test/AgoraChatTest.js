@@ -13,7 +13,10 @@ import {
     WhiteSpace,
     Toast
 } from 'antd-mobile'
+import Orientation from 'react-native-orientation';
+
 import ToolBar from '../../Components/ToolBar'
+import Button from "antd-mobile/es/button/index.native";
 var AgorachatView = requireNativeComponent('AgorachatView', null);
 var AgorachatModule = NativeModules.AgorachatViewManager;
 
@@ -25,7 +28,8 @@ export default class App extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            players : []
+            players : [],
+            isPushing:false
         }
 
     }
@@ -42,10 +46,24 @@ export default class App extends React.Component{
         }
     }
 
+    record = ()=>{
+        if(!this.state.isPushing){
+            AgorachatModule.startRCTRecord();
+        }else{
+            AgorachatModule.stopRCTRecord();
+        }
+        this.setState({isPushing:!this.state.isPushing});
+    }
+
+    componentWillMount(){
+        AgorachatModule.initAgora();
+    }
+
     componentDidMount(){
         if(Platform.OS != 'ios'){
             return;
         }
+        Orientation.lockToLandscape();
         AgorachatModule.joinChannel("test")
         this.firstRemoteVideoDecoded_subscription = NativeAppEventEmitter.addListener(
             'firstRemoteVideoDecoded',
@@ -67,39 +85,46 @@ export default class App extends React.Component{
         );
 
         //
-        BaiduASRModule.startListen();
+        /*BaiduASRModule.startListen();
         this.subscription = BaiduASRModuleEmitter.addListener(
             'onVoiceRecognize',
             this.onVoiceRecognize
-        );
+        );*/
     }
 
     componentWillUnmount(){
         if(Platform.OS != 'ios'){
             return;
         }
+        Orientation.lockToPortrait();
         AgorachatModule.leaveChannel();
         this.firstRemoteVideoDecoded_subscription.remove();
         this.didOffline_subscription.remove();
 
+        AgorachatModule.destroyAgora();
+
         //
-        BaiduASRModule.endListen();
-        this.subscription.remove();
+        /*BaiduASRModule.endListen();
+        this.subscription.remove();*/
     }
 
     render(){
         return (
         <View style={{flex:1}}>
-            <ToolBar title="视频聊天" navigation={this.props.navigation}/>
-            <AgorachatView uid={0} style={{width:240,height:320}}/>
+            <AgorachatView uid={0} style={{width:160,height:120}}/>
             {
                 this.state.players.map((item)=>{
                     return <View key={item}>
                         <WhiteSpace/>
-                        <AgorachatView uid={item} style={{width:120,height:160}}/>
+                        <AgorachatView uid={item} style={{width:160,height:120}}/>
                     </View>
                 })
             }
+            <View style={{position:'absolute',bottom:0,right:0}}>
+                <Button onClick={()=>{this.props.navigation.goBack()}} size="large">返回</Button>
+                <WhiteSpace/>
+                <Button onClick={this.record} size="large">{this.state.isPushing?"stop":"start"}</Button>
+            </View>
         </View>);
     }
 }

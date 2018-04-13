@@ -17,7 +17,8 @@ typedef enum PACKET_ID{
   SEND_BIG_H264DATA = 5,
   SEND_SMALL_H264SDATA = 6,
   CAMERA_NAME = 7,
-  COMMENT_AUDIO = 8
+  COMMENT_AUDIO = 8,
+  JSON_MESSAGE = 9
 }PACKET_ID;
 
 #endif /* PacketID_h */

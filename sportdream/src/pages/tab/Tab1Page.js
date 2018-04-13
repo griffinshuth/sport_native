@@ -114,6 +114,22 @@ class Main extends Component{
     gotoAgoraChat_AndroidTest = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'AgoraChat_AndroidTest'}))
     }
+    gotoShootTrainByVoice = ()=>
+    {
+        this.props.dispatch(NavigationActions.navigate({routeName:'ShootTrainByVoice'}))
+    }
+    gotoVoiceCount = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'VoiceCount'}))
+    }
+    gotoReactNativeCameraTest = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'ReactNativeCameraTest'}))
+    }
+    gotoLocalClient = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'LocalClientTest'}))
+    }
+    gotoLocalServer = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'LocalServerTest'}))
+    }
     gotoCreateAp = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'CreateWiFiAP'}))
     }
@@ -256,13 +272,13 @@ class Main extends Component{
                                         </Modal>
                                     </View>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoCount}>计数页面</Button>
+                                    <Button onClick={this.gotoCount}>Android三脚架机位和现场解说</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoBTDiscover}>蓝牙搜索</Button>
+                                    <Button onClick={this.gotoBTDiscover}>Android 经典蓝牙和Wi-Fi Direct</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoBle}>BLE</Button>
+                                    <Button onClick={this.gotoBle}>ble-manager(中心设备)</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoCrossPlatformP2P}>跨平台P2P</Button>
+                                    <Button onClick={this.gotoCrossPlatformP2P}>bluetooth-cross-platform</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoReactArtTest}>ReactArt测试</Button>
                                     <WhiteSpace/>
@@ -279,6 +295,16 @@ class Main extends Component{
                                     <Button onClick={this.gotoAgoraChatTest}>Agora视频聊天室</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoAgoraChat_AndroidTest}>Agora视频聊天室(Android)</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoShootTrainByVoice}>语音识别Android</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoVoiceCount}>语音计数</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoReactNativeCameraTest}>React Native Camera测试</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoLocalClient}>热点客户端</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoLocalServer}>热点服务器</Button>
                                 </WingBlank>
 
                                 <WhiteSpace size="lg"/>

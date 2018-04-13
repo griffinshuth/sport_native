@@ -122,12 +122,6 @@ export default class DemoPage extends Component{
             this.setState({imageurl:image.path})
         });
     }
-
-    testPromise(){
-        //getCalendar();
-        Toast.info(CalendarManager.TeamSize);
-    }
-
     goToZhibo = async()=>{
         var push = await post("/getPublishURL",{streamname:"test2"})
         QiniuModule.Zhibo(push.url);
@@ -137,8 +131,7 @@ export default class DemoPage extends Component{
         QiniuModule.playZhibo(play.url);
     }
     goToH264Record = async()=>{
-        //var push = await post("/getPublishURL",{streamname:"test2"})
-        QiniuModule.h264Record(""/*push.url*/);
+        QiniuModule.h264Record("");
     }
     goToLocalNetwork(){
         QiniuModule.gotoLocalNetwork();
@@ -182,12 +175,6 @@ export default class DemoPage extends Component{
         var code = await ClassicBlueToothModule.openDiscoverable();
         Toast.info(code);
     }
-
-    async testInit(){
-        var result = await MultipeerAdvertiserModule.testInit();
-        Toast.info(JSON.stringify(result));
-    }
-
     advertise(){
         MultipeerAdvertiserModule.advertise();
         Toast.info("开始广播")
@@ -284,35 +271,21 @@ export default class DemoPage extends Component{
                     <Text>{this.state.imageurl}</Text>
                     <Button onClick={()=>this.pickImage()}>选择图片</Button>
                     <WhiteSpace/>
-                    <Button onClick={()=>this.testPromise()}>ios promise</Button>
-                    <WhiteSpace/>
                     <Button onClick={()=>this.goToZhibo()}>七牛直播</Button>
                     <WhiteSpace/>
                     <Button onClick={()=>this.goToZhiboPlay()}>七牛直播播放</Button>
                     <WhiteSpace/>
-                    <Button onClick={()=>this.goToH264Record()}>H264录制</Button>
+                    <Button onClick={()=>this.getBlueToothInfo()}>Android 获得经典蓝牙信息</Button>
                     <WhiteSpace/>
-                    <Button onClick={()=>this.goToLocalNetwork()}>本地网络</Button>
+                    <Button onClick={()=>this.openBluetooth()}>Android 打开经典蓝牙</Button>
                     <WhiteSpace/>
-                    <Button onClick={()=>this.getBlueToothInfo()}>Android 获得蓝牙信息</Button>
+                    <Button onClick={()=>this.openDiscoverable()}>Android 打开经典蓝牙可发现性</Button>
                     <WhiteSpace/>
-                    <Button onClick={()=>this.openBluetooth()}>打开蓝牙</Button>
+                    <Button onClick={()=>this.advertise()}>IOS Multipeer 广播服务</Button>
                     <WhiteSpace/>
-                    <Button onClick={()=>this.openDiscoverable()}>打开可发现性</Button>
+                    <Button onClick={()=>this.browser()}>IOS Multipeer 浏览服务</Button>
                     <WhiteSpace/>
-                    <Button onClick={()=>this.testInit()}>测试IOS模块初始化</Button>
-                    <WhiteSpace/>
-                    <Button onClick={()=>this.advertise()}>广播服务</Button>
-                    <WhiteSpace/>
-                    <Button onClick={()=>this.browser()}>浏览服务</Button>
-                    <WhiteSpace/>
-                    <Button onClick={()=>this.sendData()}>发送数据</Button>
-                    <WhiteSpace/>
-                    <Button onClick={()=>this.gotoVideoChat()}>视频聊天</Button>
-                    <WhiteSpace/>
-                    <Button onClick={()=>this.gotoMatchDirector()}>导播系统</Button>
-                    <WhiteSpace/>
-                    <Button onClick={()=>this.gotoARCameraView()}>多主播切换系统</Button>
+                    <Button onClick={()=>this.sendData()}>IOS Multipeer 发送数据</Button>
                     <WhiteSpace/>
                     <Button onClick={()=>this.gotoCameraOnStand()}>三脚架机位</Button>
                     <WhiteSpace/>

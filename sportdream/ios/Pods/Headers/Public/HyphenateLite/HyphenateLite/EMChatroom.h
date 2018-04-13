@@ -1,1 +1,1 @@
-../../../../HyphenateLite/ios_IM_HyphenateLite_sdk_3.3.4r1/HyphenateSDK/HyphenateLite.framework/Headers/EMChatroom.h
+../../../../HyphenateLite/iOS_IM_SDK_V3.3.9/HyphenateSDK/HyphenateLite.framework/Headers/EMChatroom.h

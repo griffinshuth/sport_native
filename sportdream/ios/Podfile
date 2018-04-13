@@ -14,5 +14,6 @@ target 'sportdream' do
     pod 'CocoaAsyncSocket'
     pod 'NerdyUI'
     pod 'MyLayout'
+    pod 'pili-librtmp'
 end
 

@@ -60,7 +60,7 @@
     [self.captureSession commitConfiguration];
     
     if(_isSlowMotion){
-      [self configureCameraForHighestFrameRate:videoDevice];
+      [self configureCameraFor60FrameRate:videoDevice];
     }else{
       if ( [videoDevice lockForConfiguration:NULL] == YES ) {
         videoDevice.activeVideoMinFrameDuration = CMTimeMake(1, 25);
@@ -99,11 +99,38 @@
   float maxframerate = 0;
   for ( AVCaptureDeviceFormat *format in [device formats] ) {
     for ( AVFrameRateRange *range in format.videoSupportedFrameRateRanges ) {
-      if ( range.maxFrameRate > bestFrameRateRange.maxFrameRate ) {
+      if ( range.maxFrameRate > maxframerate ) {
         bestFormat = format;
         bestFrameRateRange = range;
         maxframerate = bestFrameRateRange.maxFrameRate;
         NSLog(@"maxframerate:%f",maxframerate);
+      }
+    }
+  }
+  if ( bestFormat ) {
+    if ( [device lockForConfiguration:NULL] == YES ) {
+      device.activeFormat = bestFormat;
+      device.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration;
+      device.activeVideoMaxFrameDuration = bestFrameRateRange.minFrameDuration;
+      [device unlockForConfiguration];
+    }
+  }
+}
+
+//配置高速摄像机
+- (void)configureCameraFor60FrameRate:(AVCaptureDevice *)device
+{
+  AVCaptureDeviceFormat *bestFormat = nil;
+  AVFrameRateRange *bestFrameRateRange = nil;
+  float maxframerate = 60;
+  for ( AVCaptureDeviceFormat *format in [device formats] ) {
+    for ( AVFrameRateRange *range in format.videoSupportedFrameRateRanges ) {
+      if ( range.maxFrameRate == maxframerate ) {
+        bestFormat = format;
+        bestFrameRateRange = range;
+        maxframerate = bestFrameRateRange.maxFrameRate;
+        NSLog(@"maxframerate:%f",maxframerate);
+        break;
       }
     }
   }

@@ -8,12 +8,18 @@
 
 #import "AudioMixer.h"
 
-#define MAXBUFS 2
+#define MAXBUFS 3
 const Float64 kGraphSampleRate = 44100.0;
+
+
 
 @interface SoundBuffer:NSObject
 @property (nonatomic,strong) NSMutableData* mData;
 @property (nonatomic,strong) NSString* ip;
+@property (nonatomic,assign) int type;
+@property (nonatomic,assign) int subtype;
+@property (nonatomic,strong) NSString* deviceID;
+@property (nonatomic,strong) NSString* name;
 @end
 
 @implementation SoundBuffer
@@ -21,7 +27,13 @@ const Float64 kGraphSampleRate = 44100.0;
 @end
 
 @interface AudioMixer()
- @property (nonatomic,strong) NSMutableArray<SoundBuffer*>* commentors;
+ //@property (nonatomic,strong) NSMutableArray<SoundBuffer*>* commentors;
+  @property (nonatomic,strong) AACDecode* audioDecoder1;
+  @property (nonatomic,strong) SoundBuffer* mData1;
+  @property (nonatomic,strong) AACDecode* audioDecoder2;
+  @property (nonatomic,strong) SoundBuffer* mData2;
+  @property (nonatomic,strong) AACDecode* audioDecoder3;
+  @property (nonatomic,strong) SoundBuffer* mData3;
 @end
 
 @implementation AudioMixer
@@ -32,15 +44,18 @@ const Float64 kGraphSampleRate = 44100.0;
   AUGraph mGraph;
   AudioUnit mConverter1;
   AudioUnit mConverter2;
+  AudioUnit mConverter3;
   AudioUnit mMixer;
+  AudioUnit mConverterSInt16ToFloat32;
   AudioUnit mOutput;
   
   Boolean isPlaying;
+  UInt32 audioNums;
 }
 
-static OSStatus renderInput(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
+static OSStatus renderInput1(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
 {
-  AudioMixer *audoMixer = (__bridge id)inRefCon;
+  __unsafe_unretained AudioMixer *audoMixer = (__bridge id)inRefCon;
   return [audoMixer renderData:ioData
                      atTimeStamp:inTimeStamp
                       forElement:0
@@ -50,10 +65,20 @@ static OSStatus renderInput(void *inRefCon, AudioUnitRenderActionFlags *ioAction
 
 static OSStatus renderInput2(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
 {
-  AudioMixer *audoMixer = (__bridge id)inRefCon;
+  __unsafe_unretained AudioMixer *audoMixer = (__bridge id)inRefCon;
   return [audoMixer renderData:ioData
                    atTimeStamp:inTimeStamp
                     forElement:1
+                  numberFrames:inNumberFrames
+                         flags:ioActionFlags];
+}
+
+static OSStatus renderInput3(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
+{
+  __unsafe_unretained AudioMixer *audoMixer = (__bridge id)inRefCon;
+  return [audoMixer renderData:ioData
+                   atTimeStamp:inTimeStamp
+                    forElement:2
                   numberFrames:inNumberFrames
                          flags:ioActionFlags];
 }
@@ -63,70 +88,121 @@ static OSStatus renderInput2(void *inRefCon, AudioUnitRenderActionFlags *ioActio
           numberFrames:(UInt32)numFrames
                  flags:(AudioUnitRenderActionFlags *)flags
 {
-  //静音
-  for(int iBuffer=0;iBuffer<ioData->mNumberBuffers;++iBuffer){
-    memset(ioData->mBuffers[iBuffer].mData, 0, ioData->mBuffers[iBuffer].mDataByteSize);
+ 
+    for(int iBuffer=0;iBuffer<ioData->mNumberBuffers;++iBuffer){
+      memset(ioData->mBuffers[iBuffer].mData, 0, ioData->mBuffers[iBuffer].mDataByteSize);
+    }
+
+    SoundBuffer* buffer = nil;
+  if(inBusNumber == 0){
+    buffer = self.mData1;
+  }else if(inBusNumber == 1){
+    buffer = self.mData2;
+  }else if(inBusNumber == 2){
+    buffer = self.mData3;
   }
-  SoundBuffer* buffer = [self.commentors objectAtIndex:inBusNumber];
-  if(inBusNumber == 1){
-    
+    if(buffer){
+      NSUInteger needLen = 0;
+      UInt32 bytesPerSample = sizeof (SInt16);
+      if(buffer.mData.length < numFrames*bytesPerSample){
+        needLen = buffer.mData.length;
+      }else{
+        needLen = numFrames*bytesPerSample;
+      }
+      if(needLen == 0){
+        return noErr;
+      }
+      for (int iBuffer=0; iBuffer < ioData->mNumberBuffers; ++iBuffer) {
+        memcpy(ioData->mBuffers[iBuffer].mData, buffer.mData.bytes, needLen);
+      }
+      @synchronized(buffer){
+        [buffer.mData replaceBytesInRange:NSMakeRange(0, needLen) withBytes:NULL length:0];
+      }
+    }
+    return noErr;
+  
+}
+
+-(SoundBuffer*)getSoundBufferByIp:(NSString*)ip
+{
+  if(self.mData1){
+    if([self.mData1.ip isEqualToString:ip]){
+      return self.mData1;
+    }
   }
-  if(buffer){
-    NSUInteger needLen = 0;
-    UInt32 bytesPerSample = sizeof (SInt16);
-    if(buffer.mData.length < numFrames*bytesPerSample){
-      needLen = buffer.mData.length;
-    }else{
-      needLen = numFrames*bytesPerSample;
-    }
-    if(needLen == 0){
-      return noErr;
-    }
-    for (int iBuffer=0; iBuffer < ioData->mNumberBuffers; ++iBuffer) {
-      memcpy(ioData->mBuffers[iBuffer].mData, buffer.mData.bytes, needLen);
-    }
-    @synchronized(buffer){
-      [buffer.mData replaceBytesInRange:NSMakeRange(0, needLen) withBytes:NULL length:0];
+  
+  if(self.mData2){
+    if([self.mData2.ip isEqualToString:ip]){
+      return self.mData2;
     }
   }
-  return noErr;
+  
+  if(self.mData3){
+    if([self.mData3.ip isEqualToString:ip]){
+      return self.mData3;
+    }
+  }
+  
+  return nil;
 }
 
 -(void)commentorConnected:(NSString*)ip
 {
-  //判断IP是否已经存在
-  for(SoundBuffer* buffer in self.commentors){
-    if([buffer.ip isEqualToString:ip]){
-      return;
+  SoundBuffer* t = [self getSoundBufferByIp:ip];
+  if(t == nil){
+    if(self.mData1 == nil){
+      self.mData1 = [SoundBuffer alloc];
+      self.mData1.mData = [[NSMutableData alloc] init];
+      self.mData1.ip = [[NSString alloc] initWithString:ip];
+    }else if(self.mData2 == nil){
+      self.mData2 = [SoundBuffer alloc];
+      self.mData2.mData = [[NSMutableData alloc] init];
+      self.mData2.ip = [[NSString alloc] initWithString:ip];
+    }else if(self.mData3 == nil){
+      self.mData3 = [SoundBuffer alloc];
+      self.mData3.mData = [[NSMutableData alloc] init];
+      self.mData3.ip = [[NSString alloc] initWithString:ip];
     }
+    
   }
-  
-  SoundBuffer* b = [SoundBuffer alloc];
-  b.mData = [[NSMutableData alloc] init];
-  b.ip = [[NSString alloc] initWithString:ip];
-  [self.commentors addObject:b];
 }
 
 -(void)commentorDisconnected:(NSString*)ip
 {
-  for(SoundBuffer* buffer in self.commentors){
-    if([buffer.ip isEqualToString:ip]){
-      [self.commentors removeObject:buffer];
-      break;
-    }
+  SoundBuffer* t = [self getSoundBufferByIp:ip];
+  if(t == self.mData1){
+    self.mData1 = nil;
+  }else if(t == self.mData2){
+    self.mData2 = nil;
+  }else if(t == self.mData3){
+    self.mData3 = nil;
   }
 }
 
 -(void)intoAudioData:(NSData*)data ip:(NSString*)ip
 {
-  for(SoundBuffer* buffer in self.commentors){
-    if([buffer.ip isEqualToString:ip]){
-      @synchronized(buffer){
-        [buffer.mData appendData:data];
+  SoundBuffer* t = [self getSoundBufferByIp:ip];
+  if(t){
+    if(t == self.mData1){
+      @synchronized(self.mData1){
+        [self.mData1.mData appendData:data];
       }
-      break;
+    }else if(t == self.mData2){
+      @synchronized(self.mData2){
+        [self.mData2.mData appendData:data];
+      }
+    }else if(t == self.mData3){
+      @synchronized(self.mData3){
+        [self.mData3.mData appendData:data];
+      }
     }
   }
+}
+
+//delegate
+-(void)AACDecodeToPCM:(NSData*)data  SocketName:(NSString*)SocketName
+{
+  
 }
 
 
@@ -134,9 +210,16 @@ static OSStatus renderInput2(void *inRefCon, AudioUnitRenderActionFlags *ioActio
 {
   self = [super init];
   if(self){
-    self.commentors = [[NSMutableArray alloc] init];
     [self initializeAUGraph];
-    [self startAUGraph];
+    isPlaying = false;
+    audioNums = 2;
+    self.audioDecoder1 = [[AACDecode alloc] init];
+    self.audioDecoder1.delegate = self;
+    self.audioDecoder2 = [[AACDecode alloc] init];
+    self.audioDecoder2.delegate = self;
+    self.audioDecoder3 = [[AACDecode alloc] init];
+    self.audioDecoder3.delegate = self;
+    [self startMixer];
     //AudioUnitParameterValue isOn = false;
     //[self enableInput:0 isOn:isOn];
   }
@@ -145,14 +228,21 @@ static OSStatus renderInput2(void *inRefCon, AudioUnitRenderActionFlags *ioActio
 
 -(void)dealloc
 {
-  [self stopAUGraph];
+  if(isPlaying){
+    [self stopMixer];
+  }
+  [self.audioDecoder1 stopAACEncodeSession];
+  [self.audioDecoder2 stopAACEncodeSession];
+  [self.audioDecoder3 stopAACEncodeSession];
 }
 
 -(void)initializeAUGraph
 {
   AUNode convertNode1;
   AUNode convertNode2;
+  AUNode convertNode3;
   AUNode mixerNode;
+  AUNode mConverterSInt16ToFloat32Node;
   AUNode outputNode;
   
   mClientFormat = [[AVAudioFormat alloc] initWithCommonFormat:AVAudioPCMFormatInt16
@@ -187,31 +277,34 @@ static OSStatus renderInput2(void *inRefCon, AudioUnitRenderActionFlags *ioActio
   
   result = AUGraphAddNode(mGraph, &convertDescription, &convertNode1);
   result = AUGraphAddNode(mGraph, &convertDescription, &convertNode2);
+  result = AUGraphAddNode(mGraph, &convertDescription, &convertNode3);
   result = AUGraphAddNode(mGraph, &mixer_desc, &mixerNode);
+  result = AUGraphAddNode(mGraph, &convertDescription, &mConverterSInt16ToFloat32Node);
   result = AUGraphAddNode(mGraph, &output_desc, &outputNode);
   if(result<0){
     NSLog(@"error");
   }
 
-  if(result<0){
-    NSLog(@"error");
-  }
-  //result = AUGraphConnectNodeInput(mGraph, convertNode, 0, outputNode, 0);
-  
   result = AUGraphOpen(mGraph);
   
   result = AUGraphNodeInfo(mGraph, mixerNode, NULL, &mMixer);
   result = AUGraphNodeInfo(mGraph, convertNode1, NULL, &mConverter1);
   result = AUGraphNodeInfo(mGraph, convertNode2, NULL, &mConverter2);
+  result = AUGraphNodeInfo(mGraph, convertNode3, NULL, &mConverter3);
+  result = AUGraphNodeInfo(mGraph, mConverterSInt16ToFloat32Node, NULL, &mConverterSInt16ToFloat32);
   result = AUGraphNodeInfo(mGraph, outputNode, NULL, &mOutput);
   
     AURenderCallbackStruct rcbs;
-    rcbs.inputProc = &renderInput;
+    rcbs.inputProc = &renderInput1;
     rcbs.inputProcRefCon = (__bridge void*) self;
   
   AURenderCallbackStruct rcbs2;
   rcbs2.inputProc = &renderInput2;
   rcbs2.inputProcRefCon = (__bridge void*) self;
+  
+  AURenderCallbackStruct rcbs3;
+  rcbs3.inputProc = &renderInput3;
+  rcbs3.inputProcRefCon = (__bridge void*) self;
     
     //result = AUGraphSetNodeInputCallback(mGraph, convertNode1, 0, &rcbs);
     //result = AUGraphSetNodeInputCallback(mGraph, convertNode2, 1, &rcbs2);
@@ -220,28 +313,37 @@ static OSStatus renderInput2(void *inRefCon, AudioUnitRenderActionFlags *ioActio
   result = AudioUnitSetProperty(mConverter2, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0,
                                 &rcbs2, sizeof(rcbs2));
   
-  UInt32 numbuses = 2;
-  result = AudioUnitSetProperty(mMixer, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, sizeof(numbuses));
-  result = AudioUnitSetProperty(mConverter1, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  result = AudioUnitSetProperty(mConverter3, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0,
+                                &rcbs3, sizeof(rcbs3));
   
-  result = AudioUnitSetProperty(mConverter1, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mOutputFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  
+  result = AudioUnitSetProperty(mMixer, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &audioNums, sizeof(audioNums));
+  
+  result = AudioUnitSetProperty(mConverter1, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  result = AudioUnitSetProperty(mConverter1, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
   
   result = AudioUnitSetProperty(mConverter2, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  result = AudioUnitSetProperty(mConverter2, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
   
-  result = AudioUnitSetProperty(mConverter2, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mOutputFormat.streamDescription, sizeof(AudioStreamBasicDescription));
-  for(int i=0;i<numbuses;i++){
-    result = AudioUnitSetProperty(mMixer, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, mOutputFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  result = AudioUnitSetProperty(mConverter3, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  result = AudioUnitSetProperty(mConverter3, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  
+  for(int i=0;i<audioNums;i++){
+    result = AudioUnitSetProperty(mMixer, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
   }
+  result = AudioUnitSetProperty(mMixer, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
   
-  
-  result = AudioUnitSetProperty(mMixer, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mOutputFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  result = AudioUnitSetProperty(mConverterSInt16ToFloat32, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, mClientFormat.streamDescription, sizeof(AudioStreamBasicDescription));
+  result = AudioUnitSetProperty(mConverterSInt16ToFloat32, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, mOutputFormat.streamDescription, sizeof(AudioStreamBasicDescription));
   
  
   result = AudioUnitSetProperty(mOutput, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, mOutputFormat.streamDescription, sizeof(AudioStreamBasicDescription));
   
   result = AUGraphConnectNodeInput(mGraph, convertNode1, 0, mixerNode, 0);
   result = AUGraphConnectNodeInput(mGraph, convertNode2, 0, mixerNode, 1);
-  result = AUGraphConnectNodeInput(mGraph, mixerNode, 0, outputNode, 0);
+  result = AUGraphConnectNodeInput(mGraph, convertNode3, 0, mixerNode, 2);
+  result = AUGraphConnectNodeInput(mGraph, mixerNode, 0, mConverterSInt16ToFloat32Node, 0);
+  result = AUGraphConnectNodeInput(mGraph, mConverterSInt16ToFloat32Node, 0, outputNode, 0);
   
   result = AUGraphInitialize(mGraph);
 }
@@ -273,22 +375,20 @@ static OSStatus renderInput2(void *inRefCon, AudioUnitRenderActionFlags *ioActio
 }
 
 // stars render
-- (void)startAUGraph
+- (void)startMixer
 {
-  printf("PLAY\n");
-  
+  if(isPlaying){
+    return;
+  }
   OSStatus result = AUGraphStart(mGraph);
   if (result) { printf("AUGraphStart result %ld %08lX %4.4s\n", (long)result, (long)result, (char*)&result); return; }
   isPlaying = true;
 }
 
 // stops render
-- (void)stopAUGraph
+- (void)stopMixer
 {
-  printf("STOP\n");
-  
   Boolean isRunning = false;
-  
   OSStatus result = AUGraphIsRunning(mGraph, &isRunning);
   if (result) { printf("AUGraphIsRunning result %ld %08lX %4.4s\n", (long)result, (long)result, (char*)&result); return; }
   

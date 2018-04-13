@@ -42,12 +42,13 @@
   int yuv_len = w_x_h * 3 / 2;
   
   //yuv数据
-  uint8_t *yuv_bytes = malloc(yuv_len);
+  //uint8_t *yuv_bytes = malloc(yuv_len);
   [self lockFramebufferForReading];
-  ARGBToNV12(self.rawBytesForImage, width * 4, yuv_bytes, width, yuv_bytes + w_x_h, width, width, height);
+  //ARGBToNV12(self.rawBytesForImage, width * 4, yuv_bytes, width, yuv_bytes + w_x_h, width, width, height);
+  //NSData *yuvData = [NSData dataWithBytesNoCopy:yuv_bytes length:yuv_len];
+  NSData* rgbaData = [NSData dataWithBytes:self.rawBytesForImage length:w_x_h*4];
   [self unlockFramebufferAfterReading];
-  NSData *yuvData = [NSData dataWithBytesNoCopy:yuv_bytes length:yuv_len];
-  [self.capture.delegate dataFromPostProgress:(NSData*)yuvData frameTime:frameTime];
+  [self.capture.delegate dataFromPostProgress:(NSData*)rgbaData frameTime:frameTime];
 }
 @end
 

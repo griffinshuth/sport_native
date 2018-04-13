@@ -27,6 +27,7 @@
 #import "DirectorServerViewController.h"
 #import "CommentatorsViewController.h"
 #import "LiveCommentatorsViewController.h"
+#import "Orientation.h"
 
 @implementation AppDelegate
 
@@ -61,13 +62,17 @@
   return YES;
 }
 
-- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+/*- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
   if(self.allowRotation)
     return UIInterfaceOrientationMaskLandscapeLeft;
   else if(self.allowBothRotation)
     return UIInterfaceOrientationMaskLandscapeLeft|UIInterfaceOrientationMaskPortrait;
   else
     return UIInterfaceOrientationMaskPortrait;
+}*/
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+  return [Orientation getOrientation];
 }
 
 - (void)goToReactNative

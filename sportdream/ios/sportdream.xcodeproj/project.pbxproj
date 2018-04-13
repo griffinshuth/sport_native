@@ -13,6 +13,7 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* sportdreamTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* sportdreamTests.m */; };
+		0125E3956D4F4904A2A97315 /* libRNRecorder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CCAF422EB794608B8915940 /* libRNRecorder.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -56,6 +57,34 @@
 		223E2C601F80831900A7362E /* H264EncodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223E2C5F1F80831900A7362E /* H264EncodeViewController.m */; };
 		224141F81F6C0C9E006DE0F9 /* AgorachatViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 224141F71F6C0C9E006DE0F9 /* AgorachatViewManager.mm */; };
 		224142171F6C18EC006DE0F9 /* AgorachatView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 224142161F6C18EC006DE0F9 /* AgorachatView.mm */; };
+		224926142055682F00823A13 /* VideoFilterTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 224926132055682F00823A13 /* VideoFilterTool.m */; };
+		2249265020576F9400823A13 /* RemoteControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249264F20576F9400823A13 /* RemoteControlView.m */; };
+		2249265320576FA500823A13 /* RemoteControlViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249265220576FA500823A13 /* RemoteControlViewManager.m */; };
+		224926582057BF5300823A13 /* silence10sec.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 224926572057BF5300823A13 /* silence10sec.mp3 */; };
+		2249297F20590E0400823A13 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227BE4F11F7E1E320074C4E1 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		224929822059628000823A13 /* AccompanyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 224929812059628000823A13 /* AccompanyModule.m */; };
+		224929852059B00100823A13 /* VideoGPUFilterModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 224929842059B00100823A13 /* VideoGPUFilterModule.m */; };
+		2249298C2069246700823A13 /* live_audio_packet_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2249298A2069246700823A13 /* live_audio_packet_queue.cpp */; };
+		22492990206A589F00823A13 /* live_video_packet_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2249298E206A589F00823A13 /* live_video_packet_queue.cpp */; };
+		22492993206A9C4A00823A13 /* live_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22492991206A9C4A00823A13 /* live_thread.cpp */; };
+		22492996206B391500823A13 /* live_audio_packet_pool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22492994206B391500823A13 /* live_audio_packet_pool.cpp */; };
+		22492999206B773000823A13 /* gearshift_box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22492997206B773000823A13 /* gearshift_box.cpp */; };
+		2249299C206BA37200823A13 /* live_video_quality_agent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2249299A206BA37200823A13 /* live_video_quality_agent.cpp */; };
+		2249299F206BC12E00823A13 /* publisher_rate_feed_back.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2249299D206BC12E00823A13 /* publisher_rate_feed_back.cpp */; };
+		224929A2206BD2CA00823A13 /* publisher_statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224929A0206BD2CA00823A13 /* publisher_statistics.cpp */; };
+		224929A5206BD8C100823A13 /* live_packet_pool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224929A3206BD8C100823A13 /* live_packet_pool.cpp */; };
+		224929A8206C834A00823A13 /* pool_av_user.mm in Sources */ = {isa = PBXBuildFile; fileRef = 224929A7206C834A00823A13 /* pool_av_user.mm */; };
+		224929AB206C8B2100823A13 /* video_consumer_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224929A9206C8B2100823A13 /* video_consumer_thread.cpp */; };
+		224929AE206C8CAE00823A13 /* recording_publisher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224929AC206C8CAE00823A13 /* recording_publisher.cpp */; };
+		224929B2206C9FEE00823A13 /* recording_h264_publisher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224929B0206C9FEE00823A13 /* recording_h264_publisher.cpp */; };
+		224929B5206CE34300823A13 /* aac_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224929B3206CE34300823A13 /* aac_thread.cpp */; };
+		224929B8206CF31800823A13 /* audio_encoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224929B6206CF31800823A13 /* audio_encoder.cpp */; };
+		224929BC206D3F8100823A13 /* PushStreamMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 224929BB206D3F8100823A13 /* PushStreamMetadata.m */; };
+		22682D89206EA49E000BB7E1 /* libffmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22C71867201F73220089E69A /* libffmpeg.a */; };
+		22682DCF2070FA66000BB7E1 /* FFmpegPushClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 22682DCE2070FA66000BB7E1 /* FFmpegPushClient.mm */; };
+		22682DD22071F646000BB7E1 /* VideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 22682DD12071F646000BB7E1 /* VideoPlayer.mm */; };
+		22682DDC2074DB45000BB7E1 /* IMG_0032.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 22682DDB2074DB45000BB7E1 /* IMG_0032.m4v */; };
+		22682DDF207E6EE5000BB7E1 /* LocalNetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22682DDE207E6EE5000BB7E1 /* LocalNetManager.m */; };
 		2268C0601F7A32B1007ED730 /* QiniuManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2268C05F1F7A32B1007ED730 /* QiniuManager.m */; };
 		226BC6021FD653A10052C66D /* BaiduASRModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 226BC6011FD653A10052C66D /* BaiduASRModule.m */; };
 		226BC6251FD6725E0052C66D /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 226BC6241FD6725E0052C66D /* libz.1.2.5.tbd */; };
@@ -73,8 +102,6 @@
 		226BC67D1FD6D1CE0052C66D /* offline_engine_tmp_license.dat in Resources */ = {isa = PBXBuildFile; fileRef = 226BC6771FD6CAB30052C66D /* offline_engine_tmp_license.dat */; };
 		226BC67E1FD6D1CE0052C66D /* tmp_license.dat in Resources */ = {isa = PBXBuildFile; fileRef = 226BC6781FD6CAB30052C66D /* tmp_license.dat */; };
 		226D35011FB8088600A9D593 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 226D34E21FB8086F00A9D593 /* libART.a */; };
-		226D35081FB8462C00A9D593 /* libRCTBarcode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 226D35071FB8460500A9D593 /* libRCTBarcode.a */; };
-		226D350B1FB84A8900A9D593 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 226D350A1FB846A800A9D593 /* beep.wav */; };
 		2272833A1F6B6595003BB2FD /* EaseChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 227283391F6B6595003BB2FD /* EaseChatManager.m */; };
 		2276C9E41FD797F7001C66B1 /* baidu_speech_grammar.bsg in Resources */ = {isa = PBXBuildFile; fileRef = 2276C9E31FD797F7001C66B1 /* baidu_speech_grammar.bsg */; };
 		2276CA121FDA9725001C66B1 /* VideoChatViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2276CA101FDA9725001C66B1 /* VideoChatViewController.mm */; };
@@ -181,7 +208,6 @@
 		22C71811201EA8310089E69A /* AACDecode.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C71810201EA8310089E69A /* AACDecode.m */; };
 		22C71814201EE8FE0089E69A /* LiveCommentatorsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C71813201EE8FE0089E69A /* LiveCommentatorsViewController.m */; };
 		22C7186C201FFA770089E69A /* libBaiduTTSSpeechSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22C7186B201FFA760089E69A /* libBaiduTTSSpeechSDK.a */; };
-		22C7186D202042670089E69A /* libffmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22C71867201F73220089E69A /* libffmpeg.a */; };
 		22C71884202159120089E69A /* AudioMixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C71883202159120089E69A /* AudioMixer.m */; };
 		22F90D49202C44C600204E7E /* PLPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22F90D48202C44C500204E7E /* PLPlayerKit.framework */; };
 		22F90D4B202C45D900204E7E /* PLPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22F90D4A202C45D900204E7E /* PLPlayerKit.framework */; };
@@ -200,9 +226,14 @@
 		2D02E4C91E0B4AEC006451C7 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* sportdreamTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* sportdreamTests.m */; };
 		47D0E29FC275B522A60A88AC /* libPods-sportdream.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72DBF58EAD66A56539F219C6 /* libPods-sportdream.a */; };
+		47F4811E07FD4482A1CCEDF9 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DD1843136344696845FAE5E /* libRCTVideo.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		724C5B2DD7C44C6DA12BACEC /* libRCTBarcode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED89F71B5E464C5795B9EC34 /* libRCTBarcode.a */; };
+		7E5D646250BC4BE491945883 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8604E443DC034064B2885B93 /* libRCTOrientation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9C611C17DF8C43459393D53C /* libBleManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE8125609D548649A4B3324 /* libBleManager.a */; };
+		B2F3C53B95424406B7760486 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1121A994DD014D89B34A6967 /* libRNSound.a */; };
+		C46C5FD3EE604DE6B77BCA47 /* libRNAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED838A46C02F4DD0A61EA6E3 /* libRNAudio.a */; };
 		CA942F7D30DB4D14902AD5D4 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B23BAF42AF81455EA07DB1CA /* libimageCropPicker.a */; };
 /* End PBXBuildFile section */
 
@@ -270,6 +301,55 @@
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
 		};
+		2249264A2057666A00823A13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 948C6A1B2BEA428A9E6F0E81 /* RNSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
+			remoteInfo = RNSound;
+		};
+		224926902057D3A000823A13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3D38ABB42D14AC190601157 /* RNAudio.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 42F559BA1CFC90C400DC3F84;
+			remoteInfo = RNAudio;
+		};
+		2249284C2058B65C00823A13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6F793EE7C943423A9DA71B3B /* RCTBarCode.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9FCCD7581DAC8DA800025BFD;
+			remoteInfo = RCTBarcode;
+		};
+		224928CB2058C15800823A13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 140B58BDE6E24FFCAE931045 /* RCTVideo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTVideo;
+		};
+		224928CD2058C15800823A13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 140B58BDE6E24FFCAE931045 /* RCTVideo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 641E28441F0EEC8500443AF6;
+			remoteInfo = "RCTVideo-tvOS";
+		};
+		2249297B2058D02C00823A13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DF246FA16584AB8A12869DF /* RNRecorder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D42CB3511B2538DE00FD0AE2;
+			remoteInfo = RNRecorder;
+		};
+		2249297D2058D02C00823A13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DF246FA16584AB8A12869DF /* RNRecorder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D42CB35C1B2538DE00FD0AE2;
+			remoteInfo = RNRecorderTests;
+		};
 		224AD52E1F64F4A000B32263 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 224AD52A1F64F4A000B32263 /* CalendarManager.xcodeproj */;
@@ -277,19 +357,19 @@
 			remoteGlobalIDString = 224947BC1F6431F6001351F1;
 			remoteInfo = CalendarManager;
 		};
+		22682DCB206F8790000BB7E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A8BA1F5BC1BA4DBEA0A7B59D /* RCTOrientation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTOrientation;
+		};
 		226D34E11FB8086F00A9D593 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 226D34DD1FB8086F00A9D593 /* ART.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
 			remoteInfo = ART;
-		};
-		226D35061FB8460500A9D593 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 226D35021FB8460500A9D593 /* RCTBarCode.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9FCCD7581DAC8DA800025BFD;
-			remoteInfo = RCTBarcode;
 		};
 		2284888B1F666286001C237B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -466,6 +546,7 @@
 		00E356EE1AD99517003FC87E /* sportdreamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = sportdreamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* sportdreamTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sportdreamTests.m; sourceTree = "<group>"; };
+		1121A994DD014D89B34A6967 /* libRNSound.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSound.a; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* sportdream.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sportdream.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -475,18 +556,20 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = sportdream/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = sportdream/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = sportdream/main.mm; sourceTree = "<group>"; };
+		140B58BDE6E24FFCAE931045 /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 		145373CC2E57454D07536E3B /* Pods-sportdream.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sportdream.release.xcconfig"; path = "Pods/Target Support Files/Pods-sportdream/Pods-sportdream.release.xcconfig"; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		1DD1843136344696845FAE5E /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		22323D4B1F7CE9BE00EDB038 /* btn_camera_cancel_a@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "btn_camera_cancel_a@3x.png"; path = "sportdream/images/btn_camera_cancel_a@3x.png"; sourceTree = "<group>"; };
 		22323D4C1F7CE9BE00EDB038 /* btn_camera_cancel_a@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "btn_camera_cancel_a@2x.png"; path = "sportdream/images/btn_camera_cancel_a@2x.png"; sourceTree = "<group>"; };
 		22323D4E1F7CE9BE00EDB038 /* btn_camera_cancel_b@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "btn_camera_cancel_b@2x.png"; path = "sportdream/images/btn_camera_cancel_b@2x.png"; sourceTree = "<group>"; };
 		22323D4F1F7CE9BE00EDB038 /* btn_camera_cancel_b@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "btn_camera_cancel_b@3x.png"; path = "sportdream/images/btn_camera_cancel_b@3x.png"; sourceTree = "<group>"; };
-		2233536E1F827F21002679D6 /* PlayerH264ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlayerH264ViewController.h; path = sportdream/PlayerH264ViewController.h; sourceTree = "<group>"; };
-		2233536F1F827F21002679D6 /* PlayerH264ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PlayerH264ViewController.m; path = sportdream/PlayerH264ViewController.m; sourceTree = "<group>"; };
-		2233538E1F82970C002679D6 /* VideoFileParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoFileParser.m; path = sportdream/VideoFileParser.m; sourceTree = "<group>"; };
-		2233538F1F82970C002679D6 /* AAPLEAGLLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AAPLEAGLLayer.h; path = sportdream/AAPLEAGLLayer.h; sourceTree = "<group>"; };
-		223353901F82970C002679D6 /* AAPLEAGLLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AAPLEAGLLayer.m; path = sportdream/AAPLEAGLLayer.m; sourceTree = "<group>"; };
-		223353911F82970D002679D6 /* VideoFileParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoFileParser.h; path = sportdream/VideoFileParser.h; sourceTree = "<group>"; };
+		2233536E1F827F21002679D6 /* PlayerH264ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerH264ViewController.h; sourceTree = "<group>"; };
+		2233536F1F827F21002679D6 /* PlayerH264ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerH264ViewController.m; sourceTree = "<group>"; };
+		2233538E1F82970C002679D6 /* VideoFileParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFileParser.m; sourceTree = "<group>"; };
+		2233538F1F82970C002679D6 /* AAPLEAGLLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLEAGLLayer.h; sourceTree = "<group>"; };
+		223353901F82970C002679D6 /* AAPLEAGLLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLEAGLLayer.m; sourceTree = "<group>"; };
+		223353911F82970D002679D6 /* VideoFileParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFileParser.h; sourceTree = "<group>"; };
 		223771631F7D245E00299554 /* lanuch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lanuch.png; sourceTree = "<group>"; };
 		2237716C1F7D50A300299554 /* btn_record_a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_record_a.png; sourceTree = "<group>"; };
 		2237716E1F7D54B300299554 /* flash_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = flash_close.png; path = sportdream/images/flash_close.png; sourceTree = "<group>"; };
@@ -547,13 +630,66 @@
 		223A63041FFB256100E38A0B /* AGVideoBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AGVideoBuffer.m; path = sportdream/AgoraPush/AGVideoBuffer.m; sourceTree = "<group>"; };
 		223A63061FFB351F00E38A0B /* AGAudioBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AGAudioBuffer.h; path = sportdream/AgoraPush/AGAudioBuffer.h; sourceTree = "<group>"; };
 		223A63071FFB351F00E38A0B /* AGAudioBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AGAudioBuffer.m; path = sportdream/AgoraPush/AGAudioBuffer.m; sourceTree = "<group>"; };
-		223E2C5E1F80831900A7362E /* H264EncodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = H264EncodeViewController.h; path = sportdream/H264EncodeViewController.h; sourceTree = "<group>"; };
-		223E2C5F1F80831900A7362E /* H264EncodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = H264EncodeViewController.m; path = sportdream/H264EncodeViewController.m; sourceTree = "<group>"; };
+		223E2C5E1F80831900A7362E /* H264EncodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = H264EncodeViewController.h; sourceTree = "<group>"; };
+		223E2C5F1F80831900A7362E /* H264EncodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = H264EncodeViewController.m; sourceTree = "<group>"; };
 		224141F61F6C0C9E006DE0F9 /* AgorachatViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AgorachatViewManager.h; path = sportdream/NativeModules/AgorachatViewManager.h; sourceTree = "<group>"; };
 		224141F71F6C0C9E006DE0F9 /* AgorachatViewManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AgorachatViewManager.mm; path = sportdream/NativeModules/AgorachatViewManager.mm; sourceTree = "<group>"; };
 		224142151F6C18EC006DE0F9 /* AgorachatView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AgorachatView.h; path = sportdream/NativeModules/AgorachatView.h; sourceTree = "<group>"; };
 		224142161F6C18EC006DE0F9 /* AgorachatView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AgorachatView.mm; path = sportdream/NativeModules/AgorachatView.mm; sourceTree = "<group>"; };
+		224926122055682F00823A13 /* VideoFilterTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoFilterTool.h; sourceTree = "<group>"; };
+		224926132055682F00823A13 /* VideoFilterTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoFilterTool.m; sourceTree = "<group>"; };
+		2249264E20576F9400823A13 /* RemoteControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteControlView.h; sourceTree = "<group>"; };
+		2249264F20576F9400823A13 /* RemoteControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RemoteControlView.m; sourceTree = "<group>"; };
+		2249265120576FA500823A13 /* RemoteControlViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteControlViewManager.h; sourceTree = "<group>"; };
+		2249265220576FA500823A13 /* RemoteControlViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RemoteControlViewManager.m; sourceTree = "<group>"; };
+		224926572057BF5300823A13 /* silence10sec.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence10sec.mp3; sourceTree = "<group>"; };
+		224929802059628000823A13 /* AccompanyModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AccompanyModule.h; sourceTree = "<group>"; };
+		224929812059628000823A13 /* AccompanyModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AccompanyModule.m; sourceTree = "<group>"; };
+		224929832059B00100823A13 /* VideoGPUFilterModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoGPUFilterModule.h; sourceTree = "<group>"; };
+		224929842059B00100823A13 /* VideoGPUFilterModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoGPUFilterModule.m; sourceTree = "<group>"; };
+		2249298A2069246700823A13 /* live_audio_packet_queue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = live_audio_packet_queue.cpp; sourceTree = "<group>"; };
+		2249298B2069246700823A13 /* live_audio_packet_queue.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = live_audio_packet_queue.hpp; sourceTree = "<group>"; };
+		2249298D206A147700823A13 /* platform_4_live_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform_4_live_common.h; sourceTree = "<group>"; };
+		2249298E206A589F00823A13 /* live_video_packet_queue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = live_video_packet_queue.cpp; sourceTree = "<group>"; };
+		2249298F206A589F00823A13 /* live_video_packet_queue.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = live_video_packet_queue.hpp; sourceTree = "<group>"; };
+		22492991206A9C4A00823A13 /* live_thread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = live_thread.cpp; sourceTree = "<group>"; };
+		22492992206A9C4A00823A13 /* live_thread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = live_thread.hpp; sourceTree = "<group>"; };
+		22492994206B391500823A13 /* live_audio_packet_pool.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = live_audio_packet_pool.cpp; sourceTree = "<group>"; };
+		22492995206B391500823A13 /* live_audio_packet_pool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = live_audio_packet_pool.hpp; sourceTree = "<group>"; };
+		22492997206B773000823A13 /* gearshift_box.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gearshift_box.cpp; sourceTree = "<group>"; };
+		22492998206B773000823A13 /* gearshift_box.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = gearshift_box.hpp; sourceTree = "<group>"; };
+		2249299A206BA37200823A13 /* live_video_quality_agent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = live_video_quality_agent.cpp; sourceTree = "<group>"; };
+		2249299B206BA37200823A13 /* live_video_quality_agent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = live_video_quality_agent.hpp; sourceTree = "<group>"; };
+		2249299D206BC12E00823A13 /* publisher_rate_feed_back.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = publisher_rate_feed_back.cpp; sourceTree = "<group>"; };
+		2249299E206BC12E00823A13 /* publisher_rate_feed_back.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = publisher_rate_feed_back.hpp; sourceTree = "<group>"; };
+		224929A0206BD2CA00823A13 /* publisher_statistics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = publisher_statistics.cpp; sourceTree = "<group>"; };
+		224929A1206BD2CA00823A13 /* publisher_statistics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = publisher_statistics.hpp; sourceTree = "<group>"; };
+		224929A3206BD8C100823A13 /* live_packet_pool.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = live_packet_pool.cpp; sourceTree = "<group>"; };
+		224929A4206BD8C100823A13 /* live_packet_pool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = live_packet_pool.hpp; sourceTree = "<group>"; };
+		224929A6206C834A00823A13 /* pool_av_user.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pool_av_user.h; sourceTree = "<group>"; };
+		224929A7206C834A00823A13 /* pool_av_user.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = pool_av_user.mm; sourceTree = "<group>"; };
+		224929A9206C8B2100823A13 /* video_consumer_thread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = video_consumer_thread.cpp; sourceTree = "<group>"; };
+		224929AA206C8B2100823A13 /* video_consumer_thread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = video_consumer_thread.hpp; sourceTree = "<group>"; };
+		224929AC206C8CAE00823A13 /* recording_publisher.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = recording_publisher.cpp; sourceTree = "<group>"; };
+		224929AD206C8CAE00823A13 /* recording_publisher.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = recording_publisher.hpp; sourceTree = "<group>"; };
+		224929AF206C8E5500823A13 /* platform_4_live_ffmpeg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform_4_live_ffmpeg.h; sourceTree = "<group>"; };
+		224929B0206C9FEE00823A13 /* recording_h264_publisher.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = recording_h264_publisher.cpp; sourceTree = "<group>"; };
+		224929B1206C9FEE00823A13 /* recording_h264_publisher.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = recording_h264_publisher.hpp; sourceTree = "<group>"; };
+		224929B3206CE34300823A13 /* aac_thread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = aac_thread.cpp; sourceTree = "<group>"; };
+		224929B4206CE34300823A13 /* aac_thread.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = aac_thread.hpp; sourceTree = "<group>"; };
+		224929B6206CF31800823A13 /* audio_encoder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = audio_encoder.cpp; sourceTree = "<group>"; };
+		224929B7206CF31800823A13 /* audio_encoder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = audio_encoder.hpp; sourceTree = "<group>"; };
+		224929B9206D3E2700823A13 /* PushStreamConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PushStreamConfiguration.h; sourceTree = "<group>"; };
+		224929BA206D3F8100823A13 /* PushStreamMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PushStreamMetadata.h; sourceTree = "<group>"; };
+		224929BB206D3F8100823A13 /* PushStreamMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PushStreamMetadata.m; sourceTree = "<group>"; };
 		224AD52A1F64F4A000B32263 /* CalendarManager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CalendarManager.xcodeproj; path = "../node_modules/sport-native-modules/ios/CalendarManager/CalendarManager.xcodeproj"; sourceTree = "<group>"; };
+		22682DCD2070FA66000BB7E1 /* FFmpegPushClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFmpegPushClient.h; sourceTree = "<group>"; };
+		22682DCE2070FA66000BB7E1 /* FFmpegPushClient.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FFmpegPushClient.mm; sourceTree = "<group>"; };
+		22682DD02071F646000BB7E1 /* VideoPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoPlayer.h; sourceTree = "<group>"; };
+		22682DD12071F646000BB7E1 /* VideoPlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoPlayer.mm; sourceTree = "<group>"; };
+		22682DDB2074DB45000BB7E1 /* IMG_0032.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = IMG_0032.m4v; sourceTree = "<group>"; };
+		22682DDD207E6EE5000BB7E1 /* LocalNetManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalNetManager.h; sourceTree = "<group>"; };
+		22682DDE207E6EE5000BB7E1 /* LocalNetManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalNetManager.m; sourceTree = "<group>"; };
 		2268C05E1F7A32B1007ED730 /* QiniuManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QiniuManager.h; path = sportdream/NativeModules/QiniuManager.h; sourceTree = "<group>"; };
 		2268C05F1F7A32B1007ED730 /* QiniuManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = QiniuManager.m; path = sportdream/NativeModules/QiniuManager.m; sourceTree = "<group>"; };
 		226BC6001FD653A10052C66D /* BaiduASRModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BaiduASRModule.h; path = sportdream/NativeModules/BaiduASRModule.h; sourceTree = "<group>"; };
@@ -581,14 +717,13 @@
 		226BC6771FD6CAB30052C66D /* offline_engine_tmp_license.dat */ = {isa = PBXFileReference; lastKnownFileType = text; path = offline_engine_tmp_license.dat; sourceTree = "<group>"; };
 		226BC6781FD6CAB30052C66D /* tmp_license.dat */ = {isa = PBXFileReference; lastKnownFileType = text; path = tmp_license.dat; sourceTree = "<group>"; };
 		226D34DD1FB8086F00A9D593 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
-		226D35021FB8460500A9D593 /* RCTBarCode.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBarCode.xcodeproj; path = "../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarCode.xcodeproj"; sourceTree = "<group>"; };
 		226D350A1FB846A800A9D593 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		227283381F6B6595003BB2FD /* EaseChatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EaseChatManager.h; path = sportdream/NativeModules/EaseChatManager.h; sourceTree = "<group>"; };
 		227283391F6B6595003BB2FD /* EaseChatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EaseChatManager.m; path = sportdream/NativeModules/EaseChatManager.m; sourceTree = "<group>"; };
 		2276C9E31FD797F7001C66B1 /* baidu_speech_grammar.bsg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = baidu_speech_grammar.bsg; sourceTree = "<group>"; };
-		2276CA0F1FDA9725001C66B1 /* VideoChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VideoChatViewController.h; path = sportdream/VideoChatViewController.h; sourceTree = "<group>"; };
-		2276CA101FDA9725001C66B1 /* VideoChatViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = VideoChatViewController.mm; path = sportdream/VideoChatViewController.mm; sourceTree = "<group>"; };
-		2276CA111FDA9725001C66B1 /* VideoChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = VideoChatViewController.xib; path = sportdream/VideoChatViewController.xib; sourceTree = "<group>"; };
+		2276CA0F1FDA9725001C66B1 /* VideoChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoChatViewController.h; sourceTree = "<group>"; };
+		2276CA101FDA9725001C66B1 /* VideoChatViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoChatViewController.mm; sourceTree = "<group>"; };
+		2276CA111FDA9725001C66B1 /* VideoChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoChatViewController.xib; sourceTree = "<group>"; };
 		2276CA6A1FDAAE8D001C66B1 /* libBaiduSpeechSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBaiduSpeechSDK.a; sourceTree = "<group>"; };
 		2276CAAA1FDAD738001C66B1 /* AgoraVideoChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraVideoChat.framework; sourceTree = "<group>"; };
 		2276CAF81FDE892F001C66B1 /* AGVideoProcessing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AGVideoProcessing.h; path = sportdream/AgoraPush/AGVideoProcessing.h; sourceTree = "<group>"; };
@@ -605,17 +740,17 @@
 		2276CB701FDF8A51001C66B1 /* QiniuPlayView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = QiniuPlayView.m; path = sportdream/NativeModules/QiniuPlayView.m; sourceTree = "<group>"; };
 		2276CB721FE01AA3001C66B1 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = sportdream/NativeModules/Reachability.h; sourceTree = "<group>"; };
 		2276CB731FE01AA3001C66B1 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = sportdream/NativeModules/Reachability.m; sourceTree = "<group>"; };
-		2276CB751FE0C19A001C66B1 /* QiniuPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QiniuPlayerViewController.h; path = sportdream/QiniuPlayerViewController.h; sourceTree = "<group>"; };
-		2276CB761FE0C19A001C66B1 /* QiniuPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = QiniuPlayerViewController.m; path = sportdream/QiniuPlayerViewController.m; sourceTree = "<group>"; };
-		2276CB901FE3C329001C66B1 /* MatchDirectorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MatchDirectorViewController.h; path = sportdream/MatchDirectorViewController.h; sourceTree = "<group>"; };
-		2276CB911FE3C329001C66B1 /* MatchDirectorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MatchDirectorViewController.m; path = sportdream/MatchDirectorViewController.m; sourceTree = "<group>"; };
-		2276CB921FE3C329001C66B1 /* MatchDirectorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MatchDirectorViewController.xib; path = sportdream/MatchDirectorViewController.xib; sourceTree = "<group>"; };
-		2276CBC91FE691F7001C66B1 /* SocketClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SocketClient.h; path = sportdream/SocketClient.h; sourceTree = "<group>"; };
-		2276CBCA1FE691F7001C66B1 /* SocketClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SocketClient.m; path = sportdream/SocketClient.m; sourceTree = "<group>"; };
-		2276CC141FE895A0001C66B1 /* ARCameraViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ARCameraViewController.h; path = sportdream/ARCameraViewController.h; sourceTree = "<group>"; };
-		2276CC151FE895A0001C66B1 /* ARCameraViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ARCameraViewController.m; path = sportdream/ARCameraViewController.m; sourceTree = "<group>"; };
-		2276CC371FE8AA4D001C66B1 /* CFTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CFTool.h; path = sportdream/CFTool.h; sourceTree = "<group>"; };
-		2276CC381FE8AA4D001C66B1 /* CFTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CFTool.m; path = sportdream/CFTool.m; sourceTree = "<group>"; };
+		2276CB751FE0C19A001C66B1 /* QiniuPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QiniuPlayerViewController.h; sourceTree = "<group>"; };
+		2276CB761FE0C19A001C66B1 /* QiniuPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QiniuPlayerViewController.m; sourceTree = "<group>"; };
+		2276CB901FE3C329001C66B1 /* MatchDirectorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MatchDirectorViewController.h; sourceTree = "<group>"; };
+		2276CB911FE3C329001C66B1 /* MatchDirectorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MatchDirectorViewController.m; sourceTree = "<group>"; };
+		2276CB921FE3C329001C66B1 /* MatchDirectorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchDirectorViewController.xib; sourceTree = "<group>"; };
+		2276CBC91FE691F7001C66B1 /* SocketClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocketClient.h; sourceTree = "<group>"; };
+		2276CBCA1FE691F7001C66B1 /* SocketClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocketClient.m; sourceTree = "<group>"; };
+		2276CC141FE895A0001C66B1 /* ARCameraViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARCameraViewController.h; sourceTree = "<group>"; };
+		2276CC151FE895A0001C66B1 /* ARCameraViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARCameraViewController.m; sourceTree = "<group>"; };
+		2276CC371FE8AA4D001C66B1 /* CFTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFTool.h; sourceTree = "<group>"; };
+		2276CC381FE8AA4D001C66B1 /* CFTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFTool.m; sourceTree = "<group>"; };
 		227BE4F11F7E1E320074C4E1 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		227BE4F31F7E20780074C4E1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		227BE4F51F7E241E0074C4E1 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -632,21 +767,21 @@
 		227BE50B1F7E260A0074C4E1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		227BE50D1F7E26180074C4E1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		227BE50F1F7E262B0074C4E1 /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
-		227BE5111F7E26B80074C4E1 /* ZhiboAnchorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZhiboAnchorViewController.h; path = sportdream/ZhiboAnchorViewController.h; sourceTree = "<group>"; };
-		227BE5121F7E26B80074C4E1 /* ZhiboAnchorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ZhiboAnchorViewController.m; path = sportdream/ZhiboAnchorViewController.m; sourceTree = "<group>"; };
-		227EF00520050166000CAB65 /* CameraOnStandViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CameraOnStandViewController.h; path = sportdream/CameraOnStandViewController.h; sourceTree = "<group>"; };
-		227EF00620050166000CAB65 /* CameraOnStandViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CameraOnStandViewController.m; path = sportdream/CameraOnStandViewController.m; sourceTree = "<group>"; };
+		227BE5111F7E26B80074C4E1 /* ZhiboAnchorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZhiboAnchorViewController.h; sourceTree = "<group>"; };
+		227BE5121F7E26B80074C4E1 /* ZhiboAnchorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZhiboAnchorViewController.m; sourceTree = "<group>"; };
+		227EF00520050166000CAB65 /* CameraOnStandViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraOnStandViewController.h; sourceTree = "<group>"; };
+		227EF00620050166000CAB65 /* CameraOnStandViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraOnStandViewController.m; sourceTree = "<group>"; };
 		227EF02820064C51000CAB65 /* h264CacheQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = h264CacheQueue.h; sourceTree = "<group>"; };
 		227EF02920064C51000CAB65 /* h264CacheQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = h264CacheQueue.m; sourceTree = "<group>"; };
-		227EF02B20078790000CAB65 /* DirectorServerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectorServerViewController.h; path = sportdream/DirectorServerViewController.h; sourceTree = "<group>"; };
-		227EF02C20078790000CAB65 /* DirectorServerViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = DirectorServerViewController.mm; path = sportdream/DirectorServerViewController.mm; sourceTree = "<group>"; };
-		227EF02E2007883D000CAB65 /* CommentatorsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommentatorsViewController.h; path = sportdream/CommentatorsViewController.h; sourceTree = "<group>"; };
-		227EF02F2007883D000CAB65 /* CommentatorsViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = CommentatorsViewController.mm; path = sportdream/CommentatorsViewController.mm; sourceTree = "<group>"; };
-		227EF03120078914000CAB65 /* CheerLeaderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CheerLeaderViewController.h; path = sportdream/CheerLeaderViewController.h; sourceTree = "<group>"; };
-		227EF03220078914000CAB65 /* CheerLeaderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CheerLeaderViewController.m; path = sportdream/CheerLeaderViewController.m; sourceTree = "<group>"; };
-		22808A651F6C284E0064116F /* ChatMessageContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatMessageContainerViewController.h; path = sportdream/ChatMessageContainerViewController.h; sourceTree = "<group>"; };
-		22808A661F6C284E0064116F /* ChatMessageContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatMessageContainerViewController.m; path = sportdream/ChatMessageContainerViewController.m; sourceTree = "<group>"; };
-		22808A671F6C284E0064116F /* ChatMessageContainerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ChatMessageContainerViewController.xib; path = sportdream/ChatMessageContainerViewController.xib; sourceTree = "<group>"; };
+		227EF02B20078790000CAB65 /* DirectorServerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DirectorServerViewController.h; sourceTree = "<group>"; };
+		227EF02C20078790000CAB65 /* DirectorServerViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DirectorServerViewController.mm; sourceTree = "<group>"; };
+		227EF02E2007883D000CAB65 /* CommentatorsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommentatorsViewController.h; sourceTree = "<group>"; };
+		227EF02F2007883D000CAB65 /* CommentatorsViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CommentatorsViewController.mm; sourceTree = "<group>"; };
+		227EF03120078914000CAB65 /* CheerLeaderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CheerLeaderViewController.h; sourceTree = "<group>"; };
+		227EF03220078914000CAB65 /* CheerLeaderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CheerLeaderViewController.m; sourceTree = "<group>"; };
+		22808A651F6C284E0064116F /* ChatMessageContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageContainerViewController.h; sourceTree = "<group>"; };
+		22808A661F6C284E0064116F /* ChatMessageContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageContainerViewController.m; sourceTree = "<group>"; };
+		22808A671F6C284E0064116F /* ChatMessageContainerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatMessageContainerViewController.xib; sourceTree = "<group>"; };
 		228488831F666285001C237B /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		22943FEC1F93161D00E845DE /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		22943FEF1F93170500E845DE /* libiconv.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.tbd; path = usr/lib/libiconv.2.tbd; sourceTree = SDKROOT; };
@@ -676,9 +811,9 @@
 		229442FB1F998B0C00E845DE /* Underdark.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Underdark.framework; path = "../node_modules/react-native-bluetooth-cross-platform/ios/react-native-bluetooth-cross-platform/Underdark.framework"; sourceTree = "<group>"; };
 		229442FC1F998B0C00E845DE /* MessageEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageEncoder.swift; path = "../node_modules/react-native-bluetooth-cross-platform/ios/react-native-bluetooth-cross-platform/MessageEncoder.swift"; sourceTree = "<group>"; };
 		229442FD1F998B0C00E845DE /* ParseExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParseExtensions.swift; path = "../node_modules/react-native-bluetooth-cross-platform/ios/react-native-bluetooth-cross-platform/ParseExtensions.swift"; sourceTree = "<group>"; };
-		22A5E2261F8876EE0088FEE0 /* LocalNetworkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LocalNetworkViewController.h; path = sportdream/LocalNetworkViewController.h; sourceTree = "<group>"; };
-		22A5E2271F8876EE0088FEE0 /* LocalNetworkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LocalNetworkViewController.m; path = sportdream/LocalNetworkViewController.m; sourceTree = "<group>"; };
-		22A5E2281F8876EE0088FEE0 /* LocalNetworkViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = LocalNetworkViewController.xib; path = sportdream/LocalNetworkViewController.xib; sourceTree = "<group>"; };
+		22A5E2261F8876EE0088FEE0 /* LocalNetworkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalNetworkViewController.h; sourceTree = "<group>"; };
+		22A5E2271F8876EE0088FEE0 /* LocalNetworkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalNetworkViewController.m; sourceTree = "<group>"; };
+		22A5E2281F8876EE0088FEE0 /* LocalNetworkViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalNetworkViewController.xib; sourceTree = "<group>"; };
 		22AC53611F74961600188DFD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		22AC53621F74961600188DFD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		22AC53631F74961600188DFD /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -752,8 +887,8 @@
 		22C71809201CC8840089E69A /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAXException.h; sourceTree = "<group>"; };
 		22C7180F201EA8310089E69A /* AACDecode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AACDecode.h; sourceTree = "<group>"; };
 		22C71810201EA8310089E69A /* AACDecode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AACDecode.m; sourceTree = "<group>"; };
-		22C71812201EE8FE0089E69A /* LiveCommentatorsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LiveCommentatorsViewController.h; path = sportdream/LiveCommentatorsViewController.h; sourceTree = "<group>"; };
-		22C71813201EE8FE0089E69A /* LiveCommentatorsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LiveCommentatorsViewController.m; path = sportdream/LiveCommentatorsViewController.m; sourceTree = "<group>"; };
+		22C71812201EE8FE0089E69A /* LiveCommentatorsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LiveCommentatorsViewController.h; sourceTree = "<group>"; };
+		22C71813201EE8FE0089E69A /* LiveCommentatorsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiveCommentatorsViewController.m; sourceTree = "<group>"; };
 		22C71818201F73220089E69A /* avcodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avcodec.h; sourceTree = "<group>"; };
 		22C71819201F73220089E69A /* avfft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avfft.h; sourceTree = "<group>"; };
 		22C7181A201F73220089E69A /* dxva2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dxva2.h; sourceTree = "<group>"; };
@@ -836,15 +971,24 @@
 		22F90D4A202C45D900204E7E /* PLPlayerKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLPlayerKit.framework; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* sportdream-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sportdream-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* sportdream-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "sportdream-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DF246FA16584AB8A12869DF /* RNRecorder.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRecorder.xcodeproj; path = "../node_modules/react-native-screcorder/ios/RNRecorder.xcodeproj"; sourceTree = "<group>"; };
 		443FD7BD00B80608339F73CB /* Pods-sportdream.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sportdream.debug.xcconfig"; path = "Pods/Target Support Files/Pods-sportdream/Pods-sportdream.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		6F793EE7C943423A9DA71B3B /* RCTBarCode.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBarCode.xcodeproj; path = "../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarCode.xcodeproj"; sourceTree = "<group>"; };
 		712D72197359448986F4CD13 /* BleManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BleManager.xcodeproj; path = "../node_modules/react-native-ble-manager/ios/BleManager.xcodeproj"; sourceTree = "<group>"; };
 		72DBF58EAD66A56539F219C6 /* libPods-sportdream.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sportdream.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		8604E443DC034064B2885B93 /* libRCTOrientation.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTOrientation.a; sourceTree = "<group>"; };
+		948C6A1B2BEA428A9E6F0E81 /* RNSound.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
+		9CCAF422EB794608B8915940 /* libRNRecorder.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRecorder.a; sourceTree = "<group>"; };
+		A8BA1F5BC1BA4DBEA0A7B59D /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
 		AE27753B7632412AA09433A3 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		B23BAF42AF81455EA07DB1CA /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
 		DCE8125609D548649A4B3324 /* libBleManager.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBleManager.a; sourceTree = "<group>"; };
+		ED838A46C02F4DD0A61EA6E3 /* libRNAudio.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAudio.a; sourceTree = "<group>"; };
+		ED89F71B5E464C5795B9EC34 /* libRCTBarcode.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTBarcode.a; sourceTree = "<group>"; };
+		F3D38ABB42D14AC190601157 /* RNAudio.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAudio.xcodeproj; path = "../node_modules/react-native-audio/ios/RNAudio.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -860,14 +1004,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22682D89206EA49E000BB7E1 /* libffmpeg.a in Frameworks */,
+				2249297F20590E0400823A13 /* CoreFoundation.framework in Frameworks */,
 				22F90D49202C44C600204E7E /* PLPlayerKit.framework in Frameworks */,
-				22C7186D202042670089E69A /* libffmpeg.a in Frameworks */,
 				2276CAAC1FDAD741001C66B1 /* AgoraVideoChat.framework in Frameworks */,
 				2276CA6B1FDAAE9E001C66B1 /* libBaiduSpeechSDK.a in Frameworks */,
 				22C7186C201FFA770089E69A /* libBaiduTTSSpeechSDK.a in Frameworks */,
 				226BC6251FD6725E0052C66D /* libz.1.2.5.tbd in Frameworks */,
 				22F90D4C202C4B3700204E7E /* PLPlayerKit.framework in Frameworks */,
-				226D35081FB8462C00A9D593 /* libRCTBarcode.a in Frameworks */,
 				226D35011FB8088600A9D593 /* libART.a in Frameworks */,
 				223A62C51FEC0E4A00E38A0B /* libyuv.a in Frameworks */,
 				229443061F998B0D00E845DE /* Underdark.framework in Frameworks */,
@@ -912,6 +1056,12 @@
 				47D0E29FC275B522A60A88AC /* libPods-sportdream.a in Frameworks */,
 				CA942F7D30DB4D14902AD5D4 /* libimageCropPicker.a in Frameworks */,
 				9C611C17DF8C43459393D53C /* libBleManager.a in Frameworks */,
+				B2F3C53B95424406B7760486 /* libRNSound.a in Frameworks */,
+				C46C5FD3EE604DE6B77BCA47 /* libRNAudio.a in Frameworks */,
+				724C5B2DD7C44C6DA12BACEC /* libRCTBarcode.a in Frameworks */,
+				47F4811E07FD4482A1CCEDF9 /* libRCTVideo.a in Frameworks */,
+				0125E3956D4F4904A2A97315 /* libRNRecorder.a in Frameworks */,
+				7E5D646250BC4BE491945883 /* libRCTOrientation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,6 +1170,10 @@
 		13B07FAE1A68108700A75B9A /* sportdream */ = {
 			isa = PBXGroup;
 			children = (
+				224926562057BF5300823A13 /* audio */,
+				224926112054415F00823A13 /* Utils */,
+				224926102054412200823A13 /* ViewControllers */,
+				2249260F2054403000823A13 /* TestViewControllers */,
 				22C71815201F73220089E69A /* FFmpeg */,
 				223A62AD1FEC0E4A00E38A0B /* libyuv */,
 				223A62851FEBA80600E38A0B /* DreamSDK */,
@@ -1028,10 +1182,6 @@
 				226BC6511FD693990052C66D /* BDSClientEASRResources */,
 				229442F01F99899700E845DE /* bluetooth-cross-platform */,
 				229442B61F96FD7700E845DE /* sportdream.entitlements */,
-				2233538F1F82970C002679D6 /* AAPLEAGLLayer.h */,
-				223353901F82970C002679D6 /* AAPLEAGLLayer.m */,
-				223353911F82970D002679D6 /* VideoFileParser.h */,
-				2233538E1F82970C002679D6 /* VideoFileParser.m */,
 				22AC53861F75094800188DFD /* images */,
 				227283371F6B6575003BB2FD /* NativeModules */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -1041,43 +1191,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.mm */,
-				22808A651F6C284E0064116F /* ChatMessageContainerViewController.h */,
-				22808A661F6C284E0064116F /* ChatMessageContainerViewController.m */,
-				22808A671F6C284E0064116F /* ChatMessageContainerViewController.xib */,
-				227BE5111F7E26B80074C4E1 /* ZhiboAnchorViewController.h */,
-				227BE5121F7E26B80074C4E1 /* ZhiboAnchorViewController.m */,
-				223E2C5E1F80831900A7362E /* H264EncodeViewController.h */,
-				223E2C5F1F80831900A7362E /* H264EncodeViewController.m */,
-				2233536E1F827F21002679D6 /* PlayerH264ViewController.h */,
-				2233536F1F827F21002679D6 /* PlayerH264ViewController.m */,
-				22A5E2261F8876EE0088FEE0 /* LocalNetworkViewController.h */,
-				22A5E2271F8876EE0088FEE0 /* LocalNetworkViewController.m */,
-				22A5E2281F8876EE0088FEE0 /* LocalNetworkViewController.xib */,
 				229442AD1F93387100E845DE /* Prefix.pch */,
-				2276CA0F1FDA9725001C66B1 /* VideoChatViewController.h */,
-				2276CA101FDA9725001C66B1 /* VideoChatViewController.mm */,
-				2276CA111FDA9725001C66B1 /* VideoChatViewController.xib */,
-				2276CB751FE0C19A001C66B1 /* QiniuPlayerViewController.h */,
-				2276CB761FE0C19A001C66B1 /* QiniuPlayerViewController.m */,
-				2276CB901FE3C329001C66B1 /* MatchDirectorViewController.h */,
-				2276CB911FE3C329001C66B1 /* MatchDirectorViewController.m */,
-				2276CB921FE3C329001C66B1 /* MatchDirectorViewController.xib */,
-				2276CBC91FE691F7001C66B1 /* SocketClient.h */,
-				2276CBCA1FE691F7001C66B1 /* SocketClient.m */,
-				2276CC141FE895A0001C66B1 /* ARCameraViewController.h */,
-				2276CC151FE895A0001C66B1 /* ARCameraViewController.m */,
-				2276CC371FE8AA4D001C66B1 /* CFTool.h */,
-				2276CC381FE8AA4D001C66B1 /* CFTool.m */,
-				227EF00520050166000CAB65 /* CameraOnStandViewController.h */,
-				227EF00620050166000CAB65 /* CameraOnStandViewController.m */,
-				227EF02B20078790000CAB65 /* DirectorServerViewController.h */,
-				227EF02C20078790000CAB65 /* DirectorServerViewController.mm */,
-				227EF02E2007883D000CAB65 /* CommentatorsViewController.h */,
-				227EF02F2007883D000CAB65 /* CommentatorsViewController.mm */,
-				227EF03120078914000CAB65 /* CheerLeaderViewController.h */,
-				227EF03220078914000CAB65 /* CheerLeaderViewController.m */,
-				22C71812201EE8FE0089E69A /* LiveCommentatorsViewController.h */,
-				22C71813201EE8FE0089E69A /* LiveCommentatorsViewController.m */,
 			);
 			name = sportdream;
 			sourceTree = "<group>";
@@ -1100,6 +1214,8 @@
 		223A62851FEBA80600E38A0B /* DreamSDK */ = {
 			isa = PBXGroup;
 			children = (
+				22682DDB2074DB45000BB7E1 /* IMG_0032.m4v */,
+				224929892069221A00823A13 /* VideoOutput */,
 				22C717FE201CC8840089E69A /* PublicUtility */,
 				22C717C2201CC7DF0089E69A /* AUKit */,
 				22C717C0201C31380089E69A /* 0127_1.mov */,
@@ -1147,6 +1263,10 @@
 				22C71810201EA8310089E69A /* AACDecode.m */,
 				22C71882202159120089E69A /* AudioMixer.h */,
 				22C71883202159120089E69A /* AudioMixer.m */,
+				224926122055682F00823A13 /* VideoFilterTool.h */,
+				224926132055682F00823A13 /* VideoFilterTool.m */,
+				22682DD02071F646000BB7E1 /* VideoPlayer.h */,
+				22682DD12071F646000BB7E1 /* VideoPlayer.mm */,
 			);
 			path = DreamSDK;
 			sourceTree = "<group>";
@@ -1203,10 +1323,183 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		2249260F2054403000823A13 /* TestViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				2276CC141FE895A0001C66B1 /* ARCameraViewController.h */,
+				2276CC151FE895A0001C66B1 /* ARCameraViewController.m */,
+				223E2C5E1F80831900A7362E /* H264EncodeViewController.h */,
+				223E2C5F1F80831900A7362E /* H264EncodeViewController.m */,
+				2233536E1F827F21002679D6 /* PlayerH264ViewController.h */,
+				2233536F1F827F21002679D6 /* PlayerH264ViewController.m */,
+				22A5E2261F8876EE0088FEE0 /* LocalNetworkViewController.h */,
+				22A5E2271F8876EE0088FEE0 /* LocalNetworkViewController.m */,
+				22A5E2281F8876EE0088FEE0 /* LocalNetworkViewController.xib */,
+				2276CA0F1FDA9725001C66B1 /* VideoChatViewController.h */,
+				2276CA101FDA9725001C66B1 /* VideoChatViewController.mm */,
+				2276CA111FDA9725001C66B1 /* VideoChatViewController.xib */,
+				2276CB901FE3C329001C66B1 /* MatchDirectorViewController.h */,
+				2276CB911FE3C329001C66B1 /* MatchDirectorViewController.m */,
+				2276CB921FE3C329001C66B1 /* MatchDirectorViewController.xib */,
+			);
+			path = TestViewControllers;
+			sourceTree = "<group>";
+		};
+		224926102054412200823A13 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				22808A651F6C284E0064116F /* ChatMessageContainerViewController.h */,
+				22808A661F6C284E0064116F /* ChatMessageContainerViewController.m */,
+				22808A671F6C284E0064116F /* ChatMessageContainerViewController.xib */,
+				227BE5111F7E26B80074C4E1 /* ZhiboAnchorViewController.h */,
+				227BE5121F7E26B80074C4E1 /* ZhiboAnchorViewController.m */,
+				2276CB751FE0C19A001C66B1 /* QiniuPlayerViewController.h */,
+				2276CB761FE0C19A001C66B1 /* QiniuPlayerViewController.m */,
+				227EF00520050166000CAB65 /* CameraOnStandViewController.h */,
+				227EF00620050166000CAB65 /* CameraOnStandViewController.m */,
+				227EF02B20078790000CAB65 /* DirectorServerViewController.h */,
+				227EF02C20078790000CAB65 /* DirectorServerViewController.mm */,
+				227EF02E2007883D000CAB65 /* CommentatorsViewController.h */,
+				227EF02F2007883D000CAB65 /* CommentatorsViewController.mm */,
+				227EF03120078914000CAB65 /* CheerLeaderViewController.h */,
+				227EF03220078914000CAB65 /* CheerLeaderViewController.m */,
+				22C71812201EE8FE0089E69A /* LiveCommentatorsViewController.h */,
+				22C71813201EE8FE0089E69A /* LiveCommentatorsViewController.m */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		224926112054415F00823A13 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2233538F1F82970C002679D6 /* AAPLEAGLLayer.h */,
+				223353901F82970C002679D6 /* AAPLEAGLLayer.m */,
+				223353911F82970D002679D6 /* VideoFileParser.h */,
+				2233538E1F82970C002679D6 /* VideoFileParser.m */,
+				2276CBC91FE691F7001C66B1 /* SocketClient.h */,
+				2276CBCA1FE691F7001C66B1 /* SocketClient.m */,
+				2276CC371FE8AA4D001C66B1 /* CFTool.h */,
+				2276CC381FE8AA4D001C66B1 /* CFTool.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		224926472057666A00823A13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2249264B2057666A00823A13 /* libRNSound.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2249264D20576F2700823A13 /* NativeViews */ = {
+			isa = PBXGroup;
+			children = (
+				2249264E20576F9400823A13 /* RemoteControlView.h */,
+				2249264F20576F9400823A13 /* RemoteControlView.m */,
+				2249265120576FA500823A13 /* RemoteControlViewManager.h */,
+				2249265220576FA500823A13 /* RemoteControlViewManager.m */,
+			);
+			path = NativeViews;
+			sourceTree = "<group>";
+		};
+		224926562057BF5300823A13 /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				224926572057BF5300823A13 /* silence10sec.mp3 */,
+			);
+			name = audio;
+			path = sportdream/audio;
+			sourceTree = "<group>";
+		};
+		2249268D2057D3A000823A13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				224926912057D3A000823A13 /* libRNAudio.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		224928492058B65C00823A13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2249284D2058B65C00823A13 /* libRCTBarcode.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		224928C72058C15800823A13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				224928CC2058C15800823A13 /* libRCTVideo.a */,
+				224928CE2058C15800823A13 /* libRCTVideo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		224929772058D02C00823A13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2249297C2058D02C00823A13 /* libRNRecorder.a */,
+				2249297E2058D02C00823A13 /* RNRecorderTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		224929892069221A00823A13 /* VideoOutput */ = {
+			isa = PBXGroup;
+			children = (
+				2249298A2069246700823A13 /* live_audio_packet_queue.cpp */,
+				2249298B2069246700823A13 /* live_audio_packet_queue.hpp */,
+				2249298D206A147700823A13 /* platform_4_live_common.h */,
+				2249298E206A589F00823A13 /* live_video_packet_queue.cpp */,
+				2249298F206A589F00823A13 /* live_video_packet_queue.hpp */,
+				22492991206A9C4A00823A13 /* live_thread.cpp */,
+				22492992206A9C4A00823A13 /* live_thread.hpp */,
+				22492994206B391500823A13 /* live_audio_packet_pool.cpp */,
+				22492995206B391500823A13 /* live_audio_packet_pool.hpp */,
+				22492997206B773000823A13 /* gearshift_box.cpp */,
+				22492998206B773000823A13 /* gearshift_box.hpp */,
+				2249299A206BA37200823A13 /* live_video_quality_agent.cpp */,
+				2249299B206BA37200823A13 /* live_video_quality_agent.hpp */,
+				2249299D206BC12E00823A13 /* publisher_rate_feed_back.cpp */,
+				2249299E206BC12E00823A13 /* publisher_rate_feed_back.hpp */,
+				224929A0206BD2CA00823A13 /* publisher_statistics.cpp */,
+				224929A1206BD2CA00823A13 /* publisher_statistics.hpp */,
+				224929A3206BD8C100823A13 /* live_packet_pool.cpp */,
+				224929A4206BD8C100823A13 /* live_packet_pool.hpp */,
+				224929A6206C834A00823A13 /* pool_av_user.h */,
+				224929A7206C834A00823A13 /* pool_av_user.mm */,
+				224929A9206C8B2100823A13 /* video_consumer_thread.cpp */,
+				224929AA206C8B2100823A13 /* video_consumer_thread.hpp */,
+				224929AC206C8CAE00823A13 /* recording_publisher.cpp */,
+				224929AD206C8CAE00823A13 /* recording_publisher.hpp */,
+				224929AF206C8E5500823A13 /* platform_4_live_ffmpeg.h */,
+				224929B0206C9FEE00823A13 /* recording_h264_publisher.cpp */,
+				224929B1206C9FEE00823A13 /* recording_h264_publisher.hpp */,
+				224929B3206CE34300823A13 /* aac_thread.cpp */,
+				224929B4206CE34300823A13 /* aac_thread.hpp */,
+				224929B6206CF31800823A13 /* audio_encoder.cpp */,
+				224929B7206CF31800823A13 /* audio_encoder.hpp */,
+				224929B9206D3E2700823A13 /* PushStreamConfiguration.h */,
+				224929BA206D3F8100823A13 /* PushStreamMetadata.h */,
+				224929BB206D3F8100823A13 /* PushStreamMetadata.m */,
+			);
+			path = VideoOutput;
+			sourceTree = "<group>";
+		};
 		224AD52B1F64F4A000B32263 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				224AD52F1F64F4A000B32263 /* libCalendarManager.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		22682DC8206F878F000BB7E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				22682DCC206F8790000BB7E1 /* libRCTOrientation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1256,14 +1549,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		226D35031FB8460500A9D593 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				226D35071FB8460500A9D593 /* libRCTBarcode.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		226D35091FB846A800A9D593 /* raw */ = {
 			isa = PBXGroup;
 			children = (
@@ -1276,6 +1561,7 @@
 		227283371F6B6575003BB2FD /* NativeModules */ = {
 			isa = PBXGroup;
 			children = (
+				2249264D20576F2700823A13 /* NativeViews */,
 				2276CB721FE01AA3001C66B1 /* Reachability.h */,
 				2276CB731FE01AA3001C66B1 /* Reachability.m */,
 				227283381F6B6595003BB2FD /* EaseChatManager.h */,
@@ -1300,6 +1586,12 @@
 				2276CB6D1FDF8A31001C66B1 /* QiniuPlayViewManager.m */,
 				2276CB6F1FDF8A51001C66B1 /* QiniuPlayView.h */,
 				2276CB701FDF8A51001C66B1 /* QiniuPlayView.m */,
+				224929802059628000823A13 /* AccompanyModule.h */,
+				224929812059628000823A13 /* AccompanyModule.m */,
+				224929832059B00100823A13 /* VideoGPUFilterModule.h */,
+				224929842059B00100823A13 /* VideoGPUFilterModule.m */,
+				22682DDD207E6EE5000BB7E1 /* LocalNetManager.h */,
+				22682DDE207E6EE5000BB7E1 /* LocalNetManager.m */,
 			);
 			name = NativeModules;
 			sourceTree = "<group>";
@@ -1329,6 +1621,8 @@
 				223A63041FFB256100E38A0B /* AGVideoBuffer.m */,
 				223A63061FFB351F00E38A0B /* AGAudioBuffer.h */,
 				223A63071FFB351F00E38A0B /* AGAudioBuffer.m */,
+				22682DCD2070FA66000BB7E1 /* FFmpegPushClient.h */,
+				22682DCE2070FA66000BB7E1 /* FFmpegPushClient.mm */,
 			);
 			name = AgoraPush;
 			sourceTree = "<group>";
@@ -1595,6 +1889,12 @@
 			children = (
 				B23BAF42AF81455EA07DB1CA /* libimageCropPicker.a */,
 				DCE8125609D548649A4B3324 /* libBleManager.a */,
+				1121A994DD014D89B34A6967 /* libRNSound.a */,
+				ED838A46C02F4DD0A61EA6E3 /* libRNAudio.a */,
+				ED89F71B5E464C5795B9EC34 /* libRCTBarcode.a */,
+				1DD1843136344696845FAE5E /* libRCTVideo.a */,
+				9CCAF422EB794608B8915940 /* libRNRecorder.a */,
+				8604E443DC034064B2885B93 /* libRCTOrientation.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1637,7 +1937,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				226D35021FB8460500A9D593 /* RCTBarCode.xcodeproj */,
 				226D34DD1FB8086F00A9D593 /* ART.xcodeproj */,
 				228488831F666285001C237B /* RCTCameraRoll.xcodeproj */,
 				224AD52A1F64F4A000B32263 /* CalendarManager.xcodeproj */,
@@ -1654,6 +1953,12 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				AE27753B7632412AA09433A3 /* imageCropPicker.xcodeproj */,
 				712D72197359448986F4CD13 /* BleManager.xcodeproj */,
+				948C6A1B2BEA428A9E6F0E81 /* RNSound.xcodeproj */,
+				F3D38ABB42D14AC190601157 /* RNAudio.xcodeproj */,
+				6F793EE7C943423A9DA71B3B /* RCTBarCode.xcodeproj */,
+				140B58BDE6E24FFCAE931045 /* RCTVideo.xcodeproj */,
+				3DF246FA16584AB8A12869DF /* RNRecorder.xcodeproj */,
+				A8BA1F5BC1BA4DBEA0A7B59D /* RCTOrientation.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1834,7 +2139,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = MH4ZLK687Z;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 900;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
@@ -1892,8 +2197,8 @@
 					ProjectRef = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
 				},
 				{
-					ProductGroup = 226D35031FB8460500A9D593 /* Products */;
-					ProjectRef = 226D35021FB8460500A9D593 /* RCTBarCode.xcodeproj */;
+					ProductGroup = 224928492058B65C00823A13 /* Products */;
+					ProjectRef = 6F793EE7C943423A9DA71B3B /* RCTBarCode.xcodeproj */;
 				},
 				{
 					ProductGroup = 228488841F666285001C237B /* Products */;
@@ -1916,6 +2221,10 @@
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
 				},
 				{
+					ProductGroup = 22682DC8206F878F000BB7E1 /* Products */;
+					ProjectRef = A8BA1F5BC1BA4DBEA0A7B59D /* RCTOrientation.xcodeproj */;
+				},
+				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
 					ProjectRef = 139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */;
 				},
@@ -1928,12 +2237,28 @@
 					ProjectRef = 00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */;
 				},
 				{
+					ProductGroup = 224928C72058C15800823A13 /* Products */;
+					ProjectRef = 140B58BDE6E24FFCAE931045 /* RCTVideo.xcodeproj */;
+				},
+				{
 					ProductGroup = 139FDEE71B06529A00C62182 /* Products */;
 					ProjectRef = 139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */;
 				},
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 2249268D2057D3A000823A13 /* Products */;
+					ProjectRef = F3D38ABB42D14AC190601157 /* RNAudio.xcodeproj */;
+				},
+				{
+					ProductGroup = 224929772058D02C00823A13 /* Products */;
+					ProjectRef = 3DF246FA16584AB8A12869DF /* RNRecorder.xcodeproj */;
+				},
+				{
+					ProductGroup = 224926472057666A00823A13 /* Products */;
+					ProjectRef = 948C6A1B2BEA428A9E6F0E81 /* RNSound.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -2003,6 +2328,55 @@
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		2249264B2057666A00823A13 /* libRNSound.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSound.a;
+			remoteRef = 2249264A2057666A00823A13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		224926912057D3A000823A13 /* libRNAudio.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNAudio.a;
+			remoteRef = 224926902057D3A000823A13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2249284D2058B65C00823A13 /* libRCTBarcode.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTBarcode.a;
+			remoteRef = 2249284C2058B65C00823A13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		224928CC2058C15800823A13 /* libRCTVideo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTVideo.a;
+			remoteRef = 224928CB2058C15800823A13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		224928CE2058C15800823A13 /* libRCTVideo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTVideo.a;
+			remoteRef = 224928CD2058C15800823A13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2249297C2058D02C00823A13 /* libRNRecorder.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNRecorder.a;
+			remoteRef = 2249297B2058D02C00823A13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2249297E2058D02C00823A13 /* RNRecorderTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RNRecorderTests.xctest;
+			remoteRef = 2249297D2058D02C00823A13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		224AD52F1F64F4A000B32263 /* libCalendarManager.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2010,18 +2384,18 @@
 			remoteRef = 224AD52E1F64F4A000B32263 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		22682DCC206F8790000BB7E1 /* libRCTOrientation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTOrientation.a;
+			remoteRef = 22682DCB206F8790000BB7E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		226D34E21FB8086F00A9D593 /* libART.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libART.a;
 			remoteRef = 226D34E11FB8086F00A9D593 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		226D35071FB8460500A9D593 /* libRCTBarcode.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRCTBarcode.a;
-			remoteRef = 226D35061FB8460500A9D593 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2284888C1F666286001C237B /* libRCTCameraRoll.a */ = {
@@ -2187,12 +2561,14 @@
 				2276CA131FDA9725001C66B1 /* VideoChatViewController.xib in Resources */,
 				22C717FC201CC7E00089E69A /* test.mp3 in Resources */,
 				22C717F8201CC7E00089E69A /* play_back_effect_param.plist in Resources */,
+				224926582057BF5300823A13 /* silence10sec.mp3 in Resources */,
 				226BC67C1FD6D1CE0052C66D /* license-ios-etts-BaiduBoxDev.dat in Resources */,
 				226BC67D1FD6D1CE0052C66D /* offline_engine_tmp_license.dat in Resources */,
 				226BC67E1FD6D1CE0052C66D /* tmp_license.dat in Resources */,
 				226BC6791FD6CB580052C66D /* Chinese_And_English_Speech_Female.dat in Resources */,
 				226BC67A1FD6CB580052C66D /* Chinese_And_English_Speech_Male.dat in Resources */,
 				226BC67B1FD6CB580052C66D /* Chinese_And_English_Text.dat in Resources */,
+				22682DDC2074DB45000BB7E1 /* IMG_0032.m4v in Resources */,
 				226BC6591FD693D50052C66D /* bds_easr_basic_model.dat in Resources */,
 				226BC65A1FD693D50052C66D /* bds_easr_dnn_wakeup_model.dat in Resources */,
 				22C717F6201CC7E00089E69A /* mote_c.melp in Resources */,
@@ -2203,7 +2579,6 @@
 				2276CB941FE3C329001C66B1 /* MatchDirectorViewController.xib in Resources */,
 				226BC65E1FD693D50052C66D /* bds_easr_wakeup_words.dat in Resources */,
 				226BC65F1FD693D50052C66D /* bds_license.dat in Resources */,
-				226D350B1FB84A8900A9D593 /* beep.wav in Resources */,
 				223771731F7D5A4600299554 /* toggle_camera.png in Resources */,
 				22A5E22A1F8876EE0088FEE0 /* LocalNetworkViewController.xib in Resources */,
 				223771701F7D55E000299554 /* flash_close.png in Resources */,
@@ -2275,13 +2650,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-sportdream-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7E38749938A3DA9C52D2F3EB /* [CP] Copy Pods Resources */ = {
@@ -2290,9 +2668,30 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-sportdream/Pods-sportdream-resources.sh",
+				"${PODS_ROOT}/EaseUILite/EaseUI/resources/EaseUIResource.bundle",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_amatorka.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_miss_etikate.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_1.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_2.png",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MWPhotoBrowser/MWPhotoBrowser.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/QBImagePickerController/QBImagePicker.bundle",
+				"${PODS_ROOT}/RSKImageCropper/RSKImageCropper/RSKImageCropperStrings.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EaseUIResource.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_amatorka.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_miss_etikate.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_1.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_2.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MWPhotoBrowser.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RSKImageCropperStrings.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2305,9 +2704,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-sportdream/Pods-sportdream-frameworks.sh",
+				"${PODS_ROOT}/HyphenateLite/iOS_IM_SDK_V3.3.9/HyphenateSDK/HyphenateLite.framework",
+				"${PODS_ROOT}/PLMediaStreamingKit/Pod/Library/PLMediaStreamingKit.framework",
+				"${PODS_ROOT}/PLMediaStreamingKit/Pod/Library/HappyDNS.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HyphenateLite.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PLMediaStreamingKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HappyDNS.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2329,14 +2735,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2249265320576FA500823A13 /* RemoteControlViewManager.m in Sources */,
 				223A62E71FF1EFFA00E38A0B /* SocketBuffer.m in Sources */,
 				22C717F0201CC7E00089E69A /* hsfeq.cpp in Sources */,
 				223A62FF1FFA2E5B00E38A0B /* ChatVideoViewLayouter.m in Sources */,
 				223A62F91FF9425A00E38A0B /* VideoChatAndPush.m in Sources */,
+				2249299F206BC12E00823A13 /* publisher_rate_feed_back.cpp in Sources */,
 				229442FF1F998B0D00E845DE /* NetworkManager.swift in Sources */,
 				223A62AB1FEBE16000E38A0B /* GPUImageBeautifyFilter.m in Sources */,
 				227EF03320078914000CAB65 /* CheerLeaderViewController.m in Sources */,
 				2276CB711FDF8A51001C66B1 /* QiniuPlayView.m in Sources */,
+				22492990206A589F00823A13 /* live_video_packet_queue.cpp in Sources */,
+				224929A5206BD8C100823A13 /* live_packet_pool.cpp in Sources */,
 				22C717F2201CC7E00089E69A /* KTVAUGraphRecorder.mm in Sources */,
 				22C717F1201CC7E00089E69A /* KTVAUGraphController.mm in Sources */,
 				2276CB6E1FDF8A31001C66B1 /* QiniuPlayViewManager.m in Sources */,
@@ -2348,14 +2758,23 @@
 				223A62FC1FFA260F00E38A0B /* VideoChatSession.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				22C717FA201CC7E00089E69A /* scale_analyze.cpp in Sources */,
+				224929852059B00100823A13 /* VideoGPUFilterModule.m in Sources */,
+				2249298C2069246700823A13 /* live_audio_packet_queue.cpp in Sources */,
+				224929AB206C8B2100823A13 /* video_consumer_thread.cpp in Sources */,
+				224929822059628000823A13 /* AccompanyModule.m in Sources */,
 				22C7180A201CC8840089E69A /* CADebugMacros.cpp in Sources */,
 				13B07FC11A68108700A75B9A /* main.mm in Sources */,
 				2276CB6B1FDF798F001C66B1 /* QiniuPushView.m in Sources */,
+				22492999206B773000823A13 /* gearshift_box.cpp in Sources */,
 				227EF00720050169000CAB65 /* CameraOnStandViewController.m in Sources */,
 				22C717F4201CC7E00089E69A /* mel_chord_ana.cpp in Sources */,
+				2249265020576F9400823A13 /* RemoteControlView.m in Sources */,
 				2276CB771FE0C19A001C66B1 /* QiniuPlayerViewController.m in Sources */,
+				224929A2206BD2CA00823A13 /* publisher_statistics.cpp in Sources */,
 				229442B91F984FF700E845DE /* MultipeerAdvertiserModule.m in Sources */,
+				22682DCF2070FA66000BB7E1 /* FFmpegPushClient.mm in Sources */,
 				22C71814201EE8FE0089E69A /* LiveCommentatorsViewController.m in Sources */,
+				224929A8206C834A00823A13 /* pool_av_user.mm in Sources */,
 				223A62A81FEBE0C900E38A0B /* CameraRecord.m in Sources */,
 				2276CA121FDA9725001C66B1 /* VideoChatViewController.mm in Sources */,
 				223A62F61FF6862300E38A0B /* CameraSlowMotionRecord.m in Sources */,
@@ -2366,14 +2785,18 @@
 				227BE5131F7E26B80074C4E1 /* ZhiboAnchorViewController.m in Sources */,
 				227EF02A20064C51000CAB65 /* h264CacheQueue.m in Sources */,
 				2276CAFA1FDE892F001C66B1 /* AGVideoProcessing.mm in Sources */,
+				22682DDF207E6EE5000BB7E1 /* LocalNetManager.m in Sources */,
 				229442FE1F998B0C00E845DE /* User.swift in Sources */,
 				223A62CE1FED38B300E38A0B /* mp4Push.m in Sources */,
+				224929B8206CF31800823A13 /* audio_encoder.cpp in Sources */,
 				2276CC391FE8AA4D001C66B1 /* CFTool.m in Sources */,
+				22682DD22071F646000BB7E1 /* VideoPlayer.mm in Sources */,
 				2276CB111FDE9477001C66B1 /* LivePusher.m in Sources */,
 				22C717EB201CC7E00089E69A /* AVAudioSession+RouteUtils.m in Sources */,
 				229443041F998B0D00E845DE /* ReactNearbyProtocol.swift in Sources */,
 				22C717F3201CC7E00089E69A /* mayer_fft.cpp in Sources */,
 				22C717ED201CC7E00089E69A /* doubleyou.cpp in Sources */,
+				224929B5206CE34300823A13 /* aac_thread.cpp in Sources */,
 				227EF0302007883D000CAB65 /* CommentatorsViewController.mm in Sources */,
 				22A5E2291F8876EE0088FEE0 /* LocalNetworkViewController.m in Sources */,
 				229443071F998B0D00E845DE /* MessageEncoder.swift in Sources */,
@@ -2383,12 +2806,14 @@
 				223A63081FFB351F00E38A0B /* AGAudioBuffer.m in Sources */,
 				22C717EA201CC7E00089E69A /* autotune.cpp in Sources */,
 				2272833A1F6B6595003BB2FD /* EaseChatManager.m in Sources */,
+				22492996206B391500823A13 /* live_audio_packet_pool.cpp in Sources */,
 				2276CC161FE895A0001C66B1 /* ARCameraViewController.m in Sources */,
 				229443001F998B0D00E845DE /* NetworkManager.m in Sources */,
 				223353921F82970D002679D6 /* VideoFileParser.m in Sources */,
 				22C7180B201CC8840089E69A /* CADebugPrintf.cpp in Sources */,
 				226BC6021FD653A10052C66D /* BaiduASRModule.m in Sources */,
 				223353931F82970D002679D6 /* AAPLEAGLLayer.m in Sources */,
+				22492993206A9C4A00823A13 /* live_thread.cpp in Sources */,
 				22C717FB201CC7E00089E69A /* scale_count.cpp in Sources */,
 				2276CB741FE01AA3001C66B1 /* Reachability.m in Sources */,
 				223353701F827F21002679D6 /* PlayerH264ViewController.m in Sources */,
@@ -2401,6 +2826,7 @@
 				22C7180C201CC8840089E69A /* CAHostTimeBase.cpp in Sources */,
 				223A62E41FF1E4F900E38A0B /* LocalWifiNetwork.m in Sources */,
 				22C717BD201AC55C0089E69A /* PCMPlayer.m in Sources */,
+				2249299C206BA37200823A13 /* live_video_quality_agent.cpp in Sources */,
 				2268C0601F7A32B1007ED730 /* QiniuManager.m in Sources */,
 				22C7179A2019C3DD0089E69A /* FileDecoder.m in Sources */,
 				22C717E9201CC7E00089E69A /* AQPlayer.mm in Sources */,
@@ -2408,14 +2834,18 @@
 				22C71727200DEBFB0089E69A /* AgoraKitRemoteCamera.mm in Sources */,
 				223A62E11FEF3FF100E38A0B /* h264encode.m in Sources */,
 				223A62EA1FF51C6500E38A0B /* h264decode.m in Sources */,
+				224926142055682F00823A13 /* VideoFilterTool.m in Sources */,
 				229443051F998B0D00E845DE /* TransportHandler.swift in Sources */,
 				2276CBCB1FE691F7001C66B1 /* SocketClient.m in Sources */,
 				223A63021FFA7FB900E38A0B /* StreamingClient.m in Sources */,
+				224929AE206C8CAE00823A13 /* recording_publisher.cpp in Sources */,
 				2276CB481FDF7842001C66B1 /* QiniuPushViewManager.m in Sources */,
 				22C71782200F67EE0089E69A /* RemoteCameraSession.m in Sources */,
 				229443021F998B0D00E845DE /* NetworkCommunicator.swift in Sources */,
+				224929BC206D3F8100823A13 /* PushStreamMetadata.m in Sources */,
 				22C7180D201CC8840089E69A /* CAStreamBasicDescription.cpp in Sources */,
 				223A62ED1FF5C6D200E38A0B /* AudioRecord.m in Sources */,
+				224929B2206C9FEE00823A13 /* recording_h264_publisher.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2478,6 +2908,12 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-screcorder/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = sportdreamTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2507,6 +2943,12 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-screcorder/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = sportdreamTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2529,6 +2971,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 443FD7BD00B80608339F73CB /* Pods-sportdream.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = sportdream/sportdream.entitlements;
@@ -2558,6 +3001,12 @@
 					"$(SRCROOT)/sportdream/libs",
 					"$(SRCROOT)/sportdream/libyuv/include",
 					"$(SRCROOT)/sportdream/FFmpeg/include",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-screcorder/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = sportdream/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2629,6 +3078,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				UNITY_RUNTIME_VERSION = 2017.1.0f3;
 				UNITY_SCRIPTING_BACKEND = il2cpp;
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2637,6 +3087,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 145373CC2E57454D07536E3B /* Pods-sportdream.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = sportdream/sportdream.entitlements;
@@ -2665,6 +3116,12 @@
 					"$(SRCROOT)/sportdream/libs",
 					"$(SRCROOT)/sportdream/libyuv/include",
 					"$(SRCROOT)/sportdream/FFmpeg/include",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-screcorder/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = sportdream/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2735,6 +3192,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				UNITY_RUNTIME_VERSION = 2017.1.0f3;
 				UNITY_SCRIPTING_BACKEND = il2cpp;
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2755,6 +3213,12 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-screcorder/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = "sportdream-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2791,6 +3255,12 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-ble-manager/ios",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-smart-barcode/ios/RCTBarcode/RCTBarcode",
+					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-screcorder/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = "sportdream-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

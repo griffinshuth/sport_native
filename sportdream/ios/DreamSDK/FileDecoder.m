@@ -22,6 +22,10 @@
   BOOL keepLooping;
   CMTime previousFrameTime, processingFrameTime;
   CFAbsoluteTime previousActualFrameTime;
+  OSType PixelFormatType;
+  
+  AVAssetReaderOutput *readerVideoTrackOutput;
+  AVAssetReaderOutput *readerAudioTrackOutput;
 }
 -(id)initWithURL:(NSURL*)url
 {
@@ -33,6 +37,21 @@
   self.shouldRepeat = NO;
   keepLooping = NO;
   self.playAtActualSpeed = YES;
+  PixelFormatType = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange;
+  return self;
+}
+
+-(id)initWithURL:(NSURL*)url withPixelType:(OSType)PixelType
+{
+  if (!(self = [super init]))
+  {
+    return nil;
+  }
+  self.url = url;
+  self.shouldRepeat = NO;
+  keepLooping = NO;
+  self.playAtActualSpeed = YES;
+  PixelFormatType = PixelType;
   return self;
 }
 
@@ -84,7 +103,7 @@
   NSError* error = nil;
   AVAssetReader* assetReader = [AVAssetReader assetReaderWithAsset:self.asset error:&error];
   NSMutableDictionary *outputSettings = [NSMutableDictionary dictionary];
-  [outputSettings setObject:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+  [outputSettings setObject:@(PixelFormatType) forKey:(id)kCVPixelBufferPixelFormatTypeKey];
   AVAssetReaderTrackOutput* readerVideoTrackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[[self.asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0] outputSettings:outputSettings];
   readerVideoTrackOutput.alwaysCopiesSampleData = NO;
   [assetReader addOutput:readerVideoTrackOutput];
@@ -95,11 +114,7 @@
   if(shouldRecordAudioTrack){
     AVAssetTrack* audioTrack = [audioTracks objectAtIndex:0];
     NSDictionary * audioOutputSettings = @{
-                                           AVFormatIDKey:@(kAudioFormatLinearPCM),
-                                           //AVLinearPCMIsBigEndianKey:@NO,
-                                           //AVLinearPCMIsFloatKey:@NO,
-                                           //AVLinearPCMBitDepthKey:@(16),
-                                           //AVSampleRateKey:@(44100)
+                                           AVFormatIDKey:@(kAudioFormatLinearPCM)
                                            };
     AVAssetReaderTrackOutput* readerAudioTrackOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:audioTrack outputSettings:audioOutputSettings];
     readerAudioTrackOutput.alwaysCopiesSampleData = NO;
@@ -111,8 +126,6 @@
 -(void)processAsset
 {
   self.reader = [self createAssetReader];
-  AVAssetReaderOutput *readerVideoTrackOutput = nil;
-  AVAssetReaderOutput *readerAudioTrackOutput = nil;
   audioEncodingIsFinished = YES;
   for( AVAssetReaderOutput *output in self.reader.outputs ) {
     if( [output.mediaType isEqualToString:AVMediaTypeAudio] ) {
@@ -130,12 +143,15 @@
     return;
   }
   
+  [self readNextVideoFrameFromOutput];
+  [self readNextAudioSampleFromOutput];
+  
   //begin read
-  while(self.reader.status == AVAssetReaderStatusReading && (!self.shouldRepeat || keepLooping))
+  /*while(self.reader.status == AVAssetReaderStatusReading && (!self.shouldRepeat || keepLooping))
   {
     [self readNextVideoFrameFromOutput:readerVideoTrackOutput];
     if(readerAudioTrackOutput && !audioEncodingIsFinished){
-      [self readNextAudioSampleFromOutput:readerAudioTrackOutput];
+      [self readNextAudioSampleFromOutput:readerAudioTrackOutput readerVideoTrackOutput:readerAudioTrackOutput];
     }
   }
   
@@ -149,34 +165,44 @@
     }else{
       [self endProcessing];
     }
-  }
+  }*/
   
 }
 
-- (void)readNextVideoFrameFromOutput:(AVAssetReaderOutput *)readerVideoTrackOutput
+-(BOOL)isVideoFinished
+{
+  return videoEncodingIsFinished;
+}
+
+- (void)readNextVideoFrameFromOutput
 {
   if(self.reader.status == AVAssetReaderStatusReading && !videoEncodingIsFinished){
     CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
     if(sampleBufferRef){
       if(self.playAtActualSpeed){
         CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(sampleBufferRef);
+        //CGFloat temp = CMTimeGetSeconds(currentSampleTime);
+        //NSLog(@"CMSampleBufferGetOutputPresentationTimeStamp:%f",temp);
+        //NSLog(@"CMSampleBufferGetOutputPresentationTimeStamp:%f",temp);
         CMTime differenceFromLastFrame = CMTimeSubtract(currentSampleTime, previousFrameTime);
         CFAbsoluteTime currentActualTime = CFAbsoluteTimeGetCurrent();
         
         CGFloat frameTimeDifference = CMTimeGetSeconds(differenceFromLastFrame);
         CGFloat actualTimeDifference = currentActualTime - previousActualFrameTime;
         
-        if (frameTimeDifference > actualTimeDifference)
+        /*if (frameTimeDifference >= actualTimeDifference)
         {
           usleep(1000000.0 * (frameTimeDifference - actualTimeDifference));
-        }
+        }*/
+        
+        //usleep(1000000.0 * (frameTimeDifference*0.5));
         
         previousFrameTime = currentSampleTime;
         previousActualFrameTime = CFAbsoluteTimeGetCurrent();
       }
       [self.delegate didVideoOutput:sampleBufferRef];
-      CMSampleBufferInvalidate(sampleBufferRef);
-      CFRelease(sampleBufferRef);
+      //CMSampleBufferInvalidate(sampleBufferRef);
+      //CFRelease(sampleBufferRef);
     }else{
       if (!keepLooping) {
         videoEncodingIsFinished = YES;
@@ -187,14 +213,12 @@
   }
 }
 
-- (void)readNextAudioSampleFromOutput:(AVAssetReaderOutput *)readerAudioTrackOutput
+- (void)readNextAudioSampleFromOutput
 {
   if (self.reader.status == AVAssetReaderStatusReading && ! audioEncodingIsFinished){
     CMSampleBufferRef audioSampleBufferRef = [readerAudioTrackOutput copyNextSampleBuffer];
+    
     if(audioSampleBufferRef){
-      CMFormatDescriptionRef formatDescription = CMSampleBufferGetFormatDescription(audioSampleBufferRef);
-      const AudioStreamBasicDescription* asbd = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription);
-      
       [self.delegate didAudioOutput:audioSampleBufferRef];
       CFRelease(audioSampleBufferRef);
     }else{

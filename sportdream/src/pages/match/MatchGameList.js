@@ -74,7 +74,7 @@ export default class App extends React.Component{
                                                 <Button onClick={
                                                     ()=>{
                                                         this.props.dispatch(NavigationActions.navigate({
-                                                            routeName:'match_admin',
+                                                            routeName:'BasketMatch_Admin',
                                                             params: {
                                                                 team1:this.state.team1,
                                                                 team2:this.state.team2,

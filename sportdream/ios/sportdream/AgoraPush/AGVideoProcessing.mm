@@ -86,7 +86,7 @@ static AgoraVideoFrameObserver s_videoFrameObserver;
     mediaEngine->registerVideoFrameObserver(&s_videoFrameObserver);
   }
   
-  [LivePusher start];
+  //[LivePusher start];
   return 0;
 }
 
@@ -105,7 +105,7 @@ static AgoraVideoFrameObserver s_videoFrameObserver;
     mediaEngine->registerVideoFrameObserver(NULL);
   }
   
-  [LivePusher stop];
+  //[LivePusher stop];
   return 0;
 }
 @end

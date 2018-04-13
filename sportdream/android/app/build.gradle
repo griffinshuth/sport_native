@@ -135,6 +135,11 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-orientation')
+    compile project(':react-native-video')
+    compile project(':react-native-smart-barcode')
+    compile project(':react-native-audio')
+    compile project(':react-native-sound')
     compile project(':react-native-ble-manager')
     compile project(':react-native-image-crop-picker')
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -149,7 +154,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.koushikdutta.async:androidasync:2.+'
     compile project(':react-native-bluetooth-cross-platform')
-    compile project(':react-native-smart-barcode')
     compile 'io.agora.rtc:full-sdk:2.0.0'
 }
 

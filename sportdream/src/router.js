@@ -49,6 +49,13 @@ import QiniuLiveTest from './pages/test/QiniuLiveTest'
 import QiniuPlayTest from './pages/test/QiniuPlayTest'
 import AgoraChatTest from './pages/test/AgoraChatTest'
 import AgoraChat_AndroidTest from './pages/test/AgoraChat_AndroidTest'
+import ShootTrainByVoice from './pages/test/ShootTrainByVoice'
+import VoiceCount from "./pages/test/VoiceCount"
+import BasketMatch_Admin from './pages/match/BasketMatch_Admin'
+import ReactNativeCameraTest from './pages/test/ReactNativeCameraTest'
+import ReactNativeVideoTest from './pages/test/ReactNativeVideoTest'
+import LocalClientTest from './pages/test/LocalClientTest'
+import LocalServerTest from './pages/test/LocalServerTest'
 
 const AppNavigator = StackNavigator(
     {
@@ -79,6 +86,13 @@ const AppNavigator = StackNavigator(
         QiniuPlayTest:{screen:QiniuPlayTest},
         AgoraChatTest:{screen:AgoraChatTest},
         AgoraChat_AndroidTest:{screen:AgoraChat_AndroidTest},
+        ShootTrainByVoice:{screen:ShootTrainByVoice},
+        BasketMatch_Admin:{screen:BasketMatch_Admin},
+        VoiceCount:{screen:VoiceCount},
+        ReactNativeCameraTest:{screen:ReactNativeCameraTest},
+        ReactNativeVideoTest:{screen:ReactNativeVideoTest},
+        LocalClientTest:{screen:LocalClientTest},
+        LocalServerTest:{screen:LocalServerTest},
     },
     {
         headerMode: 'none',

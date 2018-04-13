@@ -26,7 +26,10 @@
 @property (nonatomic, weak) id <FileDecoderDelegate> delegate;
 
 -(id)initWithURL:(NSURL*)url;
+-(id)initWithURL:(NSURL*)url withPixelType:(OSType)PixelType;
 -(void)startProcessing;
 -(void)cancelProcessing;
-
+- (void)readNextVideoFrameFromOutput;
+- (void)readNextAudioSampleFromOutput;
+-(BOOL)isVideoFinished;
 @end

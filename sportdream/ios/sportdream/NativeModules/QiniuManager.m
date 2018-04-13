@@ -14,13 +14,13 @@ RCT_EXPORT_MODULE(QiniuModule);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"uploadsuccessed"];
+  return @[@"uploadProgress"];
 }
 
 RCT_EXPORT_METHOD(upload:(NSString*)filepath resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSURL *url = [NSURL URLWithString:@"http://192.168.0.105/getUploadToken?bucket=grassroot"];
+  NSURL *url = [NSURL URLWithString:@"http://192.168.0.104/getUploadToken?bucket=grassroot"];
   NSMutableURLRequest * theRequest = [NSMutableURLRequest requestWithURL:url];
   NSURLResponse *response = nil;
   NSError *error = nil;
@@ -29,6 +29,7 @@ RCT_EXPORT_METHOD(upload:(NSString*)filepath resolver:(RCTPromiseResolveBlock)re
   QNUploadManager *upManager = [[QNUploadManager alloc] init];
   QNUploadOption *uploadOption = [[QNUploadOption alloc] initWithMime:nil progressHandler:^(NSString *key, float percent) {
     NSLog(@"percent == %.2f", percent);
+    [self sendEventWithName:@"uploadProgress" body:@{@"percent": [NSNumber numberWithFloat:percent]}];
   }
                                                                params:nil
                                                              checkCrc:NO

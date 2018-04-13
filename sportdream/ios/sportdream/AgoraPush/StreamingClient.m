@@ -41,11 +41,11 @@ int const PCMDataSendLength = 2048;
 }
 
 //delegate
--(void)rtmpSpsPps:(const uint8_t*)pps ppsLen:(size_t)ppsLen sps:(const uint8_t*)sps spsLen:(size_t)spsLen
+-(void)rtmpSpsPps:(const uint8_t*)pps ppsLen:(size_t)ppsLen sps:(const uint8_t*)sps spsLen:(size_t)spsLen timestramp:(Float64)miliseconds;
 {
   [self.rtmpPush sendVideoSpsPps:(void*)pps ppsLen:(int)ppsLen sps:(void*)sps spsLen:(int)spsLen];
 }
--(void)rtmpH264:(const void*)data length:(size_t)length isKeyFrame:(bool)isKeyFrame
+-(void)rtmpH264:(const void*)data length:(size_t)length isKeyFrame:(bool)isKeyFrame timestramp:(Float64)miliseconds pts:(int64_t) pts dts:(int64_t) dts
 {
   [self.rtmpPush sendH264Packet:(void*)data size:(int)length isKeyFrame:isKeyFrame];
 }

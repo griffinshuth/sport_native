@@ -169,7 +169,7 @@ export default class Count extends Component{
                 >
                 <View style={{ flex: 1}}>
                     <Tabs swipeable={false} tabs={tabs}
-                          initialPage={1} onChange={this.onChange} onTabClick={this.onTabClick}>
+                          initialPage={0} onChange={this.onChange} onTabClick={this.onTabClick}>
 
                             <View style={{ height:contentHeight,backgroundColor:'white' }}>
                                 <ScrollView style={{flex:1}}>

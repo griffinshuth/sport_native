@@ -21,6 +21,7 @@ import routerModel from './models/routerModel'
 import CountModel from './models/CountModel'
 import TempModel from './models/TempModel'
 import UserModel from './models/UserModel'
+import CurrentAdminMatchModel from './models/CurrentAdminMatchModel'
 import Router from './router'
 
 const app = create({
@@ -34,6 +35,7 @@ app.model(routerModel);
 app.model(CountModel);
 app.model(TempModel);
 app.model(UserModel);
+app.model(CurrentAdminMatchModel);
 
 //app.router(()=><Router/>)
 app.start();
@@ -44,7 +46,7 @@ const AppWithPersist =  () =>
         <Router/>
     </Provider>
 
-persistStore(store, { storage: AsyncStorage ,blacklist:['temp']},function(){
+persistStore(store, { storage: AsyncStorage ,blacklist:['temp','CurrentAdminMatchModel']},function(){
     console.log("persistStore finished:"+JSON.stringify(arguments))
     store.dispatch({type:'temp/storeloaded'})
     store.dispatch({type:'appNS/genClientID'})

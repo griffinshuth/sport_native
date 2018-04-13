@@ -59,7 +59,7 @@ public class QiniuModule extends ReactContextBaseJavaModule {
                 String token = null;
                 byte[] b = null;
                 try {
-                    URL url = new URL("http://192.168.0.105/getUploadToken?bucket=grassroot");
+                    URL url = new URL("http://192.168.0.104/getUploadToken?bucket=grassroot");
                     URLConnection conn = url.openConnection();
                     HttpURLConnection httpconn = (HttpURLConnection)conn;
                     httpconn.setConnectTimeout(6000);

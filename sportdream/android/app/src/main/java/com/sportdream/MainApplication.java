@@ -10,6 +10,11 @@ import android.support.multidex.MultiDexApplication;
 import com.example.toastexample.ImagePIckerModuleReactPackage;
 import com.example.toastexample.ToastModuleReactPackage;
 import com.facebook.react.ReactApplication;
+import com.github.yamill.orientation.OrientationPackage;
+import com.brentvatne.react.ReactVideoPackage;
+import com.reactnativecomponent.barcode.RCTCapturePackage;
+import com.rnim.rn.audio.ReactNativeAudioPackage;
+import com.zmxv.RNSound.RNSoundPackage;
 import it.innove.BleManagerPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -19,6 +24,7 @@ import com.facebook.soloader.SoLoader;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseUI;
 import com.sportdream.NativeModule.BaiduMapModuleReactPackage;
+import com.sportdream.NativeModule.BaiduSpeechModuleReactPackage;
 import com.sportdream.NativeModule.ClassicBlueToothModuleReactPackage;
 import com.sportdream.NativeModule.EaseChatModuleReactPackage;
 
@@ -27,7 +33,6 @@ import com.sportdream.NativeModule.QiniuModuleReactPackage;
 import com.sportdream.NativeModule.WiFiAPModuleReactPackage;
 import com.sportdream.NativeModule.WiFiDirectModuleReactPackage;
 import com.rctunderdark.NetworkManagerPackage;
-import com.reactnativecomponent.barcode.RCTCapturePackage;
 import com.sportdream.NativeUI.AgoraChatReactPackage;
 
 import java.util.Arrays;
@@ -45,6 +50,10 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new OrientationPackage(),
+            new ReactVideoPackage(),
+            new ReactNativeAudioPackage(),
+            new RNSoundPackage(),
             new BleManagerPackage(),
             new PickerPackage(),
           new ToastModuleReactPackage(),
@@ -57,7 +66,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
               new NetworkManagerPackage(),
               new RCTCapturePackage(),
               new WiFiAPModuleReactPackage(),
-              new AgoraChatReactPackage()
+              new AgoraChatReactPackage(),
+              new BaiduSpeechModuleReactPackage()
       );
     }
   };

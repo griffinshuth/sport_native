@@ -21,8 +21,10 @@
   int height;
   int framerate;
   int bitrate;
+  int64_t encodingTimeMills;
   VTCompressionSessionRef _encodeSession;
-  CVPixelBufferRef pixelBuf;
+  dispatch_queue_t                            aQueue;
+  BOOL isSmall;
 }
 
 // h264编码回调，每当系统编码完一帧之后，会异步掉用该方法，此为c语言方法
@@ -53,9 +55,16 @@ void encodeCallback(void *userData, void *sourceFrameRefCon, OSStatus status, VT
     OSStatus err1 = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(formatDesc, 1, &ppsData, &ppsSize, &ppsCount, 0);
     if(err0 == noErr && err1 == noErr){
       vc->spsppsFound = 1;
-      [vc->_delegate dataEncodeToH264:spsData length:spsSize];
-      [vc->_delegate dataEncodeToH264:ppsData length:ppsSize];
-      [vc->_delegate rtmpSpsPps:ppsData ppsLen:ppsSize sps:spsData spsLen:spsSize];
+      if(!vc->isSmall){
+        [vc->_delegate dataEncodeToH264:spsData length:spsSize];
+        [vc->_delegate dataEncodeToH264:ppsData length:ppsSize];
+      }
+      double timeMills = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer))*1000;
+      if(!vc->isSmall){
+        [vc->_delegate rtmpSpsPps:ppsData ppsLen:ppsSize sps:spsData spsLen:spsSize timestramp:timeMills];
+      }else{
+        [vc->_delegate rtmpSmallSpsPps:ppsData ppsLen:ppsSize sps:spsData spsLen:spsSize timestramp:timeMills];
+      }
     }
   }
   
@@ -71,8 +80,19 @@ void encodeCallback(void *userData, void *sourceFrameRefCon, OSStatus status, VT
       uint32_t naluLength = 0;
       memcpy(&naluLength, data+offset, lengthInfoSize);
       naluLength = CFSwapInt32BigToHost(naluLength);
-      [vc->_delegate dataEncodeToH264:data+offset+lengthInfoSize length:naluLength];
-      [vc->_delegate rtmpH264:data+offset+lengthInfoSize length:naluLength isKeyFrame:keyframe];
+      if(!vc->isSmall){
+        [vc->_delegate dataEncodeToH264:data+offset+lengthInfoSize length:naluLength];
+      }
+      CMTime presentationTimeStamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+      double presentationTimeMills = CMTimeGetSeconds(presentationTimeStamp)*1000;
+      //NSLog(@"presentationTimeMills:%f",presentationTimeMills);
+      int64_t pts = presentationTimeMills / 1000.0f * 1000;
+      int64_t dts = pts;
+      if(!vc->isSmall){
+        [vc->_delegate rtmpH264:data+offset+lengthInfoSize length:naluLength isKeyFrame:keyframe timestramp:presentationTimeMills pts:pts dts:dts];
+      }else{
+        [vc->_delegate rtmpSmallH264:data+offset+lengthInfoSize length:naluLength isKeyFrame:keyframe timestramp:presentationTimeMills pts:pts dts:dts];
+      }
       offset += lengthInfoSize+naluLength;
     }
   }
@@ -86,9 +106,31 @@ void encodeCallback(void *userData, void *sourceFrameRefCon, OSStatus status, VT
     height = h;
     framerate = fps;
     bitrate = bt;
-    CVPixelBufferCreate(NULL, width, height, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange, NULL, &pixelBuf);
+    encodingTimeMills = -1;
+    aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    isSmall = false;
   }
   return self;
+}
+
+-(id)initSmallEncodeWith:(int)w  height:(int)h framerate:(int)fps bitrate:(int)bt{
+  self = [super init];
+  if(self){
+    width = w;
+    height = h;
+    framerate = fps;
+    bitrate = bt;
+    encodingTimeMills = -1;
+    aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    isSmall = true;
+  }
+  return self;
+}
+
+-(void)dealloc
+{
+  CFRelease(_encodeSession);
+  _encodeSession = NULL;
 }
 
 -(int)startH264EncodeSession
@@ -127,11 +169,42 @@ void encodeCallback(void *userData, void *sourceFrameRefCon, OSStatus status, VT
   //现在要把NV12数据放入 CVPixelBufferRef中，因为 硬编码主要调用VTCompressionSessionEncodeFrame函数，此函数不接受yuv数据，但是接受CVPixelBufferRef类型。
   
   //初始化pixelBuf，数据类型是kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange，此类型数据格式同NV12格式相同。
-  CVPixelBufferLockBaseAddress(pixelBuf, 0);
+  
+}
+
+-(void)encodeBytes:(unsigned char *)BGRAData
+{
+  dispatch_sync(aQueue, ^{
+    CVPixelBufferRef pixelBuf = NULL;
+    CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, BGRAData, width*4, NULL, NULL, NULL, &pixelBuf);
+    int64_t currentTimeMills = CFAbsoluteTimeGetCurrent() * 1000;
+    if(-1 == encodingTimeMills){
+      encodingTimeMills = currentTimeMills;
+    }
+    int64_t encodingDuration = currentTimeMills - encodingTimeMills;
+    CMTime pts = CMTimeMake(encodingDuration, 1000.); // timestamp is in ms.
+    CMTime dur = CMTimeMake(1, framerate);
+    VTEncodeInfoFlags flags;
+    OSStatus statusCode = VTCompressionSessionEncodeFrame(_encodeSession, pixelBuf, pts, dur, NULL, NULL, &flags);
+    if(statusCode != noErr){
+      NSLog(@"H264: VTCompressionSessionEncodeFrame failed with %d", (int)statusCode);
+    }
+    
+    CFRelease(pixelBuf);
+  });
+}
+
+-(void)encodeH264Frame:(NSData*)NV12Data
+{
+  CVPixelBufferRef pixelBuf = NULL;
+  CVPixelBufferCreate(NULL, width, height, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange, NULL, &pixelBuf);
+  if(CVPixelBufferLockBaseAddress(pixelBuf, 0) != kCVReturnSuccess){
+    NSLog(@"lock failed");
+  }
   //将yuv数据填充到CVPixelBufferRef中
   size_t y_size = width * height;
   size_t uv_size = y_size / 4;
-  uint8_t *yuv_frame = (uint8_t *)yuvData.bytes;
+  uint8_t *yuv_frame = (uint8_t *)NV12Data.bytes;
   
   //处理y frame
   uint8_t *y_frame = CVPixelBufferGetBaseAddressOfPlane(pixelBuf, 0);
@@ -139,28 +212,37 @@ void encodeCallback(void *userData, void *sourceFrameRefCon, OSStatus status, VT
   
   uint8_t *uv_frame = CVPixelBufferGetBaseAddressOfPlane(pixelBuf, 1);
   memcpy(uv_frame, yuv_frame + y_size, uv_size * 2);
-  CVPixelBufferUnlockBaseAddress(pixelBuf, 0);
-}
-
--(void)encodeH264Frame:(NSData*)sampleBuffer
-{
-  [self YUV2CVPixelBufferRef:sampleBuffer];
-  CMTime pts = CMTimeMake(0, 1000);
-  CMTime duration = kCMTimeInvalid;
+  
+  
+  int64_t currentTimeMills = CFAbsoluteTimeGetCurrent() * 1000;
+  if(-1 == encodingTimeMills){
+    encodingTimeMills = currentTimeMills;
+  }
+  int64_t encodingDuration = currentTimeMills - encodingTimeMills;
+  CMTime pts = CMTimeMake(encodingDuration, 1000.); // timestamp is in ms.
+  CMTime dur = CMTimeMake(1, framerate);
   VTEncodeInfoFlags flags;
-  OSStatus statusCode = VTCompressionSessionEncodeFrame(_encodeSession, pixelBuf, pts, duration, NULL, NULL, &flags);
+  OSStatus statusCode = VTCompressionSessionEncodeFrame(_encodeSession, pixelBuf, pts, dur, NULL, NULL, &flags);
   if(statusCode != noErr){
     NSLog(@"H264: VTCompressionSessionEncodeFrame failed with %d", (int)statusCode);
   }
+  CVPixelBufferUnlockBaseAddress(pixelBuf, 0);
+  CVPixelBufferRelease(pixelBuf);
+  
 }
 
 -(void)encodeCMSampleBuffer:(CMSampleBufferRef)sampleBuffer
 {
     CVImageBufferRef imageBuffer = (CVImageBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
-    CMTime pts = CMTimeMake(0, 1000);
-    CMTime duration = kCMTimeInvalid;
+  int64_t currentTimeMills = CFAbsoluteTimeGetCurrent() * 1000;
+  if(-1 == encodingTimeMills){
+    encodingTimeMills = currentTimeMills;
+  }
+  int64_t encodingDuration = currentTimeMills - encodingTimeMills;
+  CMTime pts = CMTimeMake(encodingDuration, 1000.); // timestamp is in ms.
+  CMTime dur = CMTimeMake(1, framerate);
     VTEncodeInfoFlags flags;
-    OSStatus statusCode = VTCompressionSessionEncodeFrame(_encodeSession, imageBuffer, pts, duration, NULL, NULL, &flags);
+    OSStatus statusCode = VTCompressionSessionEncodeFrame(_encodeSession, imageBuffer, pts, dur, NULL, NULL, &flags);
     if(statusCode != noErr){
       NSLog(@"H264: VTCompressionSessionEncodeFrame failed with %d", (int)statusCode);
     }
@@ -171,8 +253,8 @@ void encodeCallback(void *userData, void *sourceFrameRefCon, OSStatus status, VT
 {
   VTCompressionSessionCompleteFrames(_encodeSession, kCMTimeInvalid);
   VTCompressionSessionInvalidate(_encodeSession);
-  CFRelease(_encodeSession);
-  _encodeSession = NULL;
+  //CFRelease(_encodeSession);
+  //_encodeSession = NULL;
 }
 
 

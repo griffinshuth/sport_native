@@ -10,12 +10,12 @@
 #import <AgoraVideoChat/IAgoraMediaEngine.h>
 #import <AgoraVideoChat/IAgoraRtcEngine.h>
 
-class AudioFrameObserver : public agora::media::IAudioFrameObserver
+class RemoteCameraAudioFrameObserver : public agora::media::IAudioFrameObserver
 {
 private:
   void* userdata;
 public:
-  AudioFrameObserver(void* userdata)
+  RemoteCameraAudioFrameObserver(void* userdata)
   {
     this->userdata = userdata;
   }
@@ -39,12 +39,12 @@ public:
   }
 };
 
-class VideoFrameObserver : public agora::media::IVideoFrameObserver
+class RemoteCameraVideoFrameObserver : public agora::media::IVideoFrameObserver
 {
 private:
   void* userdata;
 public:
-  VideoFrameObserver(void* userdata)
+  RemoteCameraVideoFrameObserver(void* userdata)
   {
     this->userdata = userdata;
   }
@@ -91,8 +91,8 @@ public:
 
 @implementation AgoraKitRemoteCamera
 {
-  AudioFrameObserver* s_audioFrameObserver;
-  VideoFrameObserver* s_videoFrameObserver;
+  RemoteCameraAudioFrameObserver* s_audioFrameObserver;
+  RemoteCameraVideoFrameObserver* s_videoFrameObserver;
 }
 static NSInteger streamID = 0;
 
@@ -125,7 +125,7 @@ static NSInteger streamID = 0;
     [self.agoraKit setExternalVideoSource:YES useTexture:FALSE pushMode:YES];
     [self.agoraKit enableVideo];
   }else{
-    [self.agoraKit setVideoProfile:AgoraRtc_VideoProfile_720P swapWidthAndHeight:false];
+    [self.agoraKit setVideoProfile:AgoraRtc_VideoProfile_720P_3 swapWidthAndHeight:false];
     [self.agoraKit enableDualStreamMode:YES];
     [self.agoraKit setRemoteDefaultVideoStreamType:AgoraRtc_VideoStream_Low];
     [self.agoraKit enableVideo];
@@ -145,8 +145,8 @@ static NSInteger streamID = 0;
 {
   [self.agoraKit joinChannelByKey:nil channelName:_channelName info:nil uid:0 joinSuccess:nil];
   void* userdata = (__bridge void*)self;
-  s_audioFrameObserver = new AudioFrameObserver(userdata);
-  s_videoFrameObserver = new VideoFrameObserver(userdata);
+  s_audioFrameObserver = new RemoteCameraAudioFrameObserver(userdata);
+  s_videoFrameObserver = new RemoteCameraVideoFrameObserver(userdata);
   [self registerPreprocessing];
 }
 
@@ -164,11 +164,11 @@ static NSInteger streamID = 0;
   [self.agoraKit sendStreamMessage:streamID data:data];
 }
 
--(void)pushExternalVideoData:(CVPixelBufferRef)NV12Data timeStamp:(CMTime)timeStamp
+-(void)pushExternalVideoData:(NSData*)NV12Data timeStamp:(CMTime)timeStamp
 {
   AgoraVideoFrame* frame = [[AgoraVideoFrame alloc] init];
-  frame.format = 12;
-  frame.textureBuf = NV12Data;
+  frame.format = 2;
+  frame.dataBuf = NV12Data;
   frame.strideInPixels = 1280;
   frame.height = 720;
   frame.time = timeStamp;

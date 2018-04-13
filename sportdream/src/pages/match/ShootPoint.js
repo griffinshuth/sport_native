@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {connect} from "dva"
 import {
     View,
     Text,
@@ -117,19 +118,16 @@ function drawHalfCircle(context,x,y,radius,clock) {
     context.stroke();
 }
 
+@connect(({CurrentAdminMatchModel})=>({CurrentAdminMatchModel}))
 export default class App extends Component {
 
     constructor(props){
         super(props);
-        var shoots = this.props.navigation.state.params.shoot_array.map((item)=>{return item})
-        var freethrows = this.props.navigation.state.params.freethrow_array.map((item)=>{return item})
         this.state = {
-            shoot_array:shoots,
-            freethrow_array:freethrows,
-            player_uid:this.props.navigation.state.params.player.id,
-            nickname:this.props.navigation.state.params.player.nickname,
-            image:this.props.navigation.state.params.player.image,
-            game_uid:this.props.navigation.state.params.game_uid
+            player_uid:this.props.navigation.state.params.playerInfo.id,
+            nickname:this.props.navigation.state.params.playerInfo.nickname,
+            image:this.props.navigation.state.params.playerInfo.image,
+            teamindex:this.props.navigation.state.params.teamindex
         }
 
         this._panResponder = PanResponder.create({
@@ -139,19 +137,14 @@ export default class App extends Component {
             onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
             onPanResponderGrant: (evt,gestureState) => {
                 var p = {x:evt.nativeEvent.locationX,y:evt.nativeEvent.locationY}
-                //Toast.info(JSON.stringify(p),1)
-                //this.ctx.drawImage(this.duihao, p.x, p.y, 16, 16);
                 const BUTTONS = ['2分打铁', '2分命中','3分打铁', '3分命中', 'Delete', '取消'];
                 ActionSheet.showActionSheetWithOptions({
                         options: BUTTONS,
-                        //cancelButtonIndex: BUTTONS.length - 1,
-                        //destructiveButtonIndex: BUTTONS.length - 2,
                         message: '增加投篮点',
                         maskClosable: true
                     },
                     (buttonIndex) => {
                         if(buttonIndex == 0 || buttonIndex == 2){
-                            //this.ctx.drawImage(this.chahao, p.x-8, p.y-8, 16, 16);
                             drawColorCircle(this.ctx,p.x,p.y,4,"red")
                             //生成投篮点数据
                             if(buttonIndex == 0){
@@ -159,11 +152,10 @@ export default class App extends Component {
                             }else{
                                 var shootpoint = {x:this.opt.fieldX(p.x),y:this.opt.fieldY(p.y),point:3,score:false}
                             }
-                            this.state.shoot_array.push(shootpoint);
-                            this.setState({shoot_array:this.state.shoot_array})
-                            emitter.emit("onAddShoot",{shootpoint,player_uid:this.state.player_uid})
+                            this.props.dispatch({type:"CurrentAdminMatchModel/addDataStatistics",payload:{
+                                id:this.state.player_uid,
+                                type:"shoot",value:shootpoint,teamindex:this.state.teamindex}})
                         }else if(buttonIndex == 1 || buttonIndex == 3){
-                            //this.ctx.drawImage(this.duihao, p.x-8, p.y-8, 16, 16);
                             drawColorCircle(this.ctx,p.x,p.y,4,"blue")
                             //生成投篮点数据
                             if(buttonIndex == 1){
@@ -171,9 +163,9 @@ export default class App extends Component {
                             }else{
                                 var shootpoint = {x:this.opt.fieldX(p.x),y:this.opt.fieldY(p.y),point:3,score:true}
                             }
-                            this.state.shoot_array.push(shootpoint);
-                            this.setState({shoot_array:this.state.shoot_array})
-                            emitter.emit("onAddShoot",{shootpoint,player_uid:this.state.player_uid})
+                            this.props.dispatch({type:"CurrentAdminMatchModel/addDataStatistics",payload:{
+                                id:this.state.player_uid,
+                                type:"shoot",value:shootpoint,teamindex:this.state.teamindex}})
                         }
                     });
             },
@@ -323,14 +315,29 @@ export default class App extends Component {
     }
 
     componentDidMount(){
+        var shoot_array = [];
+        const {team1dataStatistics,team2dataStatistics} = this.props.CurrentAdminMatchModel;
+        if(this.state.teamindex == 0){
+            if(team1dataStatistics[this.state.player_uid]){
+                if(team1dataStatistics[this.state.player_uid]["shoot"]){
+                    shoot_array = team1dataStatistics[this.state.player_uid]["shoot"];
+                }
+            }
+        }else{
+            if(team2dataStatistics[this.state.player_uid]){
+                if(team2dataStatistics[this.state.player_uid]["shoot"]){
+                    shoot_array = team2dataStatistics[this.state.player_uid]["shoot"];
+                }
+            }
+        }
         this.handleCanvas(this.canvas);
         //绘制投篮点
         var {height, width} = Dimensions.get('window');
         var actualheight = height
         this.opt = new Options();
         this.opt.updateFieldSize(width,actualheight);
-        for(var i=0;i<this.state.shoot_array.length;i++){
-            var {x,y,point,score} = this.state.shoot_array[i];
+        for(var i=0;i<shoot_array.length;i++){
+            var {x,y,point,score} = shoot_array[i];
             //把逻辑坐标转为物理坐标
             var paint_x = this.opt.screenX(x);
             var paint_y = this.opt.screenY(y);
@@ -342,12 +349,12 @@ export default class App extends Component {
         }
     }
 
-    calculateFreethrow = ()=>{
+    calculateFreethrow = (freethrow_array)=>{
         var total = 0;
         var score = 0;
-        for(var i=0;i<this.state.freethrow_array.length;i++){
-            total += this.state.freethrow_array[i].shoot;
-            score += this.state.freethrow_array[i].score;
+        for(var i=0;i<freethrow_array.length;i++){
+            total += freethrow_array[i].shoot;
+            score += freethrow_array[i].score;
         }
         return score+"/"+total;
     }
@@ -362,10 +369,10 @@ export default class App extends Component {
                 maskClosable: true
             },
             (buttonIndex) => {
-            var freethrow = {type:type,shoot:2,score:2-buttonIndex};
-                this.state.freethrow_array.push(freethrow)
-                this.setState({freethrow_array:this.state.freethrow_array})
-                emitter.emit("addFreethrow",{player_uid:this.state.player_uid,freethrow:freethrow})
+                var freethrow = {type:type,shoot:2,score:2-buttonIndex};
+                this.props.dispatch({type:"CurrentAdminMatchModel/addDataStatistics",payload:{
+                    id:this.state.player_uid,
+                    type:"freethrow",value:freethrow,teamindex:this.state.teamindex}})
             })
     }
 
@@ -378,14 +385,29 @@ export default class App extends Component {
                 maskClosable: true
             },
             (buttonIndex) => {
-            var freethrow = {type:type,shoot:1,score:1-buttonIndex};
-                this.state.freethrow_array.push(freethrow)
-                this.setState({freethrow_array:this.state.freethrow_array})
-                emitter.emit("addFreethrow",{player_uid:this.state.player_uid,freethrow:freethrow})
+                var freethrow = {type:type,shoot:1,score:1-buttonIndex};
+                this.props.dispatch({type:"CurrentAdminMatchModel/addDataStatistics",payload:{
+                    id:this.state.player_uid,
+                    type:"freethrow",value:freethrow,teamindex:this.state.teamindex}})
             })
     }
 
     render() {
+        var freethrow_array = [];
+        const {team1dataStatistics,team2dataStatistics} = this.props.CurrentAdminMatchModel;
+        if(this.state.teamindex == 0){
+            if(team1dataStatistics[this.state.player_uid]){
+                if(team1dataStatistics[this.state.player_uid]["freethrow"]){
+                    freethrow_array = team1dataStatistics[this.state.player_uid]["freethrow"];
+                }
+            }
+        }else{
+            if(team2dataStatistics[this.state.player_uid]){
+                if(team2dataStatistics[this.state.player_uid]["freethrow"]){
+                    freethrow_array = team2dataStatistics[this.state.player_uid]["freethrow"];
+                }
+            }
+        }
         return (
             <View>
                 <ToolBar title="技术统计" navigation={this.props.navigation} />
@@ -416,7 +438,7 @@ export default class App extends Component {
                                 </Flex>
                             </WingBlank>
                         </Card.Body>
-                        <Card.Footer content="位置：未知" extra={"命中率："+this.calculateFreethrow()} />
+                        <Card.Footer content="位置：未知" extra={"命中率："+this.calculateFreethrow(freethrow_array)} />
                     </Card>
                     <WhiteSpace size="lg" />
                 </WingBlank>

@@ -43,7 +43,7 @@
 -(void)joinChannel;
 - (void)leaveChannel;
 - (void)sendDataWithString:(NSString *)message;
--(void)pushExternalVideoData:(CVPixelBufferRef)NV12Data timeStamp:(CMTime)timeStamp;
+-(void)pushExternalVideoData:(NSData*)NV12Data timeStamp:(CMTime)timeStamp;
 -(void)setupRemoteVideo:(AgoraRtcVideoCanvas*)canvas;
 -(void)setRemoteBigSmallStream:(NSUInteger)uid isBig:(BOOL)isBig;
 -(void)switchCamera;

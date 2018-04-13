@@ -1,0 +1,1 @@
+../../../../PLMediaStreamingKit/Pod/Library/PLMediaStreamingKit.framework/Headers/PLAudioEffectConfiguration.h
