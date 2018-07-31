@@ -6,5 +6,6 @@ package com.sportdream.network;
 
 public interface LocalWifiSocketHandler {
     public void DirectServerConnected();
+    public void DirectServerDisconnected();
     public void DataReceived(short PacketID,byte[] data);
 }

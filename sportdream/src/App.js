@@ -46,53 +46,11 @@ const AppWithPersist =  () =>
         <Router/>
     </Provider>
 
-persistStore(store, { storage: AsyncStorage ,blacklist:['temp','CurrentAdminMatchModel']},function(){
+persistStore(store, { storage: AsyncStorage ,blacklist:['temp']},function(){
     console.log("persistStore finished:"+JSON.stringify(arguments))
     store.dispatch({type:'temp/storeloaded'})
     store.dispatch({type:'appNS/genClientID'})
 })
-
-class HomeScreen extends React.Component{
-    static navigationOptions = {
-        title:'Welcome'
-    };
-    render(){
-        const {navigate} = this.props.navigation;
-        return (
-            <View>
-                <Text>Hello,sport!</Text>
-                <Button onPress={()=>navigate('Chat',{user:'mangguo'})} title="Chat with mangguo"></Button>
-            </View>
-        )
-    }
-}
-
-class ChatScreen extends React.Component{
-    static navigationOptions = ({navigation}) => ({
-        title:`Chat with ${navigation.state.params.user}`
-    })
-
-    render(){
-        const {params} = this.props.navigation.state;
-        return (
-            <View>
-                <Text>Chat with {params.user}</Text>
-            </View>
-        )
-    }
-}
-
-const SportDream = StackNavigator({
-    Home:{screen:HomeScreen},
-    Chat:{
-        screen:ChatScreen,
-        path:'chat/:user'
-    }
-})
-
-const prefix = Platform.OS == 'android'?'mychat://mychat/':'mychat://';
-
-const MainApp = ()=> <SportDream uriPrefix={prefix} />
 
 AppRegistry.registerComponent('sportdream',()=>AppWithPersist)
 

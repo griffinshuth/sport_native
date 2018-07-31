@@ -10,10 +10,18 @@ import android.support.multidex.MultiDexApplication;
 import com.example.toastexample.ImagePIckerModuleReactPackage;
 import com.example.toastexample.ToastModuleReactPackage;
 import com.facebook.react.ReactApplication;
+import com.janeasystems.rn_nodejs_mobile.RNNodeJsMobilePackage;
+import com.pusherman.networkinfo.RNNetworkInfoPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.reactnativecomponent.barcode.RCTCapturePackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
+import com.sportdream.NativeModule.HighlightServerModuleReactPackage;
+import com.sportdream.NativeModule.LocalClientModuleReactPackage;
+import com.sportdream.NativeModule.LocalServerModuleReactPackage;
+import com.sportdream.NativeModule.RNBLEPackage;
+import com.sportdream.NativeUI.CameraStandViewReactPackage;
+import com.sportdream.NativeUI.HighlightsViewReactPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import it.innove.BleManagerPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
@@ -49,25 +57,33 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new OrientationPackage(),
-            new ReactVideoPackage(),
-            new ReactNativeAudioPackage(),
-            new RNSoundPackage(),
-            new BleManagerPackage(),
-            new PickerPackage(),
-          new ToastModuleReactPackage(),
-          new ImagePIckerModuleReactPackage(),
-          new EaseChatModuleReactPackage(),
-          new BaiduMapModuleReactPackage(),
-          new QiniuModuleReactPackage(),
+              new MainReactPackage(),
+            new RNNodeJsMobilePackage(),
+            new RNNetworkInfoPackage(),
+              new OrientationPackage(),
+              new ReactVideoPackage(),
+              new ReactNativeAudioPackage(),
+              new RNSoundPackage(),
+              new BleManagerPackage(),
+              new PickerPackage(),
+              new ToastModuleReactPackage(),
+              new ImagePIckerModuleReactPackage(),
+              new EaseChatModuleReactPackage(),
+              new BaiduMapModuleReactPackage(),
+              new QiniuModuleReactPackage(),
               new ClassicBlueToothModuleReactPackage(),
               new WiFiDirectModuleReactPackage(),
               new NetworkManagerPackage(),
               new RCTCapturePackage(),
               new WiFiAPModuleReactPackage(),
               new AgoraChatReactPackage(),
-              new BaiduSpeechModuleReactPackage()
+              new BaiduSpeechModuleReactPackage(),
+              new LocalClientModuleReactPackage(),
+              new LocalServerModuleReactPackage(),
+              new CameraStandViewReactPackage(),
+              new HighlightsViewReactPackage(),
+              new HighlightServerModuleReactPackage(),
+              new RNBLEPackage()
       );
     }
   };
@@ -84,7 +100,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     EaseUI.getInstance().init(this,null);
     EMClient.getInstance().setDebugMode(true);
     //百度地图sdk
-    SDKInitializer.initialize(getApplicationContext());
+    //SDKInitializer.initialize(getApplicationContext());
   }
 
   /**

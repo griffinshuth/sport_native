@@ -24,8 +24,25 @@ import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.koushikdutta.async.AsyncServer;
+import com.koushikdutta.async.AsyncServerSocket;
+import com.koushikdutta.async.AsyncSocket;
+import com.koushikdutta.async.ByteBufferList;
+import com.koushikdutta.async.DataEmitter;
+import com.koushikdutta.async.Util;
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.callback.ConnectCallback;
+import com.koushikdutta.async.callback.DataCallback;
+import com.koushikdutta.async.callback.ListenCallback;
+import com.sportdream.network.BufferedPacketInfo;
+import com.sportdream.network.LocalClientInfo;
+import com.sportdream.network.PacketIDDef;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,6 +52,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Created by lili on 2017/10/18.
@@ -56,18 +74,27 @@ public class WiFiDirectModule extends ReactContextBaseJavaModule implements Life
     private WifiP2pInfo mWifiP2pInfo;
     private WifiP2pManager wifiP2pManager;
     private WifiP2pManager.Channel wifiDirectChannel;
+    private int port = 7777;
+    private AsyncServerSocket mServerSocket;
+    private HashMap mRemoteSockets;
+    private AsyncSocket mClientSocket;
+
     private WifiP2pManager.PeerListListener mPeerListListener = new WifiP2pManager.PeerListListener(){
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peersList) {
             Collection<WifiP2pDevice> aList = peersList.getDeviceList();
             Object[] arr = aList.toArray();
+            WritableMap params = Arguments.createMap();
+            WritableArray array = Arguments.createArray();
             for (int i = 0; i < arr.length; i++) {
                 WifiP2pDevice a = (WifiP2pDevice) arr[i];
-                WritableMap params = Arguments.createMap();
-                params.putString("Address",a.deviceAddress);
-                params.putString("name",a.deviceName);
-                sendEvent("onWifiDirectPeers",params);
+                WritableMap singlemap = Arguments.createMap();
+                singlemap.putString("Address",a.deviceAddress);
+                singlemap.putString("name",a.deviceName);
+                array.pushMap(singlemap);
             }
+            params.putArray("peerlist",array);
+            sendEvent("onWifiDirectPeers",params);
         }
     };
     private WifiP2pManager.ConnectionInfoListener mInfoListener = new WifiP2pManager.ConnectionInfoListener(){
@@ -77,49 +104,19 @@ public class WiFiDirectModule extends ReactContextBaseJavaModule implements Life
                 //服务器
                 mWifiP2pInfo = minfo;
                 WritableMap params = Arguments.createMap();
-                params.putString("type","server");
-                sendEvent("onWifiDirectConnected",params);
-                AsyncTask<Void, Void, String> mDataServerTask = new AsyncTask<Void, Void, String>() {
-                    @Override
-                    protected String doInBackground(Void... params) {
-                        try {
-                            ServerSocket serverSocket = new ServerSocket(8888);
-                            Socket client = serverSocket.accept();
-                            InputStream inputStream = client.getInputStream();
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            int i;
-                            while ((i = inputStream.read()) != -1){
-                                baos.write(i);
-                            }
-                            String str = baos.toString();
-                            serverSocket.close();
-                            return str;
-                        }catch (IOException e){
-                            return null;
-                        }
-                    }
-                    @Override
-                    protected void onPostExecute(String result){
-                        Toast.makeText(context,"result:"+result, Toast.LENGTH_SHORT).show();
-                        wifiP2pManager.removeGroup(wifiDirectChannel, new WifiP2pManager.ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                            }
+                params.putString("type","GroupOwner");
+                sendEvent("onWifiDirectPeerConnected",params);
+                //启动服务器
+                if(mServerSocket == null){
+                    initServer();
+                }
 
-                            @Override
-                            public void onFailure(int reason) {
-
-                            }
-                        });
-                    }
-                };
-                mDataServerTask.execute();
             }else if(minfo.groupFormed){
                 //客户端
                 mWifiP2pInfo = minfo;
                 WritableMap params = Arguments.createMap();
-                params.putString("type","client");
-                sendEvent("onWifiDirectConnected",params);
+                params.putString("type","groupFormed");
+                sendEvent("onWifiDirectPeerConnected",params);
             }
         }
     };
@@ -139,6 +136,16 @@ public class WiFiDirectModule extends ReactContextBaseJavaModule implements Life
                     wifiP2pManager.requestConnectionInfo(wifiDirectChannel,mInfoListener);
                 }else{
                     Log.i("sportdream", "断开连接");
+                    WritableMap params = Arguments.createMap();
+                    sendEvent("onWifiDirectPeerDisconnected",params);
+                    if(mServerSocket != null){
+                        mServerSocket.stop();
+                        mServerSocket = null;
+                    }
+                    if(mClientSocket != null){
+                        mClientSocket.close();
+                        mClientSocket = null;
+                    }
                 }
             }
         }
@@ -182,20 +189,6 @@ public class WiFiDirectModule extends ReactContextBaseJavaModule implements Life
     }
 
     @ReactMethod
-    public void initWifiDirect(){
-        Activity currentActivity = getCurrentActivity();
-        /*wifiP2pManager = (WifiP2pManager)currentActivity.getSystemService(Context.WIFI_P2P_SERVICE);
-        wifiDirectChannel = wifiP2pManager.initialize(context, context.getMainLooper(), new WifiP2pManager.ChannelListener() {
-            @Override
-            public void onChannelDisconnected() {
-
-            }
-        });*/
-        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-        currentActivity.startActivity(intent);
-    }
-
-    @ReactMethod
     public void discoverPeers(){
         wifiP2pManager.discoverPeers(wifiDirectChannel,new WifiP2pManager.ActionListener(){
             @Override
@@ -221,34 +214,148 @@ public class WiFiDirectModule extends ReactContextBaseJavaModule implements Life
 
             @Override
             public void onFailure(int reason) {
+                WritableMap params = Arguments.createMap();
+                sendEvent("onWifiDirectPeerConnectFailed",params);
+            }
+        });
+    }
 
+    @ReactMethod
+    public void wifiDirectDisconnect(){
+        wifiP2pManager.removeGroup(wifiDirectChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(int reason) {
+
+            }
+        });
+    }
+
+    private void handleConnectCompleted(Exception ex,final AsyncSocket socket){
+        if(socket == null){
+            WritableMap params = Arguments.createMap();
+            sendEvent("onWifiDirectClientConnectError",params);
+            return;
+        }
+        WritableMap params = Arguments.createMap();
+        sendEvent("onWifiDirectClientConnected",params);
+        mClientSocket = socket;
+        socket.setDataCallback(new DataCallback() {
+            @Override
+            public void onDataAvailable(DataEmitter emitter, ByteBufferList bb) {
+                byte[] t = bb.getAllByteArray();
+                String str = new String(t);
+                WritableMap params = Arguments.createMap();
+                params.putString("data",str);
+                sendEvent("onWifiDirectClientDataReceived",params);
+
+            }
+        });
+
+        socket.setClosedCallback(new CompletedCallback() {
+            @Override
+            public void onCompleted(Exception ex) {
+
+            }
+        });
+
+        socket.setEndCallback(new CompletedCallback() {
+            @Override
+            public void onCompleted(Exception ex) {
+                WritableMap params = Arguments.createMap();
+                sendEvent("onWifiDirectClientDisconnected",params);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void connectServer(){
+        String host = mWifiP2pInfo.groupOwnerAddress.getHostAddress();
+        AsyncServer.getDefault().connectSocket(host, port, new ConnectCallback() {
+            @Override
+            public void onConnectCompleted(Exception ex, AsyncSocket socket) {
+                handleConnectCompleted(ex,socket);
+            }
+        });
+    }
+
+    private void handleAccept(final AsyncSocket socket){
+        WritableMap params = Arguments.createMap();
+        sendEvent("onWifiDirectRemoteSocketConnected",params);
+        socket.setDataCallback(new DataCallback() {
+            @Override
+            public void onDataAvailable(DataEmitter emitter, ByteBufferList bb) {
+                byte[] t = bb.getAllByteArray();
+                String str = new String(t);
+                WritableMap params = Arguments.createMap();
+                params.putString("data",str);
+                sendEvent("onWifiDirectServerDataReceived",params);
+                //echo
+                Util.writeAll(socket, "world".getBytes(), new CompletedCallback() {
+                    @Override
+                    public void onCompleted(Exception ex) {
+
+                    }
+                });
+            }
+        });
+
+        socket.setClosedCallback(new CompletedCallback() {
+            @Override
+            public void onCompleted(Exception ex) {
+
+            }
+        });
+
+        socket.setEndCallback(new CompletedCallback() {
+            @Override
+            public void onCompleted(Exception ex) {
+                WritableMap params = Arguments.createMap();
+                sendEvent("onWifiDirectRemoteSocketDisconnected",params);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void initServer(){
+        mServerSocket = AsyncServer.getDefault().listen(null, port, new ListenCallback() {
+            @Override
+            public void onAccepted(AsyncSocket socket) {
+                handleAccept(socket);
+            }
+
+            @Override
+            public void onListening(AsyncServerSocket socket) {
+                WritableMap params = Arguments.createMap();
+                sendEvent("onWifiDirectServerRuning",params);
+            }
+
+            @Override
+            public void onCompleted(Exception ex) {
 
             }
         });
     }
 
     @ReactMethod
-    public void wifiDirectSendData(String data){
-        Socket socket = new Socket();
-        String host = mWifiP2pInfo.groupOwnerAddress.getHostAddress();
-        int port = 8888;
-        try{
-            socket.connect(new InetSocketAddress(host,port),5000);
-            OutputStream stream = socket.getOutputStream();
-
-            stream.write(data.getBytes());
-        }catch (IOException e){
-
-        }finally {
-            if(socket != null){
-                if (socket.isConnected()) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+    public void clientSendData(String data){
+        if(mClientSocket == null){
+            return;
         }
+        Util.writeAll(mClientSocket, data.getBytes(), new CompletedCallback() {
+            @Override
+            public void onCompleted(Exception ex) {
+
+            }
+        });
+    }
+
+    @ReactMethod
+    public void serverSendData(String data){
+
     }
 }

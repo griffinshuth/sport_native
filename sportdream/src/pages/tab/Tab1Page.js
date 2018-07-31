@@ -22,11 +22,14 @@ import {
     Modal,
     Drawer,
     Tabs,
-    Badge
+    Badge,
+    NoticeBar
 } from 'antd-mobile'
 
 import {NativeModules} from 'react-native'
 var ChatModule = NativeModules.ChatModule;
+var QiniuModule = NativeModules.QiniuModule;
+var WiFiAPModule = NativeModules.WiFiAPModule;
 
 import {
     NavigationActions,
@@ -39,6 +42,7 @@ import ToolBar from '../../Components/ToolBar'
 import emitter from '../../utils/SingleEventEmitter'
 
 const createAction = type => payload => ({type,payload})
+import {post,get} from '../../fetch'
 
 const styles = StyleSheet.create({
     icon:{
@@ -53,7 +57,7 @@ const tabs = [
     { title: '热门球员' },
 ];
 
-@connect(({appNS,user})=>({appNS,user}))
+@connect(({appNS,user,temp})=>({appNS,user,temp}))
 class Main extends Component{
     static navigationOptions = {
         title:"首页",
@@ -87,6 +91,12 @@ class Main extends Component{
     gotoBle = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'BLEPage'}))
     }
+    gotoBLEPeripheralTest = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'BLEPeripheralTest'}))
+    }
+    gotobleP2PTest = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'bleP2PTest'}))
+    }
     gotoCrossPlatformP2P=()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'BluetoothCrossPlatform'}))
     }
@@ -99,30 +109,55 @@ class Main extends Component{
     gotoQrcode = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'QrCodeTest'}))
     }
-    gotoSocketIO = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'SocketIOTest'}))
-    }
-    gotoQiniuLive = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'QiniuLiveTest'}))
+    gotoQiniuLive = async()=>{
+        if(Platform.OS == 'ios'){
+            //this.props.dispatch(NavigationActions.navigate({routeName:'QiniuLiveTest'}))
+            var result = await post("/getPublishURL",{streamname:"singlematch_roomid"})
+            QiniuModule.Zhibo(result.url);
+        }else{
+            Toast.info("不支持android")
+        }
     }
     gotoQiniuPlay = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'QiniuPlayTest'}))
+        if(Platform.OS == 'ios'){
+            this.props.dispatch(NavigationActions.navigate({routeName:'QiniuPlayTest'}))
+        }else{
+            Toast.info("不支持android")
+        }
+
     }
     gotoAgoraChatTest = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'AgoraChatTest'}))
+        if(Platform.OS == 'ios'){
+            this.props.dispatch(NavigationActions.navigate({routeName:'AgoraChatTest'}))
+        }else{
+            Toast.info("android暂时不支持")
+        }
+
     }
     gotoAgoraChat_AndroidTest = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'AgoraChat_AndroidTest'}))
+        if(Platform.OS == 'ios'){
+            Toast.info("不支持iOS")
+        }else{
+            this.props.dispatch(NavigationActions.navigate({routeName:'AgoraChat_AndroidTest'}))
+        }
     }
     gotoShootTrainByVoice = ()=>
     {
-        this.props.dispatch(NavigationActions.navigate({routeName:'ShootTrainByVoice'}))
+        this.props.dispatch(NavigationActions.navigate({routeName:'ShootTrain'}))
     }
     gotoVoiceCount = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'VoiceCount'}))
+        if(Platform.OS == 'ios'){
+            this.props.dispatch(NavigationActions.navigate({routeName:'VoiceCount'}))
+        }else{
+            Toast.info("不支持android")
+        }
     }
     gotoReactNativeCameraTest = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'ReactNativeCameraTest'}))
+        if(Platform.OS == 'ios'){
+            this.props.dispatch(NavigationActions.navigate({routeName:'ReactNativeCameraTest'}))
+        }else{
+            Toast.info("不支持android")
+        }
     }
     gotoLocalClient = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'LocalClientTest'}))
@@ -130,20 +165,39 @@ class Main extends Component{
     gotoLocalServer = ()=>{
         this.props.dispatch(NavigationActions.navigate({routeName:'LocalServerTest'}))
     }
-    gotoCreateAp = ()=>{
-        this.props.dispatch(NavigationActions.navigate({routeName:'CreateWiFiAP'}))
+    gotohighlightServer = ()=>{
+        this.props.dispatch(NavigationActions.navigate({routeName:'highlightServer'}))
+    }
+    gotoCreateAp = async()=>{
+            //this.props.dispatch(NavigationActions.navigate({routeName:'CreateWiFiAP'}))
+            WiFiAPModule.openAPUI();
     }
     componentDidMount(){
-        this.props.dispatch(createAction('user/getUserInfo')({token:this.props.appNS.token}))
+        //this.props.dispatch(createAction('user/getUserInfo')({token:this.props.appNS.token}))
         //监听二维码扫码事件
         emitter.on("scanQRCode",(msg)=>{
-            /*Alert.alert("msg", msg, [
-                {text: 'OK', onPress: () => {}},
-            ])*/
-            setTimeout(()=>{
-                this.props.dispatch(NavigationActions.navigate({routeName:'ReactArtTest'}))
-            },0)
-
+            //Toast.info(msg);
+            //return;
+            var arr = msg.split('&');
+            if(arr[0] == "highlightserver"){
+                var ip = arr[1];
+                Toast.info(ip);
+                if(Platform.OS != 'ios')
+                    QiniuModule.h264Record(this.props.appNS.clientID,0,"haimeng",10000,ip);
+                else
+                    QiniuModule.gotoCameraOnStand(this.props.appNS.clientID,0,"haimeng",10000,ip);
+                return;
+            }else if(arr[0] == "playrtmpurl"){
+                //Toast.info(arr[1]);
+                setTimeout(()=>{
+                    this.props.dispatch(NavigationActions.navigate({
+                        routeName:'QiniuPlayTest',
+                        params: {
+                            url:arr[1]
+                        },
+                    }))
+                },0)
+            }
         })
     }
 
@@ -198,10 +252,16 @@ class Main extends Component{
             </List.Item>
 
             <List.Item key={2}
-            ><View style={{flexDirection:'row',alignItems:'center'}}>
+            >
+                <TouchableHighlight onPress={()=>{
+                    WiFiAPModule.openWifiSetting();
+                }}>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
                 <Image source={require('../../assets/images/qrcode.png')} style={{width:28,height:28,marginRight:10}}/>
-                <Text>扫码连接热点</Text>
-            </View></List.Item>
+                <Text>连接热点</Text>
+            </View>
+                </TouchableHighlight>
+            </List.Item>
             <List.Item key={3}
             >
                 <TouchableHighlight onPress={()=>{
@@ -244,15 +304,11 @@ class Main extends Component{
                     onOpenChange={this.onDrawOpenChange}
                     drawerBackgroundColor="#ccc"
                 >
+                    {this.props.temp.isOffline?<NoticeBar mode="" onClick={()=>{Toast.info("重连服务器...")}} icon={null}>离线模式(点击重连)</NoticeBar>:null}
                 <Tabs
                     tabs={tabs}
-                    initialPage={1}
+                    initialPage={0}
                 >
-                    <View style={{flex:1}}>
-                        <Text>
-                            Content of First Tab
-                        </Text>
-                    </View>
                     <View style={{flex:1}}>
                         <ScrollView style={{flex:1}}>
                                 <WhiteSpace/>
@@ -272,11 +328,15 @@ class Main extends Component{
                                         </Modal>
                                     </View>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoCount}>Android三脚架机位和现场解说</Button>
+                                    <Button onClick={this.gotoCount}>地理定位</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoBTDiscover}>Android 经典蓝牙和Wi-Fi Direct</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoBle}>ble-manager(中心设备)</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotoBLEPeripheralTest}>BLE外围设备</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotobleP2PTest}>基于BLE的P2P系统</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoCrossPlatformP2P}>bluetooth-cross-platform</Button>
                                     <WhiteSpace/>
@@ -286,25 +346,25 @@ class Main extends Component{
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoQrcode}>二维码</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoSocketIO}>SocketIO</Button>
-                                    <WhiteSpace/>
                                     <Button onClick={this.gotoQiniuLive}>七牛直播</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoQiniuPlay}>七牛观看</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoAgoraChatTest}>Agora视频聊天室</Button>
+                                    <Button onClick={this.gotoAgoraChatTest}>单项技巧视频赛事中控端</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoAgoraChat_AndroidTest}>Agora视频聊天室(Android)</Button>
+                                    <Button onClick={this.gotoAgoraChat_AndroidTest}>单项技巧视频赛事云端</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoShootTrainByVoice}>语音识别Android</Button>
+                                    <Button onClick={this.gotoShootTrainByVoice}>智能投篮训练</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoVoiceCount}>语音计数</Button>
                                     <WhiteSpace/>
-                                    <Button onClick={this.gotoReactNativeCameraTest}>React Native Camera测试</Button>
+                                    <Button onClick={this.gotoReactNativeCameraTest}>短视频录制和后期处理</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoLocalClient}>热点客户端</Button>
                                     <WhiteSpace/>
                                     <Button onClick={this.gotoLocalServer}>热点服务器</Button>
+                                    <WhiteSpace/>
+                                    <Button onClick={this.gotohighlightServer}>集锦服务器</Button>
                                 </WingBlank>
 
                                 <WhiteSpace size="lg"/>
@@ -356,6 +416,11 @@ class Main extends Component{
                                     </Card>
                                 </WingBlank>
                             </ScrollView>
+                    </View>
+                    <View style={{flex:1}}>
+                        <Text>
+                            Content of First Tab
+                        </Text>
                     </View>
                     <View style={{flex:1}}>
                         <Text>

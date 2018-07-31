@@ -29,7 +29,7 @@ public class AgoraChatReactPackage implements ReactPackage {
         return Collections.emptyList();
     }
 
-    @Override
+    //@Override
     public List<Class<? extends JavaScriptModule>> createJSModules(){
         return Collections.emptyList();
     }

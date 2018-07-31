@@ -16,7 +16,7 @@ import {
 } from 'antd-mobile'
 
 import ToolBar from '../../Components/ToolBar'
-import {get, post, promisePost} from '../../fetch'
+import {get, post} from '../../fetch'
 import {NavigationActions} from 'react-navigation'
 
 @connect()

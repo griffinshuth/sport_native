@@ -6,7 +6,7 @@ package com.sportdream.nativec;
 
 public class udp {
     static {
-        System.loadLibrary("main");
+        System.loadLibrary("ndkmain");
     }
 
     public native void init(short port);

@@ -13,17 +13,20 @@ import {
     ListView,
     ScrollView,
     AppState,
-    requireNativeComponent
+    requireNativeComponent,
+    Dimensions
 } from 'react-native';
 import {
     Toast,
-    WhiteSpace
+    WhiteSpace,
+    Button
 } from 'antd-mobile'
+import Orientation from 'react-native-orientation';
 
 import ToolBar from '../../Components/ToolBar'
 import {AudioRecorder, AudioUtils} from 'react-native-audio';
-var BaiduSpeechModule = NativeModules.BaiduSpeechModule; //android
 var BaiduASRModule = NativeModules.BaiduASRModule; //ios
+import CaptureVideoSocketView from '../../NativeViews/CaptureVideoSocketView'
 
 export default class App extends Component {
     constructor(props){
@@ -32,25 +35,15 @@ export default class App extends Component {
             currentMetering:null,
             currentTime:null,
             count:0,
+            capture:false,
+            captureWidth:0,
+            captureHeight:0
         }
     }
     componentDidMount() {
-        if (Platform.OS === 'android' && Platform.Version >= 23) {
-            PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-                if (result) {
-                    console.log("Permission is OK");
-                } else {
-                    PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-                        if (result) {
-                            console.log("User accept");
-                        } else {
-                            console.log("User refuse");
-                        }
-                    });
-                }
-            });
-        }
-
+        Orientation.lockToLandscape();
+        var {height, width} = Dimensions.get('window');
+        this.setState({captureWidth:height,captureHeight:width})
         //测试分贝
         //var audioPath = AudioUtils.DocumentDirectoryPath + '/testaudio.aac';
         var audioPath = "/dev/null";
@@ -99,17 +92,23 @@ export default class App extends Component {
 
     componentWillUnmount() {
         AudioRecorder.stopRecording();
+        Orientation.lockToPortrait();
+    }
+
+    startCapture = ()=>{
+        this.setState({capture:true})
     }
 
     render(){
         return (<View>
-            <ToolBar title="BLE搜索" navigation={this.props.navigation}/>
             <View>
+                <CaptureVideoSocketView style={{position:'absolute',width:this.state.captureWidth,height:this.state.captureHeight}} capture={this.state.capture} />
                 <Text>{this.state.currentMetering}</Text>
                 <WhiteSpace/>
                 <Text>{this.state.currentTime}</Text>
                 <WhiteSpace/>
                 <Text>{this.state.count}</Text>
+                <Button onClick={this.startCapture}>开始预览</Button>
             </View>
         </View>)
     }

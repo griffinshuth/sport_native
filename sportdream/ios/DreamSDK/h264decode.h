@@ -17,9 +17,12 @@
 @interface h264decode : NSObject
 @property (nonatomic, weak) id <PostProgressDelegate> delegate;
 -(id)initWithView:(UIView*)view;
+-(id)initWithView:(UIView*)view previewWidth:(int)previewWidth previewHeight:(int)previewHeight;
 -(id)initWithGPUImageView:(UIView*)preview;
 -(void)setPreview:(UIView*)view;
 -(void)decodeH264:(NSData*)nalu;  //待解码的h264信息，包含头部信息
 -(void)decodeH264WithoutHeader:(NSData*)nalu;
 -(void)postProcess:(NSData*)brgaBuffer width:(int)width height:(int)height;
+-(void)createMainOverlayImage;
+-(void)showPlaybackBeginImage;
 @end

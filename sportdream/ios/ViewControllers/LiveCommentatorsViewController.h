@@ -12,5 +12,8 @@
 #import "LocalWifiNetwork.h"
 
 @interface LiveCommentatorsViewController : UIViewController<AudioRecordDelegate,AACEncodeDelegate,LocalWifiNetworkDelegate>
-
+@property (nonatomic,strong) NSString* mDeviceID;
+@property (nonatomic,assign) int mRoomID;
+@property (nonatomic,strong) NSString* mCameraName;
+@property (nonatomic,assign) int mCameraType;
 @end

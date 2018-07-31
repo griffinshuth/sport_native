@@ -27,6 +27,7 @@
 #import "DirectorServerViewController.h"
 #import "CommentatorsViewController.h"
 #import "LiveCommentatorsViewController.h"
+#import "CheerLeaderViewController.h"
 #import "Orientation.h"
 
 @implementation AppDelegate
@@ -44,6 +45,7 @@
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
+  //jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"sportdream"
@@ -159,34 +161,55 @@
   });
 }
 
--(void)gotoCameraOnStandViewController
+-(void)gotoCameraOnStandViewController:(NSString*)deviceID cameraType:(int)cameraType cameraName:(NSString*)cameraName roomID:(int)roomID isSlowMotion:(BOOL)isSlowMotion ip:(NSString*)ip
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     CameraOnStandViewController* cameraOnStandViewController = [[CameraOnStandViewController alloc] init];
+    cameraOnStandViewController.mDeviceID = deviceID;
+    cameraOnStandViewController.mCameraType = cameraType;
+    cameraOnStandViewController.mCameraName = cameraName;
+    cameraOnStandViewController.mRoomID = roomID;
+    cameraOnStandViewController.isSlowMotion = isSlowMotion;
+    cameraOnStandViewController.highlightIP = ip;
     [self.window.rootViewController presentViewController:cameraOnStandViewController animated:true completion:nil];
   });
 }
 
--(void)gotoDirectorServerViewController
+-(void)gotoDirectorServerViewController:(NSString*)AgoraChannelName
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     DirectorServerViewController* directorServerViewController = [[DirectorServerViewController alloc] init];
+    directorServerViewController.AgoraChannelName = AgoraChannelName;
     [self.window.rootViewController presentViewController:directorServerViewController animated:true completion:nil];
   });
 }
 
--(void)gotoCommentatorsViewController
+-(void)gotoCommentatorsViewController:(NSString*)channelName
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     CommentatorsViewController* commentatorsViewController = [[CommentatorsViewController alloc] init];
+    commentatorsViewController.channelName = channelName;
     [self.window.rootViewController presentViewController:commentatorsViewController animated:true completion:nil];
   });
 }
 
--(void)gotoLiveCommentatorsViewController
+-(void)gotoCheerLeaderViewController:(NSString*)channelName
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    CheerLeaderViewController* cheerLeaderViewController = [[CheerLeaderViewController alloc] init];
+    cheerLeaderViewController.channelName = channelName;
+    [self.window.rootViewController presentViewController:cheerLeaderViewController animated:true completion:nil];
+  });
+}
+
+-(void)gotoLiveCommentatorsViewController:(NSString*)deviceID cameraType:(int)cameraType cameraName:(NSString*)cameraName roomID:(int)roomID
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     LiveCommentatorsViewController* liveCommentatorsViewController = [[LiveCommentatorsViewController alloc] init];
+    liveCommentatorsViewController.mDeviceID = deviceID;
+    liveCommentatorsViewController.mCameraType = cameraType;
+    liveCommentatorsViewController.mCameraName = cameraName;
+    liveCommentatorsViewController.mRoomID = roomID;
     [self.window.rootViewController presentViewController:liveCommentatorsViewController animated:true completion:nil];
   });
 }

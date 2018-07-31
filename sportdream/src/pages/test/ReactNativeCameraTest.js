@@ -230,7 +230,7 @@ render() {
     }
         return (
             <View style={styles.wrapper}>
-                <ToolBar title="短视频录制" navigation={this.props.navigation}/>
+                <ToolBar title="短视频拍摄" navigation={this.props.navigation}/>
                 <Recorder
                     ref="recorder"
                     config={this.state.config}

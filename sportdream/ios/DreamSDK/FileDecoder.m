@@ -17,6 +17,7 @@
 
 @implementation FileDecoder
 {
+  BOOL isStart;
   BOOL audioEncodingIsFinished;
   BOOL videoEncodingIsFinished;
   BOOL keepLooping;
@@ -33,6 +34,7 @@
   {
     return nil;
   }
+  isStart = false;
   self.url = url;
   self.shouldRepeat = NO;
   keepLooping = NO;
@@ -47,6 +49,7 @@
   {
     return nil;
   }
+  isStart = false;
   self.url = url;
   self.shouldRepeat = NO;
   keepLooping = NO;
@@ -62,6 +65,9 @@
 
 -(void)startProcessing
 {
+  if(isStart){
+    return;
+  }
   if(self.shouldRepeat)keepLooping=YES;
   previousFrameTime = kCMTimeZero;
   previousActualFrameTime = CFAbsoluteTimeGetCurrent();
@@ -76,7 +82,7 @@
       {
         return;
       }
-     
+      isStart = true;
       [weakself processAsset];
       
     });
@@ -84,15 +90,15 @@
 }
 -(void)cancelProcessing
 {
-  if(self.reader){
-    [self.reader cancelReading];
-  }
-  [self endProcessing];
+  isStart = false;
 }
 
 -(void)endProcessing
 {
   keepLooping = NO;
+  if(self.reader){
+    [self.reader cancelReading];
+  }
   if(self.delegate){
     [self.delegate didCompletePlayingMovie];
   }
@@ -146,27 +152,6 @@
   [self readNextVideoFrameFromOutput];
   [self readNextAudioSampleFromOutput];
   
-  //begin read
-  /*while(self.reader.status == AVAssetReaderStatusReading && (!self.shouldRepeat || keepLooping))
-  {
-    [self readNextVideoFrameFromOutput:readerVideoTrackOutput];
-    if(readerAudioTrackOutput && !audioEncodingIsFinished){
-      [self readNextAudioSampleFromOutput:readerAudioTrackOutput readerVideoTrackOutput:readerAudioTrackOutput];
-    }
-  }
-  
-  if(self.reader.status ==  AVAssetReaderStatusCompleted){
-    [self.reader cancelReading];
-    if(keepLooping){
-      self.reader = nil;
-      dispatch_async(dispatch_get_main_queue(), ^{
-        [self startProcessing];
-      });
-    }else{
-      [self endProcessing];
-    }
-  }*/
-  
 }
 
 -(BOOL)isVideoFinished
@@ -179,35 +164,17 @@
   if(self.reader.status == AVAssetReaderStatusReading && !videoEncodingIsFinished){
     CMSampleBufferRef sampleBufferRef = [readerVideoTrackOutput copyNextSampleBuffer];
     if(sampleBufferRef){
-      if(self.playAtActualSpeed){
-        CMTime currentSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(sampleBufferRef);
-        //CGFloat temp = CMTimeGetSeconds(currentSampleTime);
-        //NSLog(@"CMSampleBufferGetOutputPresentationTimeStamp:%f",temp);
-        //NSLog(@"CMSampleBufferGetOutputPresentationTimeStamp:%f",temp);
-        CMTime differenceFromLastFrame = CMTimeSubtract(currentSampleTime, previousFrameTime);
-        CFAbsoluteTime currentActualTime = CFAbsoluteTimeGetCurrent();
-        
-        CGFloat frameTimeDifference = CMTimeGetSeconds(differenceFromLastFrame);
-        CGFloat actualTimeDifference = currentActualTime - previousActualFrameTime;
-        
-        /*if (frameTimeDifference >= actualTimeDifference)
-        {
-          usleep(1000000.0 * (frameTimeDifference - actualTimeDifference));
-        }*/
-        
-        //usleep(1000000.0 * (frameTimeDifference*0.5));
-        
-        previousFrameTime = currentSampleTime;
-        previousActualFrameTime = CFAbsoluteTimeGetCurrent();
-      }
       [self.delegate didVideoOutput:sampleBufferRef];
-      //CMSampleBufferInvalidate(sampleBufferRef);
-      //CFRelease(sampleBufferRef);
-    }else{
-      if (!keepLooping) {
+      if(!isStart){
         videoEncodingIsFinished = YES;
-        if( videoEncodingIsFinished && audioEncodingIsFinished )
+        if( videoEncodingIsFinished && audioEncodingIsFinished ){
           [self endProcessing];
+        }
+      }
+    }else{
+      videoEncodingIsFinished = YES;
+      if( videoEncodingIsFinished && audioEncodingIsFinished ){
+        [self endProcessing];
       }
     }
   }
@@ -217,15 +184,19 @@
 {
   if (self.reader.status == AVAssetReaderStatusReading && ! audioEncodingIsFinished){
     CMSampleBufferRef audioSampleBufferRef = [readerAudioTrackOutput copyNextSampleBuffer];
-    
     if(audioSampleBufferRef){
       [self.delegate didAudioOutput:audioSampleBufferRef];
       CFRelease(audioSampleBufferRef);
-    }else{
-      if (!keepLooping) {
+      if(!isStart){
         audioEncodingIsFinished = YES;
-        if( videoEncodingIsFinished && audioEncodingIsFinished )
+        if( videoEncodingIsFinished && audioEncodingIsFinished ){
           [self endProcessing];
+        }
+      }
+    }else{
+      audioEncodingIsFinished = YES;
+      if( videoEncodingIsFinished && audioEncodingIsFinished ){
+        [self endProcessing];
       }
     }
   }

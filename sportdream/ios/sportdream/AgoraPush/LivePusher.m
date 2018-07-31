@@ -14,7 +14,6 @@
 #import "FFmpegPushClient.h"
 
 @interface LivePusher ()
-//@property (strong,nonatomic) StreamingClient* client;
 @property (strong,nonatomic) FFmpegPushClient* client;
 @property (assign,nonatomic) BOOL isPushing;
 
@@ -82,14 +81,6 @@
   return queue;
 }
 
-- (FFmpegPushClient *)client
-{
-  if (!_client) {
-    _client = [[FFmpegPushClient alloc] init];
-  }
-  return _client;
-}
-
 - (NSMutableArray *)remoteVideoBuffers
 {
   if (!_remoteVideoBuffers) {
@@ -106,9 +97,9 @@
   return _mixedAudioBuffers;
 }
 
-+ (void)start
++ (void)start:(NSString*)urlOrFileName isRtmp:(BOOL)isRtmp
 {
-  [[self sharedPusher] start];
+  [[self sharedPusher] start:urlOrFileName isRtmp:isRtmp];
 }
 
 + (void)stop
@@ -116,12 +107,12 @@
   [[self sharedPusher] stop];
 }
 
-- (void)start
+- (void)start:(NSString*)urlOrFileName isRtmp:(BOOL)isRtmp
 {
   if (self.isPushing) {
     return;
   }
-  
+  self.client = [[FFmpegPushClient alloc] initWithUrl:urlOrFileName isRtmp:isRtmp];
   [self.client startStreaming];
   self.isPushing = YES;
   
@@ -153,6 +144,7 @@
   self.audioPublishTimer = nil;
   
   [self.client stopStreaming];
+  self.client = nil;
   self.isPushing = NO;
   
   self.localVideoBuffer = nil;

@@ -14,7 +14,11 @@
 #import "AACDecode.h"
 #import "VideoPlayer.h"
 #import "h264encode.h"
+#import "AudioMixer.h"
 
-@interface DirectorServerViewController : UIViewController<AACDecodeDelegate,LocalWifiNetworkDelegate,PostProgressDelegate,AgoraKitRemoteCameraDelegate,VideoPlayerDelegate,h264encodeDelegate>
-
+@interface DirectorServerViewController : UIViewController<AACDecodeDelegate,LocalWifiNetworkDelegate,PostProgressDelegate,AgoraKitRemoteCameraDelegate,VideoPlayerDelegate,h264encodeDelegate,AudioMixerDelegate>
+@property (nonatomic,strong)NSString* AgoraChannelName;
+@property (nonatomic,strong)NSString* rtmpPushUrl;
+@property (nonatomic,strong)NSString* rtmpPlayUrl;
+@property (nonatomic,strong)NSString* hlsPlayUrl;
 @end

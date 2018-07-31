@@ -21,7 +21,7 @@ static OSStatus mixerRenderNotify(void *              inRefCon,
   OSStatus result = noErr;
   
   if (*ioActionFlags & kAudioUnitRenderAction_PostRender) {
-    [pool_av_user sendAudioDataToPool:ioData->mBuffers[0].mData length:ioData->mBuffers[0].mDataByteSize];
+    [THIS.delegate filePCMDataAfterProcess:ioData->mBuffers[0]];
   }
   return result;
 }
@@ -63,7 +63,12 @@ static const AudioUnitElement inputElement = 1;
 - (void)didCompletePlayingMovie
 {
   if(isStart){
+    //播放到文件结尾自动触发
     [self stop];
+    [self.delegate didPlayAutoCompleted];
+  }else{
+    //用户手动停止播放触发，包括播放下一首，点击停止按钮和点击退出视图控制器按钮
+    [self.delegate didPlayManualStop];
   }
 }
 - (void)didVideoOutput:(CMSampleBufferRef)videoData
@@ -151,7 +156,7 @@ static const AudioUnitElement inputElement = 1;
   self = [super init];
   if(self){
     AVAudioSession *mySession = [AVAudioSession sharedInstance];
-    [mySession setCategory: AVAudioSessionCategoryPlayAndRecord error:nil];
+    [mySession setCategory: AVAudioSessionCategoryPlayback error:nil];
     isStart = FALSE;
     isPreviewing = FALSE;
     isPushing = FALSE;
@@ -183,9 +188,10 @@ static const AudioUnitElement inputElement = 1;
   _glLayer = [[AAPLEAGLLayer alloc] initWithFrame:CGRectMake(0, 0, playbackView.frame.size.width, playbackView.frame.size.height)];
   [playbackView.layer addSublayer:_glLayer];
   [fileDecoder startProcessing];
+  semaphore = dispatch_semaphore_create(0);
   isPreviewing = true;
   isStart = true;
-  semaphore = dispatch_semaphore_create(0);
+  currentAudioTime = 0;
 }
 
 -(void)startPush:(NSString*)filename fileExtension:(NSString*)fileExtension

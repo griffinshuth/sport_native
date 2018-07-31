@@ -28,11 +28,8 @@ const Float64 kGraphSampleRate = 44100.0;
 
 @interface AudioMixer()
  //@property (nonatomic,strong) NSMutableArray<SoundBuffer*>* commentors;
-  @property (nonatomic,strong) AACDecode* audioDecoder1;
   @property (nonatomic,strong) SoundBuffer* mData1;
-  @property (nonatomic,strong) AACDecode* audioDecoder2;
   @property (nonatomic,strong) SoundBuffer* mData2;
-  @property (nonatomic,strong) AACDecode* audioDecoder3;
   @property (nonatomic,strong) SoundBuffer* mData3;
 @end
 
@@ -51,6 +48,27 @@ const Float64 kGraphSampleRate = 44100.0;
   
   Boolean isPlaying;
   UInt32 audioNums;
+}
+
+static OSStatus mixerRenderNotify(void *              inRefCon,
+                                  AudioUnitRenderActionFlags *  ioActionFlags,
+                                  const AudioTimeStamp *      inTimeStamp,
+                                  UInt32              inBusNumber,
+                                  UInt32              inNumberFrames,
+                                  AudioBufferList *        ioData)
+{
+  __unsafe_unretained AudioMixer *audoMixer = (__bridge AudioMixer *)inRefCon;
+  OSStatus result = noErr;
+  
+  if (*ioActionFlags & kAudioUnitRenderAction_PostRender) {
+    [audoMixer RenderNotify:ioData->mBuffers[0]];
+  }
+  return result;
+}
+
+-(void)RenderNotify:(AudioBuffer) buffer
+{
+  [self.delegate PCMDataAfterMixer:buffer];
 }
 
 static OSStatus renderInput1(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
@@ -213,12 +231,6 @@ static OSStatus renderInput3(void *inRefCon, AudioUnitRenderActionFlags *ioActio
     [self initializeAUGraph];
     isPlaying = false;
     audioNums = 2;
-    self.audioDecoder1 = [[AACDecode alloc] init];
-    self.audioDecoder1.delegate = self;
-    self.audioDecoder2 = [[AACDecode alloc] init];
-    self.audioDecoder2.delegate = self;
-    self.audioDecoder3 = [[AACDecode alloc] init];
-    self.audioDecoder3.delegate = self;
     [self startMixer];
     //AudioUnitParameterValue isOn = false;
     //[self enableInput:0 isOn:isOn];
@@ -231,9 +243,6 @@ static OSStatus renderInput3(void *inRefCon, AudioUnitRenderActionFlags *ioActio
   if(isPlaying){
     [self stopMixer];
   }
-  [self.audioDecoder1 stopAACEncodeSession];
-  [self.audioDecoder2 stopAACEncodeSession];
-  [self.audioDecoder3 stopAACEncodeSession];
 }
 
 -(void)initializeAUGraph
@@ -344,6 +353,8 @@ static OSStatus renderInput3(void *inRefCon, AudioUnitRenderActionFlags *ioActio
   result = AUGraphConnectNodeInput(mGraph, convertNode3, 0, mixerNode, 2);
   result = AUGraphConnectNodeInput(mGraph, mixerNode, 0, mConverterSInt16ToFloat32Node, 0);
   result = AUGraphConnectNodeInput(mGraph, mConverterSInt16ToFloat32Node, 0, outputNode, 0);
+  
+  AudioUnitAddRenderNotify(mMixer, &mixerRenderNotify, (__bridge void *)self);
   
   result = AUGraphInitialize(mGraph);
 }

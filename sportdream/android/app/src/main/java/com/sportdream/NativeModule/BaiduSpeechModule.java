@@ -45,7 +45,7 @@ public class BaiduSpeechModule extends ReactContextBaseJavaModule implements Eve
 
     @Override
     public String getName(){
-        return "BaiduSpeechModule";
+        return "BaiduASRModule";
     }
 
     protected void sendEvent(String eventName, @Nullable WritableMap params){

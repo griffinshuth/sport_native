@@ -18,6 +18,7 @@ import {
 } from 'antd-mobile'
 import ToolBar from '../../Components/ToolBar'
 import {get,post} from '../../fetch'
+import Orientation from 'react-native-orientation'
 
 const QiniuPlayView = requireNativeComponent('QiniuPlayView', null);
 
@@ -29,22 +30,33 @@ export default class App extends React.Component{
         this.state = {
             playUrl:"",
             loading:true,
+            isFullScreen:false,
+            playerWidth:width,
+            playerHeight:width*720/1280
         }
     }
     getLiveUrl = async()=>{
-        var play = await post("/getRTMPPlayURL",{streamname:"test2"})
+        var play = await post("/getRTMPPlayURL",{streamname:"singlematch_roomid"})
         this.setState({playUrl:play.url,loading:false})
     }
 
     componentWillMount(){
-        this.getLiveUrl();
+        var url = this.props.navigation.state.params.url;
+        if(url){
+            this.setState({playUrl:url,loading:false})
+        }else{
+            this.getLiveUrl();
+        }
+    }
+
+    componentWillUnmount(){
+        if(this.state.isFullScreen)
+            Orientation.lockToPortrait();
     }
 
     render(){
         return (
-            <View>
-                <ToolBar title="七牛直播" navigation={this.props.navigation}/>
-                <Text>{this.state.playUrl}</Text>
+            <View style={{position:"relative"}}>
                 {this.state.loading?null:<QiniuPlayView
                     source={{
                         uri:this.state.playUrl,
@@ -54,13 +66,24 @@ export default class App extends React.Component{
                     }}
                     started={true}
                     style={{
-                        height:200,
-                        width:width,
-                        borderColor:'red',
-                        borderWidth:1
+                        width:this.state.playerWidth,
+                        height:this.state.playerHeight
                     }}
                     aspectRatio={2}
                 />}
+                <Button onClick={()=>{
+                    this.props.navigation.goBack();
+                }} type="ghost" size="small" style={{position:"absolute",top:10,right:10}}>关闭</Button>
+                <Button onClick={()=>{
+                    if(this.state.isFullScreen){
+                        Orientation.lockToPortrait();
+                        this.setState({playerWidth:width,playerHeight:width*720/1280,isFullScreen:false})
+                    }else{
+                        this.setState({playerWidth:height,playerHeight:width,isFullScreen:true})
+                        Orientation.lockToLandscape();
+                    }
+
+                }} type="ghost" size="small" style={{position:"absolute",top:50,right:10}}>{this.state.isFullScreen?"退出全屏":"全屏"}</Button>
             </View>
         )
     }

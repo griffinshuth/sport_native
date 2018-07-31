@@ -48,7 +48,7 @@ export default class BasketMatchTimer extends PureComponent{
         const {isTimerStart} = this.props;
         if(!isTimerStart){
             //启动计时器
-            this.props.dispatch({type:"CurrentAdminMatchModel/timestart",payload:{isTimerStart:true}})
+            this.props.startCountDownFromParent();
         }else{
             //停止计时器
             this.props.dispatch({type:"CurrentAdminMatchModel/timestart",payload:{isTimerStart:false}})
@@ -85,28 +85,26 @@ export default class BasketMatchTimer extends PureComponent{
     }
 
     reset24 = ()=>{
-        var currentattacktime = 24;
-        var ballowner = 0;
-        this.props.dispatch({type:"CurrentAdminMatchModel/reset24",payload:{currentattacktime,ballowner}})
+        this.props.dispatch({type:"CurrentAdminMatchModel/reset24UpdateToServer",payload:{game_uid:this.props.game_uid}})
         this.stop24();
     }
 
     start24 = ()=>{
-        const {need01,currentattacktime} = this.props;
+        const {game_uid,need01,currentattacktime} = this.props;
         if(!this.handle24Timer){
             if(!need01){
                 this.handle24Timer = setInterval(()=>{
-                    this.props.dispatch({type:"CurrentAdminMatchModel/countdown24",payload:{time:1}})
+                    this.props.dispatch({type:"CurrentAdminMatchModel/time24UpdateToServer",payload:{game_uid:game_uid,currentattacktime:this.props.currentattacktime,time:1}})
                 },1000)
             }else{
                 if(currentattacktime>5){
                     this.handle24Timer = setInterval(()=>{
-                        this.props.dispatch({type:"CurrentAdminMatchModel/countdown24",payload:{time:1}})
+                        this.props.dispatch({type:"CurrentAdminMatchModel/time24UpdateToServer",payload:{game_uid:game_uid,currentattacktime:this.props.currentattacktime,time:1}})
                     },1000)
                     this.is2401second = false;
                 }else{
                     this.handle24Timer = setInterval(()=>{
-                        this.props.dispatch({type:"CurrentAdminMatchModel/countdown24",payload:{time:0.1}})
+                        this.props.dispatch({type:"CurrentAdminMatchModel/time24UpdateToServer",payload:{game_uid:game_uid,currentattacktime:this.props.currentattacktime,time:0.1}})
                     },100)
                     this.is2401second = true;
                 }
@@ -134,22 +132,22 @@ export default class BasketMatchTimer extends PureComponent{
     }
 
     render(){
-        const {isTimerStart,ballowner,need01,currentsectiontime,currentattacktime} = this.props;
+        const {game_uid,isTimerStart,ballowner,need01,currentsectiontime,currentattacktime} = this.props;
         if(isTimerStart&&!this.handleTimer){
             //reducer同意开始，启动定时器
             if(!need01){
                 this.handleTimer = setInterval(()=>{
-                    this.props.dispatch({type:"CurrentAdminMatchModel/countdown",payload:{time:1}})
+                    this.props.dispatch({type:"CurrentAdminMatchModel/sectiontimeUpdateToServer",payload:{game_uid:game_uid,currentsectiontime:this.props.currentsectiontime,time:1}})
                 },1000)
             }else{
                 if(currentsectiontime>60){
                     this.handleTimer = setInterval(()=>{
-                        this.props.dispatch({type:"CurrentAdminMatchModel/countdown",payload:{time:1}})
+                        this.props.dispatch({type:"CurrentAdminMatchModel/sectiontimeUpdateToServer",payload:{game_uid:game_uid,currentsectiontime:this.props.currentsectiontime,time:1}})
                     },1000)
                     this.iscountdown01second = false;
                 }else{
                     this.handleTimer = setInterval(()=>{
-                        this.props.dispatch({type:"CurrentAdminMatchModel/countdown",payload:{time:0.1}})
+                        this.props.dispatch({type:"CurrentAdminMatchModel/sectiontimeUpdateToServer",payload:{game_uid:game_uid,currentsectiontime:this.props.currentsectiontime,time:0.1}})
                     },100)
                     this.iscountdown01second = true;
                 }
@@ -165,6 +163,13 @@ export default class BasketMatchTimer extends PureComponent{
             clearInterval(this.handleTimer);
             this.handleTimer = null;
             this.stop24();
+            if(currentattacktime == 0){
+                setTimeout(()=>{
+                    //重置球权
+                    this.reset24();
+                },100)
+            }
+
         }
 
         if(need01){
@@ -175,7 +180,7 @@ export default class BasketMatchTimer extends PureComponent{
             if(currentsectiontime<=60&&!this.iscountdown01second){
                 clearInterval(this.handleTimer);
                 this.handleTimer = setInterval(()=>{
-                    this.props.dispatch({type:"CurrentAdminMatchModel/countdown",payload:{time:0.1}})
+                    this.props.dispatch({type:"CurrentAdminMatchModel/sectiontimeUpdateToServer",payload:{game_uid:game_uid,currentsectiontime:this.props.currentsectiontime,time:0.1}})
                 },100)
                 this.iscountdown01second = true;
             }

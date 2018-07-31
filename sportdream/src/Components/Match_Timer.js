@@ -1,4 +1,4 @@
-import React from 'react'
+/*import React from 'react'
 import PropTypes from 'prop-types'
 import {
     View,
@@ -77,3 +77,4 @@ const MatchTimer = ({isTimerStart,currentsection,currentsectiontime,currentattac
 }
 
 export default MatchTimer
+*/

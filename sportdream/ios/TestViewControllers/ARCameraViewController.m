@@ -69,7 +69,7 @@
            pushButton
            ).embedIn(view1, 10, 10, 10, 15);
   pushButton.onClick(^(UIButton* btn){
-    if(!self.isPushing){
+    /*if(!self.isPushing){
       [LivePusher start];
       pushButton.str(@"结束推送");
       self.isPushing = true;
@@ -77,7 +77,7 @@
       [LivePusher stop];
       pushButton.str(@"开始推送");
       self.isPushing = false;
-    }
+    }*/
   });
 }
 

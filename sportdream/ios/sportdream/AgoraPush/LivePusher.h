@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface LivePusher : NSObject
-+ (void)start;
++ (void)start:(NSString*)urlOrFileName isRtmp:(BOOL)isRtmp;
 + (void)stop;
 + (void)addLocalYBuffer:(void *)yBuffer
                 uBuffer:(void *)uBuffer

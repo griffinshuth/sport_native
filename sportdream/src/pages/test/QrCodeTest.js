@@ -8,8 +8,14 @@ import QRCode from 'react-native-qrcode'
 import ToolBar from '../../Components/ToolBar'
 
 export default class App extends React.Component{
-    state = {
-        text:'text'
+    constructor(props){
+        super(props);
+        var page = props.navigation.state.params.page;
+        var param = props.navigation.state.params.param;
+        var info = page+"&"+param;
+        this.state = {
+            text:info
+        }
     }
 
     render(){

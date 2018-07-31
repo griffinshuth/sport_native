@@ -28,8 +28,9 @@
 -(void)gotoVideoChatViewController;
 -(void)gotoMatchDirectorViewController;
 -(void)gotoARCameraViewController;
--(void)gotoCameraOnStandViewController;
--(void)gotoDirectorServerViewController;
--(void)gotoCommentatorsViewController;
--(void)gotoLiveCommentatorsViewController;
+-(void)gotoCameraOnStandViewController:(NSString*)deviceID cameraType:(int)cameraType cameraName:(NSString*)cameraName roomID:(int)roomID isSlowMotion:(BOOL)isSlowMotion ip:(NSString*)ip;
+-(void)gotoDirectorServerViewController:(NSString*)AgoraChannelName;
+-(void)gotoCommentatorsViewController:(NSString*)channelName;
+-(void)gotoCheerLeaderViewController:(NSString*)channelName;
+-(void)gotoLiveCommentatorsViewController:(NSString*)deviceID cameraType:(int)cameraType cameraName:(NSString*)cameraName roomID:(int)roomID;
 @end

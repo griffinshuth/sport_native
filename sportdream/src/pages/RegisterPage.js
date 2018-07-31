@@ -26,7 +26,7 @@ import {
     ImagePicker
 } from 'antd-mobile'
 
-import {get,post,promisePost,promiseGet} from '../fetch'
+import {get,post} from '../fetch'
 
 
 export default class RegisterPage extends Component{
@@ -91,80 +91,69 @@ export default class RegisterPage extends Component{
         this.setState({images:files})
     }
 
-    onRegister = ()=>{
-        //Toast.info(JSON.stringify(this.state));
+    onRegister = async()=>{
         var {phoneValue,smscode,password,confirmPassword,nickname,sex} = this.state;
         phoneValue = phoneValue.replace(/\s/g,'');
-       var promise =  promisePost('/register',{phoneValue,smscode,password,confirmPassword,nickname,sex});
-        promise.then(function (value) {
-            if(value.error)
-                Toast.info(value.error,1)
-            else
-                Toast.info("注册成功")
-        }, function (error) {
-            Toast.info(JSON.stringify(error.res.status+"---"+error.res.url+"---"+error.res._bodyText),100);
-        })
+        try{
+            var result =  await post('/register',{phoneValue,smscode,password,confirmPassword,nickname,sex});
+            if(result.error){
+                Toast.info(result.error);
+            }else{
+                Toast.info("恭喜注册成功，请返回登录页面进行登录")
+            }
+        }catch(e){
+            Toast.info("无法连接到服务器")
+        }
     }
 
-    verifySmsCode = ()=>{
-        var promise =  promiseGet('/getSmsCode',{phonenumber:this.state.phoneValue.replace(/\s/g,'')});
-        var self = this;
-        promise.then(function (value) {
-            if(value.isEmpty){
+    verifySmsCode = async()=>{
+        try{
+            var result =  await get('/getSmsCode',{phonenumber:this.state.phoneValue.replace(/\s/g,'')});
+            if(result.isEmpty){
                 Toast.info("还没有生成验证码，请先获得验证码")
             }else{
-                if(value.code != self.state.smscode){
-                    self.setState({smscodeError:true});
+                if(result.code != this.state.smscode){
+                    this.setState({smscodeError:true});
                 }
             }
-        }, function (error) {
-            Toast.info(JSON.stringify(error.res),1);
-        })
+        }catch(e){
+            Toast.info("无法连接到服务器")
+        }
     }
 
-    onSendSMSCode = ()=>{
+    onSendSMSCode = async()=>{
         var phonenumber = this.state.phoneValue.replace(/\s/g,'');
         if(phonenumber.length != 11){
             Toast.info("手机号码格式错误",1);
             return;
         }
-        var self = this;
-        var promise =  promisePost('/sendSmsCode',{phonenumber:phonenumber});
-        promise.then(function (value) {
-            //Toast.info(JSON.stringify(value))
-            if(value.resp.respCode == "000000"){
-                var t = 60;
-                self.setState({smscodeinfo:t+"秒后可以重发"})
-                self.setState({smsbuttondisabled:true})
+        var result =  await post('/sendSmsCode',{phonenumber:phonenumber});
+        if(result.resp.respCode == "000000"){
+            var t = 60;
+            this.setState({smscodeinfo:t+"秒后可以重发"})
+            this.setState({smsbuttondisabled:true})
 
-                var timehander = setInterval(function(){
-                    t = t-1;
-                    self.setState({smscodeinfo:t+"秒后可以重发"})
-                    if(t==0){
-                        clearInterval(timehander);
-                        self.setState({smscodeinfo:'获得验证码'})
-                        self.setState({smsbuttondisabled:false})
-                    }
-                },1000)
-            }else{
-                Toast.info("发生短信失败！！！")
-            }
-        }, function (error) {
-            Toast.info(JSON.stringify(error.res.status+"---"+error.res.url+"---"+error.res._bodyText),1);
-        })
+            var timehander = setInterval(()=>{
+                t = t-1;
+                this.setState({smscodeinfo:t+"秒后可以重发"})
+                if(t==0){
+                    clearInterval(timehander);
+                    this.setState({smscodeinfo:'获得验证码'})
+                    this.setState({smsbuttondisabled:false})
+                }
+            },1000)
+        }else{
+            Toast.info("发生短信失败！！！")
+        }
     }
 
-    checkNickname = ()=>{
-        var promise =  promiseGet('/isNicknameExist',{nickname:this.state.nickname});
-        promise.then(function (value) {
-            if(value.exist){
-                Toast.info("昵称已经存在")
-            }else{
-                Toast.info("可以使用")
-            }
-        }, function (error) {
-            Toast.info(JSON.stringify(error.res.status),1);
-        })
+    checkNickname = async()=>{
+        var result =  await get('/isNicknameExist',{nickname:this.state.nickname});
+        if(result.exist){
+            Toast.info("昵称已经存在")
+        }else{
+            Toast.info("可以使用")
+        }
     }
 
     render(){

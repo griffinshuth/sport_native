@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AgoraKitRemoteCamera.h"
+#import "KTVAUGraphRecorder.h"
 
-@interface CheerLeaderViewController : UIViewController
-
+@interface CheerLeaderViewController : UIViewController<AgoraKitRemoteCameraDelegate,KTVAUGraphRecorderDelegate>
+@property (nonatomic,strong) NSString* channelName;
 @end

@@ -18,12 +18,13 @@ import {
 } from 'antd-mobile'
 import ToolBar from '../../Components/ToolBar'
 import Video from 'react-native-video'
+import {uploadurl,cloudStorageDomain} from '../../fetch'
 var QiniuModule = NativeModules.QiniuModule;
 var AccompanyModule = NativeModules.AccompanyModule;
 var VideoGPUFilterModule = NativeModules.VideoGPUFilterModule;
 const QiniuModuleEmitter = new NativeEventEmitter(QiniuModule);
 const VideoGPUFilterModuleEmitter = new NativeEventEmitter(VideoGPUFilterModule);
-var domain = "http://grassroot.qiniudn.com/"
+var domain = cloudStorageDomain
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -63,7 +64,7 @@ export default class App extends Component{
     }
     publish = async()=>{
         var path = this.state.video_url.substring(7);
-        var result = await QiniuModule.upload(path);
+        var result = await QiniuModule.upload(path,uploadurl);
         var url = domain + result.name;
         console.log(url);
         Toast.info("上传成功");
@@ -86,7 +87,7 @@ export default class App extends Component{
     }
     render(){
         return (<View style={styles.wrapper}>
-            <ToolBar title="短视频录制" navigation={this.props.navigation}/>
+            <ToolBar title="短视频后期处理" navigation={this.props.navigation}/>
             <Video
                 source={{uri: this.state.video_url}}
                 style={styles.wrapper}

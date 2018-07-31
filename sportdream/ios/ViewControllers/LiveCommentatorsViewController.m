@@ -63,19 +63,29 @@
   [self send:COMMENT_AUDIO data:data];
 }
 
--(void)serverDiscovered:(NSString*)ip
+-(void)serverDiscovered:(LocalWifiNetwork*)network ip:(NSString*)ip
 {
   
 }
--(void)clientSocketConnected
+-(void)clientSocketConnected:(LocalWifiNetwork*)network
+{
+  //发送导播服务器登录信息
+  NSDictionary* dict = @{
+                         @"id": @"liveCommentorLogin",
+                         @"deviceID":self.mDeviceID,
+                         @"type":[NSNumber numberWithInt:self.mCameraType],
+                         @"name":self.mCameraName,
+                         @"subtype":[NSNumber numberWithInt:-1],
+                         };
+  NSError *error;
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+  [self.network clientSendPacket:JSON_MESSAGE data:jsonData];
+}
+- (void)clientSocketDisconnect:(LocalWifiNetwork*)network sock:(GCDAsyncSocket *)sock
 {
   
 }
-- (void)clientSocketDisconnect:(GCDAsyncSocket *)sock
-{
-  
-}
--(void)clientReceiveData:(uint16_t)packetID data:(NSData*)data
+-(void)clientReceiveData:(LocalWifiNetwork*)network packetID:(uint16_t)packetID data:(NSData*)data
 {
   
 }

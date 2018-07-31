@@ -17,9 +17,6 @@ import {
     DeviceEventEmitter
 } from 'react-native'
 var BaiduMapModule = NativeModules.BaiduMapModule;
-var QiniuModule = NativeModules.QiniuModule;
-var BaiduMapView = requireNativeComponent('BaiduMapView',null);
-
 
 import {NavigationActions} from 'react-navigation'
 
@@ -37,6 +34,7 @@ import {
     WhiteSpace
 } from 'antd-mobile'
 import ToolBar from '../../Components/ToolBar'
+import { NetworkInfo } from 'react-native-network-info';
 
 const sidebar = (<List>
 
@@ -62,7 +60,7 @@ const tabs = [
 ];
 
 
-@connect(({count})=>({count}))
+@connect(({count,appNS})=>({count,appNS}))
 export default class Count extends Component{
     static navigationOptions = {
         title:"计数游戏"
@@ -126,17 +124,6 @@ export default class Count extends Component{
         }
     }
 
-    H264Record(){
-        QiniuModule.h264Record();
-    }
-
-    agoraRemoteCamera(){
-        QiniuModule.agoraRemoteCamera();
-    }
-    liveCommentorsActivity(){
-        QiniuModule.liveCommentorsActivity();
-    }
-
     render(){
         var windowHeight = Dimensions.get('window').height;
         var contentHeight = windowHeight - 41 - (Platform.OS == 'ios'?60:48);
@@ -170,7 +157,6 @@ export default class Count extends Component{
                 <View style={{ flex: 1}}>
                     <Tabs swipeable={false} tabs={tabs}
                           initialPage={0} onChange={this.onChange} onTabClick={this.onTabClick}>
-
                             <View style={{ height:contentHeight,backgroundColor:'white' }}>
                                 <ScrollView style={{flex:1}}>
                                     <Carousel
@@ -198,40 +184,23 @@ export default class Count extends Component{
                                         </View>
                                     </Carousel>
                                     <Grid data={griddata} columnNum={3} isCarousel onClick={(_el, index) => alert(index)} />
-                                    <Text>
-                                        Count:{count}=={contentHeight}
-                                    </Text>
-                                    <TouchableHighlight onPress={()=>{dispatch({type:'count/add'})}}>
-                                        <Text>Add</Text>
-                                    </TouchableHighlight>
-                                    <TouchableHighlight onPress={()=>{dispatch({type:'count/addDelay'})}}>
-                                        <Text>Delay Add</Text>
-                                    </TouchableHighlight>
-                                    <Text>{JSON.stringify(this.props.navigation)}</Text>
                                     <WhiteSpace/>
                                     <Button onClick={this.onGetLocation}>获得地理位置</Button>
-                                    <WhiteSpace/>
-                                    <Button onClick={this.H264Record}>Android H264 Record</Button>
-                                    <WhiteSpace/>
-                                    <Button onClick={this.agoraRemoteCamera}>(Android)比赛远程摄像头</Button>
-                                    <WhiteSpace/>
-                                    <Button onClick={this.liveCommentorsActivity}>(Android)现场解说</Button>
                                     <WhiteSpace/>
                                     <WhiteSpace/>
                                     <WhiteSpace/>
                                 </ScrollView>
                             </View>
-
-
                             <View style={{ alignItems: 'center', justifyContent: 'center', height: 400 }}>
-                                <Text>选项卡二内容</Text>
+                                <Button onClick={()=>{
+                                    NetworkInfo.getIPAddress(ipv4 => {
+                                        Toast.info(ipv4);
+                                    });
+                                }}>获得IP</Button>
                             </View>
-
-
                             <View style={{ alignItems: 'center', justifyContent: 'center', height: 100 }}>
                                 <Text>选项卡三内容</Text>
                             </View>
-
                     </Tabs>
                 </View>
                 </Drawer>

@@ -29,7 +29,7 @@
   NSTimeInterval                      _lastStopTime;
 }
 
--(id)init
+-(id)initWithUrl:(NSString*)urlOrFileName isRtmp:(BOOL)isRtmp
 {
   if(self = [super init])
   {
@@ -37,9 +37,15 @@
     //初始化视频输出模块
     NSArray *documentsPathArr = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *document = [documentsPathArr lastObject];
-    NSString* pushFileURL = [document stringByAppendingPathComponent:@"recording2.mp4"];
-    NSString* pushNetURL = kFakePushURL;
-    _metaData = [[ELPushStreamMetadata alloc] initWithRtmpUrl:pushNetURL videoWidth:kDesiredWidth videoHeight:kDesiredHeight videoFrameRate:kFrameRate videoBitRate:kAVGVideoBitRate audioSampleRate:kAudioSampleRate audioChannels:kAudioChannels audioBitRate:kAudioBitRate audioCodecName:kAudioCodecName
+    NSString* pushUrl = nil;
+    if(isRtmp){
+      pushUrl = urlOrFileName;
+    }else{
+      pushUrl = [document stringByAppendingPathComponent:urlOrFileName];
+    }
+    //NSString* pushFileURL = [document stringByAppendingPathComponent:@"recording2.mp4"];
+    //NSString* pushNetURL = kFakePushURL;
+    _metaData = [[ELPushStreamMetadata alloc] initWithRtmpUrl:pushUrl videoWidth:kDesiredWidth videoHeight:kDesiredHeight videoFrameRate:kFrameRate videoBitRate:kAVGVideoBitRate audioSampleRate:kAudioSampleRate audioChannels:kAudioChannels audioBitRate:kAudioBitRate audioCodecName:kAudioCodecName
                                               qualityStrategy:0
                               adaptiveBitrateWindowSizeInSecs:WINDOW_SIZE_IN_SECS adaptiveBitrateEncoderReconfigInterval:NOTIFY_ENCODER_RECONFIG_INTERVAL adaptiveBitrateWarCntThreshold:PUB_BITRATE_WARNING_CNT_THRESHOLD
                                        adaptiveMinimumBitrate:300 * 1024

@@ -20,13 +20,11 @@
 #import "AGVideoProcessing.h"
 #import "LivePusher.h"
 
-static AgorachatViewManager* AgorachatViewManagerSelf;
 @interface AgorachatViewManager()
-@property (nonatomic,strong) h264encode* encode;
-@property (nonatomic,assign) BOOL started;
+
 @end
 
-class AudioFrameObserver : public agora::media::IAudioFrameObserver
+/*class AudioFrameObserver : public agora::media::IAudioFrameObserver
 {
 private:
   void* userdata;
@@ -55,9 +53,9 @@ public:
   {
     return true;
   }
-};
+};*/
 
-class VideoFrameObserver : public agora::media::IVideoFrameObserver
+/*class VideoFrameObserver : public agora::media::IVideoFrameObserver
 {
 private:
   void* userdata;
@@ -133,90 +131,24 @@ private:
     free(overlay);
     count++;
   }
-};
+};*/
 
 @implementation AgorachatViewManager
 {
-  AudioFrameObserver* s_audioFrameObserver;
-  VideoFrameObserver* s_videoFrameObserver;
-  
-  ELPushStreamMetadata* _metaData;
-  VideoConsumerThread* _consumer;
-  AudioEncoderAdapter*            _audioEncoder;
-  dispatch_queue_t                    _consumerQueue;
-  double                              _startConnectTimeMills;
-  int                                 _historyBitrate;
-  NSTimeInterval                      _lastStopTime;
 
 }
 RCT_EXPORT_MODULE();
 - (id) init
 {
   self = [super init];
-  if(!self) return nil;
+  if(self){
   
-  void* userdata = (__bridge void*)self;
-  s_audioFrameObserver = new AudioFrameObserver(userdata);
-  s_videoFrameObserver = new VideoFrameObserver(userdata);
-  
-  _started = false;
-  
-  //初始化视频输出模块
-  NSArray *documentsPathArr = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSString *document = [documentsPathArr lastObject];
-  NSString* pushFileURL = [document stringByAppendingPathComponent:@"recording.mp4"];
-  NSString* pushNetURL = kFakePushURL;
-  _metaData = [[ELPushStreamMetadata alloc] initWithRtmpUrl:pushFileURL videoWidth:kDesiredWidth videoHeight:kDesiredHeight videoFrameRate:kFrameRate videoBitRate:kAVGVideoBitRate audioSampleRate:kAudioSampleRate audioChannels:kAudioChannels audioBitRate:kAudioBitRate audioCodecName:kAudioCodecName
-                                                qualityStrategy:0
-                                adaptiveBitrateWindowSizeInSecs:WINDOW_SIZE_IN_SECS adaptiveBitrateEncoderReconfigInterval:NOTIFY_ENCODER_RECONFIG_INTERVAL adaptiveBitrateWarCntThreshold:PUB_BITRATE_WARNING_CNT_THRESHOLD
-                                         adaptiveMinimumBitrate:300 * 1024
-                                         adaptiveMaximumBitrate:1000 * 1024];
-   _consumerQueue = dispatch_queue_create("com.easylive.RecordingStudio.consumerQueue", NULL);
-  
-  AgorachatViewManagerSelf =self;
+  }
   return self;
 }
 
-- (void)addLocalYBuffer:(void *)yBuffer
-                uBuffer:(void *)uBuffer
-                vBuffer:(void *)vBuffer
-                yStride:(int)yStride
-                uStride:(int)uStride
-                vStride:(int)vStride
-                  width:(int)width
-                 height:(int)height
-               rotation:(int)rotation
-{
-  int remoteYBufferSize = yStride * height;
-  int remoteUBufferSize = uStride * height / 2;
-  int remoteVBufferSize = vStride * height / 2;
-  int dataLength = remoteYBufferSize + remoteUBufferSize + remoteVBufferSize;
-  //unsigned char *NV12Data = (unsigned char *)malloc(dataLength);
-  //libyuv::I420ToNV12((const uint8*)yBuffer, yStride, (const uint8*)uBuffer, uStride, (const uint8*)vBuffer, vStride, NV12Data, yStride, NV12Data+remoteYBufferSize, uStride+vStride, yStride, height);
-  //NSData *sampleBuffer = [NSData dataWithBytesNoCopy:NV12Data length:dataLength];
-  //[self.encode encodeH264Frame:sampleBuffer];
-  uint8* argb = (uint8*)malloc(width*height*4);
-  //NSLog(@"width:%d,height:%d",width,height);
-  libyuv::I420ToARGB((const uint8*)yBuffer,yStride,(const uint8*)uBuffer,uStride,(const uint8*)vBuffer,vStride,argb,yStride*4,width,height);
-  [self.encode encodeBytes:argb];
-  free(argb);
-}
-- (void)addRemoteOfUId:(unsigned int)uid
-               yBuffer:(void *)yBuffer
-               uBuffer:(void *)uBuffer
-               vBuffer:(void *)vBuffer
-               yStride:(int)yStride
-               uStride:(int)uStride
-               vStride:(int)vStride
-                 width:(int)width
-                height:(int)height
-              rotation:(int)rotation{
-  
-}
-
 -(void)dealloc{
-  delete s_audioFrameObserver;
-  delete s_videoFrameObserver;
+  
 }
 
 RCT_EXPORT_METHOD(initAgora)
@@ -243,13 +175,11 @@ RCT_EXPORT_METHOD(joinChannel:(NSString*)name)
     [UIApplication sharedApplication].idleTimerDisabled = YES;
   }];
   
-  //[self registerPreprocessing];
   [AGVideoProcessing registerPreprocessing:self.agoraKit];
 }
 
 RCT_EXPORT_METHOD(leaveChannel)
 {
-  //[self deregisterPreprocessing];
   [AGVideoProcessing deregisterPreprocessing:self.agoraKit];
   [self.agoraKit leaveChannel:^(AgoraRtcStats *stat) {
     [UIApplication sharedApplication].idleTimerDisabled = FALSE;
@@ -259,151 +189,31 @@ RCT_EXPORT_METHOD(leaveChannel)
 RCT_EXPORT_METHOD(startRCTRecord)
 {
   //[self startRecord];
-  [LivePusher start];
+  NSString* url = @"rtmp://pili-publish.2310live.com/grasslive/singlematch_roomid";
+  [LivePusher start:url isRtmp:true];
+  signal(SIGPIPE, SignalHandler);
 }
 
 RCT_EXPORT_METHOD(stopRCTRecord)
 {
   //[self stopRecord];
   [LivePusher stop];
+  signal(SIGPIPE, SIG_DFL);
 }
 
 void SignalHandler(int signal) {
   NSLog(@"connection is closed!!!");
-  UIAlertView *alert =
-  [[UIAlertView alloc]
-   initWithTitle:@"出错啦"
-   message:[NSString stringWithFormat:@"服务器断开连接，请退出"]
-   delegate:AgorachatViewManagerSelf
-   cancelButtonTitle:@"退出"
-   otherButtonTitles:@"继续", nil];
-  [alert show];
 }
 
 -(void)startRecord
 {
-  if(NULL == _consumer){
-    _consumer = new VideoConsumerThread();
-  }
-  
-  __weak __typeof(self) weakSelf = self;
-  dispatch_async(_consumerQueue, ^(void) {
-    __strong __typeof(weakSelf) strongSelf = weakSelf;
-    char* videoOutputURI = [ELPushStreamMetadata nsstring2char:strongSelf->_metaData.rtmpUrl];
-    char* audioCodecName = [ELPushStreamMetadata nsstring2char:strongSelf->_metaData.audioCodecName];
-    strongSelf->_startConnectTimeMills = [[NSDate date] timeIntervalSince1970] * 1000;
-    LivePacketPool::GetInstance()->initRecordingVideoPacketQueue();
-    LivePacketPool::GetInstance()->initAudioPacketQueue((int)strongSelf->_metaData.audioSampleRate);
-    LiveAudioPacketPool::GetInstance()->initAudioPacketQueue();
-    std::map<std::string, int> configMap;
-    configMap["adaptiveBitrateWindowSizeInSecs"] = (int)strongSelf->_metaData.adaptiveBitrateWindowSizeInSecs;
-    configMap["adaptiveBitrateEncoderReconfigInterval"] = (int)strongSelf->_metaData.adaptiveBitrateEncoderReconfigInterval;
-    configMap["adaptiveBitrateWarCntThreshold"] = (int)strongSelf->_metaData.adaptiveBitrateWarCntThreshold;
-    configMap["adaptiveMinimumBitrate"] = (int)strongSelf->_metaData.adaptiveMinimumBitrate/1024;
-    configMap["adaptiveMaximumBitrate"] = (int)strongSelf->_metaData.adaptiveMaximumBitrate/1024;
-    if (_historyBitrate != 0 && _historyBitrate != -1           && _historyBitrate>=configMap["adaptiveMinimumBitrate"]    &&
-        _lastStopTime                                           &&
-        ([NSDate date].timeIntervalSince1970-_lastStopTime)<60) {
-      configMap["adaptiveHistoryBitrate"] = _historyBitrate;
-    }
-    
-    int consumerInitCode = strongSelf->_consumer->init(videoOutputURI, (int)strongSelf->_metaData.videoWidth, (int)strongSelf->_metaData.videoHeight, (int)strongSelf->_metaData.videoFrameRate, (int)strongSelf->_metaData.videoBitRate, (int)strongSelf->_metaData.audioSampleRate, (int)strongSelf->_metaData.audioChannels, (int)strongSelf->_metaData.audioBitRate, audioCodecName,
-                                                       (int)strongSelf->_metaData.qualityStrategy, configMap);
-    delete[] audioCodecName;
-    delete[] videoOutputURI;
-    
-    if(consumerInitCode >= 0) {
-      strongSelf->_consumer->startAsync();
-      NSLog(@"cosumer open video output success...");
-      _audioEncoder = new AudioEncoderAdapter();
-      char* audioCodecName = [ELPushStreamMetadata nsstring2char:kAudioCodecName];
-      _audioEncoder->init(LivePacketPool::GetInstance(), kAudioSampleRate, kAudioChannels, kAudioBitRate, audioCodecName);
-      delete[] audioCodecName;
-      
-      self.encode = [[h264encode alloc] initEncodeWith:_metaData.videoWidth height:_metaData.videoHeight framerate:_metaData.videoFrameRate bitrate:_metaData.videoBitRate];
-      self.encode.delegate = self;
-      [self.encode startH264EncodeSession];
-      _started = true;
-      signal(SIGPIPE, SignalHandler);
-    } else {
-      NSLog(@"cosumer open video output failed...");
-      LivePacketPool::GetInstance()->destoryRecordingVideoPacketQueue();
-      LivePacketPool::GetInstance()->destoryAudioPacketQueue();
-      LiveAudioPacketPool::GetInstance()->destoryAudioPacketQueue();
-    
-    }
-  });
-}
-
--(void)startZhibo
-{
-  
+  //服务器断开连接时，客户端会收到这个信号，如果忽略，则app自动退出
+  signal(SIGPIPE, SignalHandler);
 }
 
 -(void)stopRecord
 {
-  _historyBitrate = PublisherRateFeedback::GetInstance()->getQualityAgent()->getBitrate();
-  _lastStopTime = [NSDate date].timeIntervalSince1970;
-  
-  if (_consumer) {
-    _consumer->stop();
-    delete _consumer;
-    _consumer = NULL;
-  }
-  
-  if(NULL != _audioEncoder){
-    _audioEncoder->destroy();
-    delete _audioEncoder;
-    _audioEncoder = NULL;
-  }
-  
-  [self.encode stopH264EncodeSession];
-  _started = false;
   signal(SIGPIPE, SIG_DFL);
-}
-
--(void)registerPreprocessing
-{
-  agora::rtc::IRtcEngine* rtc_engine = (agora::rtc::IRtcEngine*)self.agoraKit.getNativeHandle;
-  agora::util::AutoPtr<agora::media::IMediaEngine> mediaEngine;
-  mediaEngine.queryInterface(rtc_engine, agora::rtc::AGORA_IID_MEDIA_ENGINE);
-  if (mediaEngine)
-  {
-    mediaEngine->registerAudioFrameObserver(s_audioFrameObserver);
-    mediaEngine->registerVideoFrameObserver(s_videoFrameObserver);
-  }
-}
-
--(void)deregisterPreprocessing
-{
-  agora::rtc::IRtcEngine* rtc_engine = (agora::rtc::IRtcEngine*)self.agoraKit.getNativeHandle;
-  agora::util::AutoPtr<agora::media::IMediaEngine> mediaEngine;
-  mediaEngine.queryInterface(rtc_engine, agora::rtc::AGORA_IID_MEDIA_ENGINE);
-  if (mediaEngine)
-  {
-    mediaEngine->registerAudioFrameObserver(NULL);
-    mediaEngine->registerVideoFrameObserver(NULL);
-  }
-}
-
-//delegate
--(void)rtmpSpsPps:(const uint8_t*)pps ppsLen:(size_t)ppsLen sps:(const uint8_t*)sps spsLen:(size_t)spsLen timestramp:(Float64)miliseconds
-{
-  //[self.rtmpPush sendVideoSpsPps:(void*)pps ppsLen:(int)ppsLen sps:(void*)sps spsLen:(int)spsLen];
-  NSData *ns_pps = [NSData dataWithBytes:pps length:ppsLen];
-  NSData *ns_sps = [NSData dataWithBytes:sps length:spsLen];
-  [pool_av_user sendSpsPpsToPool:ns_sps pps:ns_pps timestramp:miliseconds];
-  
-}
--(void)rtmpH264:(const void*)data length:(size_t)length isKeyFrame:(bool)isKeyFrame timestramp:(Float64)miliseconds pts:(int64_t) pts dts:(int64_t) dts
-{
-  //[self.rtmpPush sendH264Packet:(void*)data size:(int)length isKeyFrame:isKeyFrame];
-  NSData* ns_h264 = [NSData dataWithBytes:data length:length];
-  [pool_av_user sendVideoDataToPool:ns_h264 isKeyFrame:isKeyFrame timestramp:miliseconds pts:pts dts:dts];
-}
--(void)dataEncodeToH264:(const void*)data length:(size_t)length;
-{
-  //[self writeH264Data:data length:length];
 }
 
 //delegate

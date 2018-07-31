@@ -1,5 +1,6 @@
 package com.sportdream.H264AACHWEncode;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,6 +66,27 @@ public class Util {
                 try {
                     fos.flush();
                     fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void read(byte[] buffer,int offset,int length,String path){
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(path);
+            fis.skip(offset);
+            fis.read(buffer,0,length);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

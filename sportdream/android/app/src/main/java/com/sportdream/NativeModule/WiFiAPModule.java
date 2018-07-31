@@ -72,12 +72,19 @@ public class WiFiAPModule extends ReactContextBaseJavaModule {
     /**
      * 打开网络共享与热点设置页面
      */
-    private void openAPUI() {
+    @ReactMethod
+    public void openAPUI() {
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ComponentName comp = new ComponentName("com.android.settings", "com.android.settings.Settings$TetherSettingsActivity");
         intent.setComponent(comp);
         getCurrentActivity().startActivity(intent);
+    }
+
+    //打开WI-FI设置界面
+    @ReactMethod
+    public void openWifiSetting(){
+        getCurrentActivity().startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
     }
 
     /**
@@ -97,7 +104,25 @@ public class WiFiAPModule extends ReactContextBaseJavaModule {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+
         return isOpen;
+    }
+
+    @ReactMethod
+    public void getWifiApState(Promise promise){
+        boolean isOpen = false;
+        try {
+            Method method = wifiManager.getClass().getMethod("isWifiApEnabled");
+            isOpen = (boolean) method.invoke(wifiManager);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        promise.resolve(isOpen);
     }
 
 
@@ -219,6 +244,4 @@ public class WiFiAPModule extends ReactContextBaseJavaModule {
             e.printStackTrace();
         }
     }
-
-
 }

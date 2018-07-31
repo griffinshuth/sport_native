@@ -11,7 +11,7 @@ import {
     Toast
 } from 'antd-mobile'
 import ToolBar from '../../Components/ToolBar'
-var BaiduSpeechModule = NativeModules.BaiduSpeechModule;
+var BaiduASRModule = NativeModules.BaiduASRModule;
 
 const styles = StyleSheet.create({
     container:{
@@ -24,14 +24,14 @@ export default class App extends React.Component{
         this.onVoiceRecognize_handler = DeviceEventEmitter.addListener('onVoiceRecognize', function(result) {
             var command = result.RecognizeResult;
             Toast.info(command);
-            BaiduSpeechModule.speak(command);
+            BaiduASRModule.speak(command);
         });
-        BaiduSpeechModule.init();
-        BaiduSpeechModule.initTTS();
+        BaiduASRModule.init();
+        BaiduASRModule.initTTS();
     }
     componentWillUnmount(){
-        BaiduSpeechModule.destroy();
-        BaiduSpeechModule.destroyTTS();
+        BaiduASRModule.destroy();
+        BaiduASRModule.destroyTTS();
         this.onVoiceRecognize_handler.remove();
     }
     render(){

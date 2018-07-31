@@ -1,6 +1,7 @@
 package com.sportdream;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.WindowManager;
@@ -25,8 +26,8 @@ public class MainActivity extends ReactActivity {
     {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        //PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-        //mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"reactnative");
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+
     }
     @Override
     public void onResume(){

@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "AgoraKitRemoteCamera.h"
 
-@interface CommentatorsViewController : UIViewController<AgoraRtcEngineDelegate,AgoraKitRemoteCameraDelegate>
-
+@interface CommentatorsViewController : UIViewController<AgoraKitRemoteCameraDelegate>
+@property (nonatomic,strong) NSString* channelName;
 @end

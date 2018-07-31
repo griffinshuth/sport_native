@@ -47,12 +47,7 @@ export default {
                 yield put(createAction('temp/loginLoading')({loginLoading:false}))
                 if(!result.error){
                     yield put(createAction('loginSuccessed')(result));
-                    /*yield put(
-                        NavigationActions.reset({
-                            index: 0,
-                            actions: [NavigationActions.navigate({ routeName: 'Profile' })],
-                        })
-                    );*/
+                    yield put({type:'temp/ServerConnected',payload:{tokenExpired:false}})
                 }else{
                     yield put(createAction('temp/loginError')({loginError:result.error}))
                 }

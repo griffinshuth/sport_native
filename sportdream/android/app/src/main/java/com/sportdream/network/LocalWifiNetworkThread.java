@@ -64,6 +64,10 @@ public class LocalWifiNetworkThread extends Thread {
     private SocketBuffer socketBuffer = new SocketBuffer();
     private LocalWifiSocketHandler mListener;
 
+    private int TEMP_TCP_PORT = 3333;
+    private int DIRECTOR_SERVER_PORT = 6666;
+    private int UDP_BROADCAST_PORT = 8888;
+
     public LocalWifiNetworkThread(LocalWifiSocketHandler listener){
         mListener = listener;
         initSocket();
@@ -81,13 +85,11 @@ public class LocalWifiNetworkThread extends Thread {
                 @Override
                 public void run() {
                     try{
-                        tempSocket = new ServerSocket(3333);
+                        tempSocket = new ServerSocket(TEMP_TCP_PORT);
                         while (!this.isInterrupted()){
                             Socket socket = tempSocket.accept();
-                            if(directorServerIP == ""){
-                                directorServerIP = socket.getInetAddress().getHostAddress();
-                                clientSocketThread.start();
-                            }
+                            directorServerIP = socket.getInetAddress().getHostAddress();
+                            clientSocketThread.start();
                             socket.close();
                         }
                     }catch (IOException e){
@@ -100,7 +102,7 @@ public class LocalWifiNetworkThread extends Thread {
                 @Override
                 public void run() {
                     try{
-                        clientSocket = new Socket(directorServerIP,6666);
+                        clientSocket = new Socket(directorServerIP,DIRECTOR_SERVER_PORT);
                         mListener.DirectServerConnected();
                     }catch (IOException e){
                         e.printStackTrace();
@@ -112,6 +114,7 @@ public class LocalWifiNetworkThread extends Thread {
                             int len = in.read(buffer);
                             if(len == -1){
                                 Log.w("sportstream","in.read(buffer);");
+                                mListener.DirectServerDisconnected();
                                 break;
                             }
                             byte[] oneread = new byte[len];
@@ -168,7 +171,7 @@ public class LocalWifiNetworkThread extends Thread {
     }
 
     public void searchServer(){
-        udpBroadcast("255.255.255.255",8888,"androidbroadcast");
+        udpBroadcast("255.255.255.255",UDP_BROADCAST_PORT,"androidbroadcast");
     }
 
     public final void exit(){

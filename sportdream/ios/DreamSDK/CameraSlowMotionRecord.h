@@ -19,4 +19,5 @@
 -(id)initWithPreview:(UIView*)preview isSlowMotion:(BOOL)isSlowMotion;
 -(void)startCapture;
 -(void)stopCapture;
+-(void)zoom:(float)scale;
 @end

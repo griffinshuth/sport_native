@@ -12,6 +12,10 @@
 #import "h264CacheQueue.h"
 #import "PacketID.h"
 #import "libyuv.h"
+#import <Orientation.h>
+
+const int highlight_tcp_port = 4002;
+const int highlight_udp_port = 5002;
 
 @implementation H264FrameMetaData
 -(id)init
@@ -46,16 +50,18 @@
 @property (nonatomic,strong) CameraSlowMotionRecord* record;
 @property (nonatomic,strong) h264encode* encode;
 @property (nonatomic,strong) h264encode* smallEncode;
-//@property (nonatomic,strong) h264CacheQueue* cacheQueue;
-@property (nonatomic,strong) UIView* containerpreview;
-@property (nonatomic,strong) UILabel* info;
-@property (nonatomic,strong) UILabel* status;
-@property (nonatomic,strong) LocalWifiNetwork* localClient;
-
-@property (nonatomic,strong) NSString* filename;
-
 @property (nonatomic,strong) NSMutableArray<H264FrameMetaData*>* metaBigData;
 @property (nonatomic,strong) NSMutableArray<H264FrameMetaData*>* metaSmallData;
+@property (nonatomic,strong) LocalWifiNetwork* localClient;
+@property (nonatomic,strong) LocalWifiNetwork* highlightClient;
+//@property (nonatomic,strong) h264CacheQueue* cacheQueue;
+
+@property (nonatomic,strong) UIView* containerpreview;
+@property (nonatomic,strong) UILabel* info;
+@property (nonatomic,strong) UILabel* timeInfo;
+@property (nonatomic,strong) UIButton* highlightButton;
+@property (nonatomic,strong) UIButton* directorButton;
+@property (nonatomic,strong) NSString* filename;
 @end
 
 @implementation CameraOnStandViewController
@@ -70,11 +76,25 @@
   FILE *_metaBigFile;
   FILE *_metaSmallFile;
   
+  NSFileHandle *mSmallVideoFileHandle;
+  
+  //导播服务器状态
   BOOL canSendBigH264;
   BOOL canSendSmallH264;
-  BOOL isServerConnect;
+  BOOL isDirectServerConnected;
+  //集锦服务器状态
+  BOOL canSendHighlightH264;
+  BOOL isHighlightServerConnected;
+  //sps pps
+  NSData* mHighlightSPS;
+  NSData* mHighlightPPS;
+  NSData* mDirectServerBigSPS;
+  NSData* mDirectServerBigPPS;
+  NSData* mDirectServerSmallSPS;
+  NSData* mDirectServerSmallPPS;
   
   int mCaptureFrameCount;                    //采集的总帧数
+  int64_t beginCaptureTimestamp;       //获得第一帧时的时间戳
   int mBigFrameCount;               //编码的大流帧数
   int mSmallFrameCount;             //编码的小流帧数
   int lastBigIFrameIndex;               //上一个大流I帧的索引
@@ -85,18 +105,40 @@
   int64_t mInitSmallRelativeTime;     //以第一个小流I帧的绝对编码时间为初始值
   int     mlastBigFrameRelativeTime;   //上一帧的相对时间
   int     mlastSmallFrameRelativeTime;  //上一帧的相对时间
-  int64_t mBeginServerAbsoluteTime;  //服务器绝对时间
-  int64_t mBeginLocalAbsoluteTime;   //收到服务器时间同步包时的本机绝对时间
 }
+
+-(void)highlightButtonEvent:(id)sender
+{
+  if(isHighlightServerConnected){
+    return;
+  }
+  NSDictionary* dict = @{
+                         @"id": @"getHighlightServerIP",
+                         };
+  NSError *error;
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+  [self.localClient clientSendPacket:JSON_MESSAGE data:jsonData];
+}
+
+-(void)directerButtonEvent:(id)sender
+{
+  if(isDirectServerConnected){
+    return;
+  }
+  [self.localClient searchDirectorServer];
+}
+
+-(void)handlePinch:(UIPinchGestureRecognizer*)recognizer
+{
+  float scale = recognizer.scale;
+  [self.record zoom:scale];
+  recognizer.scale = 1;
+}
+
 - (void)viewDidLoad {
-    [super viewDidLoad];
-  self.filename = @"Camera_roomid_deviceid_positionname";
-  self.mDeviceID = @"234543";
-  self.mRoomID = 223343;
-  self.mPositionName = @"court_left_top";
-  self.mCameraName = @"carl";
-  self.mCameraType = CameraType_NORMAL;
-  self.filename = [NSString stringWithFormat:@"Camera_%d_%@_%@",self.mRoomID,self.mDeviceID,self.mPositionName];
+  [super viewDidLoad];
+  [Orientation setOrientation:UIInterfaceOrientationMaskLandscapeLeft];
+  self.filename = [NSString stringWithFormat:@"Camera_%d_%@_%@",self.mRoomID,self.mDeviceID,self.mCameraName];
   
   NSString* documentDictionary = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   _h264BigFileName = [NSString stringWithFormat:@"%@_big.h264",self.filename];
@@ -107,16 +149,24 @@
   _h264SmallFile = fopen([[NSString stringWithFormat:@"%@/%@",documentDictionary,_h264SmallFileName] UTF8String], "ab+");
   _metaBigFile = fopen([[NSString stringWithFormat:@"%@/%@",documentDictionary,_metaBigFileName] UTF8String], "ab+");
   _metaSmallFile = fopen([[NSString stringWithFormat:@"%@/%@",documentDictionary,_metaSmallFileName] UTF8String], "ab+");
+  
+  mSmallVideoFileHandle = [NSFileHandle fileHandleForReadingAtPath:[NSString stringWithFormat:@"%@/%@",documentDictionary,_h264SmallFileName]];
     // Do any additional setup after loading the view.
   MyFrameLayout* rootLayout = [MyFrameLayout new];
   rootLayout.backgroundColor = [UIColor whiteColor];
   self.view = rootLayout;
+  int screenWidth = CGRectGetWidth([UIScreen mainScreen].bounds);
+  int screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
   self.containerpreview = [[UIView alloc] init];
-  self.containerpreview.widthSize.equalTo(rootLayout.widthSize);
-  self.containerpreview.heightSize.equalTo(rootLayout.heightSize);
+  //self.containerpreview.widthSize.equalTo(rootLayout.widthSize);
+  //self.containerpreview.heightSize.equalTo(rootLayout.heightSize);
+  self.containerpreview.myWidth = screenHeight;
+  self.containerpreview.myHeight =screenWidth;
   [rootLayout addSubview:self.containerpreview];
   
   UIView *backView = View.wh(40,40).bgColor(@"blue,0.7").borderRadius(20).shadow(0.8).onClick(^{
+    [Orientation setOrientation:UIInterfaceOrientationMaskPortrait];
+    //[[UIDevice currentDevice] setValue:[NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey:@"orientation"];
     [self dismissViewControllerAnimated:YES completion:nil];
   });
   ImageView.img(@"btn_camera_cancel_a").embedIn(backView).centerMode;
@@ -126,22 +176,42 @@
   [rootLayout addSubview:backView];
   
   self.info = [UILabel new];
-  self.info.text = @"采集的帧数：00000";
+  self.info.text = @"采集的帧数：00000000000";
   [self.info sizeToFit];
   self.info.centerXPos.equalTo(@0);
   self.info.centerYPos.equalTo(@(1/6.0)).offset(self.info.frame.size.height / 2); //对于框架布局来说中心点偏移也可以设置为相对偏移。
   [rootLayout addSubview:self.info];
   
-  self.status = [UILabel new];
-  self.status.text = @"连接中。。。";
-  //[self.status sizeToFit];
-  self.status.myHeight = 50;
-  self.status.myWidth = 200;
-  self.status.centerXPos.equalTo(@0);
-  self.status.centerYPos.equalTo(@(200)).offset(self.status.frame.size.height*2); //对于框架布局来说中心点偏移也可以设置为相对偏移。
-  [rootLayout addSubview:self.status];
+  self.timeInfo = [UILabel new];
+  self.timeInfo.text = @"持续时间：000000000000000";
+  [self.timeInfo sizeToFit];
+  self.timeInfo.myTop = 80;
+  [rootLayout addSubview:self.timeInfo];
   
+  self.highlightButton = Button.fnt(@15).color(@"#0065F7").border(1, @"#0065F7").borderRadius(3);
+  self.highlightButton.highColor(@"white").highBgImg(@"#0065F7").insets(5, 10);
+  self.highlightButton.str(@"集锦服务器没有连接");
+  self.highlightButton.myHeight = 30;
+  self.highlightButton.myWidth = 200;
+  self.highlightButton.myTop = 30;
+  self.highlightButton.myLeading = 10;
+  [self.highlightButton addTarget:self action:@selector(highlightButtonEvent:) forControlEvents:UIControlEventTouchUpInside];
+  [rootLayout addSubview:self.highlightButton];
+  
+  self.directorButton = Button.fnt(@15).color(@"#0065F7").border(1, @"#0065F7").borderRadius(3);
+  self.directorButton.highColor(@"white").highBgImg(@"#0065F7").insets(5, 10);
+  self.directorButton.str(@"导播服务器没有连接");
+  self.directorButton.myHeight = 30;
+  self.directorButton.myWidth = 200;
+  self.directorButton.myTop = 30;
+  self.directorButton.myLeading = 220;
+  [self.directorButton addTarget:self action:@selector(directerButtonEvent:) forControlEvents:UIControlEventTouchUpInside];
+  [rootLayout addSubview:self.directorButton];
+  
+  UIPinchGestureRecognizer* pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
+  [self.view addGestureRecognizer:pinchGestureRecognizer];
   mCaptureFrameCount = 0;
+  beginCaptureTimestamp = 0;
   mBigFrameCount = 0;               //编码的大流帧数
   mSmallFrameCount = 0;             //编码的小流帧数
   currentBigFileLength = 0;             //当前大流视频文件大小
@@ -150,18 +220,27 @@
   //初始化编码器
   self.encode = [[h264encode alloc] initEncodeWith:1280 height:720 framerate:25 bitrate:1600*1000];
   self.encode.delegate = self;
-  self.smallEncode = [[h264encode alloc] initSmallEncodeWith:320 height:180 framerate:25 bitrate:300 * 1024];
+  self.smallEncode = [[h264encode alloc] initSmallEncodeWith:320 height:180 framerate:25 bitrate:160 * 1000];
   self.smallEncode.delegate = self;
   //初始化缓存队列
   //self.cacheQueue = [[h264CacheQueue alloc] init];
   
+  //导播服务器
   self.localClient = [[LocalWifiNetwork alloc] initWithType:false];
   self.localClient.delegate = self;
   [self.localClient searchDirectorServer];
-  
   canSendBigH264 = false;
   canSendSmallH264 = false;
-  isServerConnect = false;
+  isDirectServerConnected = false;
+  
+  //集锦服务器
+  self.highlightClient = [[LocalWifiNetwork alloc] initClientWithUdpPort:highlight_udp_port TcpPort:highlight_tcp_port];
+  self.highlightClient.delegate = self;
+  isHighlightServerConnected = false;
+  canSendHighlightH264 = false;
+  if(self.highlightIP != nil){
+    [self.highlightClient connectServerByIP:self.highlightIP];
+  }
   
   self.metaBigData = [[NSMutableArray alloc] init];
   self.metaSmallData = [[NSMutableArray alloc] init];
@@ -194,28 +273,74 @@
     }
     if(bigvideolen != bigMetaDataFileLength){
       //rename(old, new)
-      NSLog(@"video and meta file length not equal,please check!!!");
+      NSLog(@"big video and meta file length not equal,please check!!!");
     }
     currentBigFileLength = bigvideolen;   //获得当前视频文件大小
     free(bigBuffer);
   }
   
-  /*H264FrameMetaData* tempData = [[H264FrameMetaData alloc] init];
-  tempData.type = 3;
-  tempData.absoluteTime = 1523287276932;
-  tempData.relativeTime = 4433;
-  tempData.frameIndex = 3445;
-  tempData.IFrameIndex = 322;
-  tempData.position = 33234;
-  tempData.length = 33452;
-  tempData.duration = 30;
-  
-  int size = [H264FrameMetaData size];
-  uint8_t* tempbuffer = (uint8_t*)malloc(size);
-  [self saveH264FrameMetaDataToBytes:tempbuffer metaData:tempData];
-  H264FrameMetaData* copyData = [self getH264FrameMetaDataFromBytes:tempbuffer];*/
+  //从文件系统读取小流数据
+  fseek(_metaSmallFile, 0L, SEEK_END);
+  long metaSmallLen = ftell(_metaSmallFile);
+  fseek(_h264SmallFile, 0L, SEEK_END);
+  long smallvideolen = ftell(_h264SmallFile);
+  if(metaSmallLen>0){
+    fseek(_metaSmallFile, 0L, SEEK_SET);
+    uint8_t* smallBuffer = (uint8_t*)malloc(metaSmallLen);
+    fread(smallBuffer, metaSmallLen, 1, _metaSmallFile);
+    int size = [H264FrameMetaData size];
+    if(metaSmallLen%size != 0){
+      NSLog(@"SmallMetaData size not correct,please check!!!");
+    }
+    uint8_t* smallTemp_ptr = smallBuffer;
+    long metaDataCount = metaSmallLen/size;
+    mSmallFrameCount = (int)metaDataCount;
+    long smallVideoLengthFromMetaData = 0;
+    while (metaDataCount>0) {
+      H264FrameMetaData* t = [self getH264FrameMetaDataFromBytes:smallTemp_ptr];
+      smallVideoLengthFromMetaData += t.length;
+      [self.metaSmallData addObject:t];
+      smallTemp_ptr += size;
+      metaDataCount--;
+    }
+    if(smallvideolen != smallVideoLengthFromMetaData){
+      NSLog(@"small video and meta file length not equal,please check!!!");
+    }
+    currentSmallFileLength = smallvideolen;
+    free(smallBuffer);
+  }
   
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+  mInitBigRelativeTime = -1;      //以第一个大流I帧的绝对编码时间为初始值
+  mInitSmallRelativeTime = -1;     //以第一个小流I帧的绝对编码时间为初始值
+  mlastBigFrameRelativeTime = -1;   //上一帧的相对时间
+  mlastSmallFrameRelativeTime = -1;  //上一帧的相对时间
+  [self.encode startH264EncodeSession];
+  [self.smallEncode startH264EncodeSession];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+  //初始化录制模块
+  if(self.isSlowMotion){
+    self.record = [[CameraSlowMotionRecord alloc] initWithPreview:self.containerpreview isSlowMotion:true];
+  }else{
+    self.record = [[CameraSlowMotionRecord alloc] initWithPreview:self.containerpreview isSlowMotion:false];
+  }
+  self.record.delegate = self;
+  [self.record startCapture];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+  [self.record stopCapture];
+  [self.encode stopH264EncodeSession];
+  [self.smallEncode stopH264EncodeSession];
+}
+
 
 -(void)dealloc
 {
@@ -223,7 +348,33 @@
   fclose(_h264SmallFile);
   fclose(_metaBigFile);
   fclose(_metaSmallFile);
+  [mSmallVideoFileHandle closeFile];
 }
+
+-(void) Toast:(NSString*)str
+{
+  dispatch_async(dispatch_get_main_queue(), ^(){
+    //初始化进度框，置于当前的View当中
+    MBProgressHUD* HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    //如果设置此属性则当前的view置于后台
+    HUD.dimBackground = NO;
+    
+    //设置对话框文字
+    HUD.labelText = str;
+    
+    //显示对话框
+    [HUD showAnimated:YES whileExecutingBlock:^{
+      //对话框显示时需要执行的操作
+      sleep(1);
+    } completionBlock:^{
+      //操作执行完后取消对话框
+      [HUD removeFromSuperview];
+    }];
+  });
+}
+
 
 -(H264FrameMetaData*)getH264FrameMetaDataFromBytes:(uint8_t*)bytes
 {
@@ -292,17 +443,42 @@
   memcpy(temp, &duration, 2);
 }
 
+-(NSString *)getMMSSFromSS:(NSInteger)seconds{
+  //format of hour
+  NSString *str_hour = [NSString stringWithFormat:@"%02ld",seconds/3600];
+  //format of minute
+  NSString *str_minute = [NSString stringWithFormat:@"%02ld",(seconds%3600)/60];
+  //format of second
+  NSString *str_second = [NSString stringWithFormat:@"%02ld",seconds%60];
+  //format of time
+  NSString *format_time = [NSString stringWithFormat:@"%@:%@:%@",str_hour,str_minute,str_second];
+  
+  return format_time;
+}
+
 //CameraSlowMotionRecordDelegate
 -(void)captureOutput:(CMSampleBufferRef)sampleBuffer
 {
   mCaptureFrameCount++;
+  if(beginCaptureTimestamp == 0){
+    beginCaptureTimestamp = [[NSDate date] timeIntervalSince1970] * 1000;
+  }
+  int64_t currentTimestamp = [[NSDate date] timeIntervalSince1970] * 1000;
+  //计算持续时间
+  int64_t totalscecond = (currentTimestamp-beginCaptureTimestamp)/1000;
+  
+  double frameInterval = (currentTimestamp-beginCaptureTimestamp)/mCaptureFrameCount;
+  int fps = 0;
+  if(frameInterval>0){
+    fps = 1000/frameInterval;
+  }
   dispatch_async(dispatch_get_main_queue(), ^{
-    self.info.text = [NSString stringWithFormat:@"采集的帧数：%d",mCaptureFrameCount];
+    self.info.text = [NSString stringWithFormat:@"帧数：%d,帧率：%d",mCaptureFrameCount,fps];
+    self.timeInfo.text = [self getMMSSFromSS:totalscecond];
   });
   [self.encode encodeCMSampleBuffer:sampleBuffer];
   
-  if(canSendSmallH264){
-    //提取出NV12数据，然后缩放，编码后，发给服务器
+  //提取出NV12数据，然后缩放，编码后，发给服务器
     CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     int bufferWidth = (int)CVPixelBufferGetWidth(pixelBuffer);
     int bufferHeight = (int)CVPixelBufferGetHeight(pixelBuffer);
@@ -333,65 +509,484 @@
     free(yuvData);
     free(scale_yuvData);
     free(nv12Data);
-  }
+  
 }
 
 //LocalWifiNetworkDelegate
 -(void)serverDiscovered:(LocalWifiNetwork*)network ip:(NSString*)ip
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    self.status.text = [NSString stringWithFormat:@"发现导播服务器"];
+    //self.status.text = [NSString stringWithFormat:@"发现导播服务器"];
+    self.directorButton.str(@"发现导播服务器");
   });
 }
 -(void)clientSocketConnected:(LocalWifiNetwork*)network
 {
-  isServerConnect = true;
-  dispatch_async(dispatch_get_main_queue(), ^{
-    self.status.text = [NSString stringWithFormat:@"服务器连接成功"];
-  });
+  if(network == self.localClient){
+    isDirectServerConnected = true;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      //self.status.text = [NSString stringWithFormat:@"服务器连接成功"];
+      self.directorButton.str(@"导播服务器连接成功");
+    });
+    //发送导播服务器登录信息
+    NSDictionary* dict = @{
+                           @"id": @"localCameraLogin",
+                           @"deviceID":self.mDeviceID,
+                           @"type":[NSNumber numberWithInt:self.mCameraType],
+                           @"name":self.mCameraName,
+                           @"subtype":[NSNumber numberWithInt:-1],
+                           @"isSlowMotion":[NSNumber numberWithBool:self.isSlowMotion]
+                           };
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+    [self.localClient clientSendPacket:JSON_MESSAGE data:jsonData];
+  }else if(network == self.highlightClient){
+    //集锦服务器
+    isHighlightServerConnected = true;
+    NSDictionary* dict = @{
+                           @"id": @"login",
+                           @"deviceID":self.mDeviceID,
+                           @"type":[NSNumber numberWithInt:self.mCameraType],
+                           @"name":self.mCameraName,
+                           @"isSlowMotion":[NSNumber numberWithBool:self.isSlowMotion]
+                           };
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+    [self.highlightClient clientSendPacket:JSON_MESSAGE data:jsonData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      //self.status.text = [NSString stringWithFormat:@"服务器连接成功"];
+      self.highlightButton.str(@"集锦服务器连接成功");
+    });
+  }
+  
 }
 - (void)clientSocketDisconnect:(LocalWifiNetwork*)network sock:(GCDAsyncSocket *)sock
 {
-  isServerConnect = false;
-  dispatch_async(dispatch_get_main_queue(), ^{
-    self.status.text = [NSString stringWithFormat:@"服务器断开连接"];
-  });
+  if(network == self.localClient){
+    isDirectServerConnected = false;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      //self.status.text = [NSString stringWithFormat:@"服务器断开连接"];
+      self.highlightButton.str(@"导播服务器断开连接");
+    });
+  }else if(network == self.highlightClient){
+    isHighlightServerConnected = false;
+    self.highlightButton.str(@"集锦服务器断开连接");
+  }
 }
 -(void)clientReceiveData:(LocalWifiNetwork*)network packetID:(uint16_t)packetID data:(NSData*)data
 {
-  if(packetID == START_SEND_BIGDATA){
-    if(!canSendBigH264){
-      [self.encode stopH264EncodeSession];
-      [self.encode startH264EncodeSession];
-      canSendBigH264 = true;
+  if(network == self.localClient){
+    if(packetID == START_SEND_BIGDATA){
+      if(!canSendBigH264){
+        //重置大流编码器
+        /*[self.encode stopH264EncodeSession];
+        [self.encode startH264EncodeSession];
+        //重置小流编码器
+        [self.smallEncode stopH264EncodeSession];
+        [self.smallEncode startH264EncodeSession];*/
+        //[self Toast:@"start big"];
+        
+        [self.localClient clientSendPacket:SEND_BIG_H264DATA data:mDirectServerBigPPS];
+        [self.localClient clientSendPacket:SEND_BIG_H264DATA data:mDirectServerBigSPS];
+      
+        canSendBigH264 = true;
+      }
+    }else if(packetID == STOP_SEND_BIGDATA){
+      if(canSendBigH264){
+        canSendBigH264 = false;
+      }
+    }else if(packetID == START_SEND_SMALLDATA){
+      if(!canSendSmallH264){
+        //重置大流编码器
+        /*[self.encode stopH264EncodeSession];
+        [self.encode startH264EncodeSession];
+        //重置小流编码器
+        [self.smallEncode stopH264EncodeSession];
+        [self.smallEncode startH264EncodeSession];*/
+        [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:mDirectServerSmallPPS];
+        [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:mDirectServerSmallSPS];
+        canSendSmallH264 = true;
+      }
+    }else if(packetID == STOP_SEND_SMALLDATA){
+      if(canSendSmallH264){
+        canSendSmallH264 = false;
+      }
+    }else if(packetID == JSON_MESSAGE){
+      NSError *err;
+      NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
+                                                          options:NSJSONReadingMutableContainers
+                                                            error:&err];
+      if(err){
+        NSLog(@"json解析失败：%@",err);
+        return;
+      }
+      NSString* json_id = dic[@"id"];
+      if([json_id isEqualToString:@"getHighlightServerIP"]){
+        BOOL isconnect = [dic[@"isConnect"] boolValue];
+        NSString* ip = dic[@"ip"];
+        if(isconnect){
+          //[self Toast:ip];
+          [self.highlightClient connectServerByIP:ip];
+        }else{
+          [self Toast:@"集锦服务器没有启动,请稍后重试"];
+        }
+      }else if([json_id isEqualToString:@"getFirstSmallIFramebyAbsoluteTimestamp"]){
+        int64_t timestamp = [dic[@"timestamp"] longLongValue];
+        H264FrameMetaData* metaData = [self getSmallIFrameByTimestamp:timestamp];
+        if(metaData){
+          NSDictionary* dic = @{
+                                @"id":@"getFirstSmallIFramebyAbsoluteTimestamp",
+                                @"type":[NSNumber numberWithInt:metaData.type],
+                                @"absoluteTime":[NSNumber numberWithLongLong:metaData.absoluteTime],
+                                @"relativeTime":[NSNumber numberWithInt:metaData.relativeTime],
+                                @"frameIndex":[NSNumber numberWithInt:metaData.frameIndex],
+                                @"IFrameIndex":[NSNumber numberWithInt:metaData.IFrameIndex],
+                                @"position":[NSNumber numberWithLongLong:metaData.position],
+                                @"length":[NSNumber numberWithInt:metaData.length],
+                                @"duration":[NSNumber numberWithInt:metaData.duration]
+                                };
+          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+          //发送视频帧元数据
+          [self.localClient clientSendPacket:JSON_MESSAGE data:jsonData];
+          //发送h264的pps和sps
+          [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:mDirectServerSmallPPS];
+          [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:mDirectServerSmallSPS];
+           //发送视频帧
+          NSData* frameData = [self getFrameDataFromSmallFile:metaData.position+4 length:metaData.length-4];
+          [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:frameData];
+        }
+      }else if([json_id isEqualToString:@"getNextSmallFrameByFrameIndex"]){
+        int frameIndex = [dic[@"frameIndex"] intValue];
+        H264FrameMetaData* metaData = [self getNextSmallFrameByIndex:frameIndex];
+        if(metaData){
+          NSDictionary* dic = @{
+                                @"id":@"getNextSmallFrameByFrameIndex",
+                                @"type":[NSNumber numberWithInt:metaData.type],
+                                @"absoluteTime":[NSNumber numberWithLongLong:metaData.absoluteTime],
+                                @"relativeTime":[NSNumber numberWithInt:metaData.relativeTime],
+                                @"frameIndex":[NSNumber numberWithInt:metaData.frameIndex],
+                                @"IFrameIndex":[NSNumber numberWithInt:metaData.IFrameIndex],
+                                @"position":[NSNumber numberWithLongLong:metaData.position],
+                                @"length":[NSNumber numberWithInt:metaData.length],
+                                @"duration":[NSNumber numberWithInt:metaData.duration]
+                                };
+          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+          //发送视频帧元数据
+          [self.localClient clientSendPacket:JSON_MESSAGE data:jsonData];
+          //发送视频帧
+          NSData* frameData = [self getFrameDataFromSmallFile:metaData.position+4 length:metaData.length-4];
+          [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:frameData];
+        }
+      }else if([json_id isEqualToString:@"getFirstBigIFramebyAbsoluteTimestamp"]){
+        int64_t timestamp = [dic[@"timestamp"] longLongValue];
+        H264FrameMetaData* metaData = [self getBigIFrameByTimestamp:timestamp];
+        if(metaData){
+          NSDictionary* dic = @{
+                                @"id":@"getFirstBigIFramebyAbsoluteTimestamp",
+                                @"type":[NSNumber numberWithInt:metaData.type],
+                                @"absoluteTime":[NSNumber numberWithLongLong:metaData.absoluteTime],
+                                @"relativeTime":[NSNumber numberWithInt:metaData.relativeTime],
+                                @"frameIndex":[NSNumber numberWithInt:metaData.frameIndex],
+                                @"IFrameIndex":[NSNumber numberWithInt:metaData.IFrameIndex],
+                                @"position":[NSNumber numberWithLongLong:metaData.position],
+                                @"length":[NSNumber numberWithInt:metaData.length],
+                                @"duration":[NSNumber numberWithInt:metaData.duration]
+                                };
+          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+          //发送视频帧元数据
+          [self.localClient clientSendPacket:JSON_MESSAGE data:jsonData];
+          //发送h264的pps和sps
+          [self.localClient clientSendPacket:SEND_BIG_H264DATA data:mDirectServerBigPPS];
+          [self.localClient clientSendPacket:SEND_BIG_H264DATA data:mDirectServerBigSPS];
+          //发送视频帧
+          NSData* frameData = [self getFrameDataFromBigFile:metaData.position+4 length:metaData.length-4];
+          [self.localClient clientSendPacket:SEND_BIG_H264DATA data:frameData];
+        }
+      }else if([json_id isEqualToString:@"getNextBigFrameByFrameIndex"]){
+        int frameIndex = [dic[@"frameIndex"] intValue];
+        H264FrameMetaData* metaData = [self getNextBigFrameByIndex:frameIndex];
+        if(metaData){
+          NSDictionary* dic = @{
+                                @"id":@"getNextBigFrameByFrameIndex",
+                                @"type":[NSNumber numberWithInt:metaData.type],
+                                @"absoluteTime":[NSNumber numberWithLongLong:metaData.absoluteTime],
+                                @"relativeTime":[NSNumber numberWithInt:metaData.relativeTime],
+                                @"frameIndex":[NSNumber numberWithInt:metaData.frameIndex],
+                                @"IFrameIndex":[NSNumber numberWithInt:metaData.IFrameIndex],
+                                @"position":[NSNumber numberWithLongLong:metaData.position],
+                                @"length":[NSNumber numberWithInt:metaData.length],
+                                @"duration":[NSNumber numberWithInt:metaData.duration]
+                                };
+          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+          //发送视频帧元数据
+          [self.localClient clientSendPacket:JSON_MESSAGE data:jsonData];
+          //发送视频帧
+          NSData* frameData = [self getFrameDataFromBigFile:metaData.position+4 length:metaData.length-4];
+          [self.localClient clientSendPacket:SEND_BIG_H264DATA data:frameData];
+        }
+      }
     }
-  }else if(packetID == STOP_SEND_BIGDATA){
-    if(canSendBigH264){
-      canSendBigH264 = false;
-    }
-  }else if(packetID == START_SEND_SMALLDATA){
-    if(!canSendSmallH264){
-      [self.smallEncode stopH264EncodeSession];
-      [self.smallEncode startH264EncodeSession];
-      canSendSmallH264 = true;
-    }
-  }else if(packetID == STOP_SEND_SMALLDATA){
-    if(canSendSmallH264){
-      canSendSmallH264 = false;
+  }else if(network == self.highlightClient){
+    if(packetID == JSON_MESSAGE){
+      NSError *err;
+      NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
+                                                          options:NSJSONReadingMutableContainers
+                                                            error:&err];
+      if(err){
+        NSLog(@"json解析失败：%@",err);
+        return;
+      }
+      NSString* json_id = dic[@"id"];
+      if([json_id isEqualToString:@"highlight_startplay"]){
+        BOOL state = [dic[@"state"] boolValue];
+        if(state){
+          //发送sps,pps
+          [self.highlightClient clientSendPacket:SEND_SMALL_H264SDATA data:mHighlightSPS];
+          [self.highlightClient clientSendPacket:SEND_SMALL_H264SDATA data:mHighlightPPS];
+        }
+        canSendHighlightH264 = state;
+      }else if([json_id isEqualToString:@"getNewestSmallIFrame"]){
+        canSendHighlightH264 = false; //停止自动发送实时画面
+        H264FrameMetaData* metaData = [self getNewestSmallIFrame];
+        if(metaData != nil){
+          //发送sps,pps
+          [self.highlightClient clientSendPacket:SEND_SMALL_H264SDATA data:mHighlightSPS];
+          [self.highlightClient clientSendPacket:SEND_SMALL_H264SDATA data:mHighlightPPS];
+          [self sendFrameDataToHighlightServer:metaData jsonID:@"getNewestSmallIFrame"];
+        }
+      }else if([json_id isEqualToString:@"getNextSmallFrame"]){
+        int frameindex = [[dic valueForKey:@"frameindex"] intValue];
+        H264FrameMetaData* metaData = [self getNextSmallFrameByIndex:frameindex];
+        if(metaData != nil){
+          [self sendFrameDataToHighlightServer:metaData jsonID:@"getNextSmallFrame"];
+        }
+      }else if([json_id isEqualToString:@"seekBackIFrame"]){
+        int frameIndex = [[dic valueForKey:@"frameindex"] intValue];
+        int interval = [[dic valueForKey:@"interval"] intValue];
+        H264FrameMetaData* metaData = [self getBackSmallframeByIndex:frameIndex andDistance:interval];
+        if(metaData != nil){
+          [self sendFrameDataToHighlightServer:metaData jsonID:@"seekBackIFrame"];
+        }
+      }else if([json_id isEqualToString:@"seekFrontIFrame"]){
+        int frameindex = [[dic valueForKey:@"frameindex"] intValue];
+        int interval = [[dic valueForKey:@"interval"] intValue];
+        H264FrameMetaData* metaData = [self getFrontSmallIframeByIndex:frameindex andDistance:interval];
+        if(metaData != nil){
+          [self sendFrameDataToHighlightServer:metaData jsonID:@"seekFrontIFrame"];
+        }
+      }
     }
   }
 }
 
--(void)send:(uint16_t)packetID data:(NSData*)data
+//向集锦服务器发送某一帧的元数据和视频数据
+-(void)sendFrameDataToHighlightServer:(H264FrameMetaData*)metaData jsonID:(NSString*)jsonID
 {
-  [self.localClient clientSendPacket:packetID data:data];
+  NSDictionary* dic = @{
+                        @"id":jsonID,
+                        @"type":[NSNumber numberWithInt:metaData.type],
+                        @"absoluteTime":[NSNumber numberWithLongLong:metaData.absoluteTime],
+                        @"relativeTime":[NSNumber numberWithInt:metaData.relativeTime],
+                        @"frameIndex":[NSNumber numberWithInt:metaData.frameIndex],
+                        @"IFrameIndex":[NSNumber numberWithInt:metaData.IFrameIndex],
+                        @"position":[NSNumber numberWithLongLong:metaData.position],
+                        @"length":[NSNumber numberWithInt:metaData.length],
+                        @"duration":[NSNumber numberWithInt:metaData.duration]
+                        };
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+  //发送视频帧元数据
+  [self.highlightClient clientSendPacket:JSON_MESSAGE data:jsonData];
+  NSData* frameData = [self getFrameDataFromSmallFile:metaData.position+4 length:metaData.length-4];
+  //发送视频帧
+  [self.highlightClient clientSendPacket:SEND_SMALL_H264SDATA data:frameData];
+}
+
+//获得距离指定视频帧最近的前一个关键帧
+-(H264FrameMetaData*) getFrontSmallIframeByIndex:(int)frameIndex
+{
+  int index = frameIndex-1;
+  while (index>=0) {
+    H264FrameMetaData* metaData = [self.metaSmallData objectAtIndex:index];
+    if(metaData.type == H264FRAMETYPE_IFRAME){
+      return metaData;
+    }
+    index--;
+  }
+  return nil;
+}
+
+//获得距离指定视频帧前n个关键帧的视频帧，如果到达文件头部，则可以小于n
+-(H264FrameMetaData*)getFrontSmallIframeByIndex:(int)frameIndex andDistance:(int)distance
+{
+  H264FrameMetaData* result = nil;
+  int n = distance;
+  int index = frameIndex - 1;
+  while (index>=0) {
+    H264FrameMetaData* metaData = [self.metaSmallData objectAtIndex:index];
+    if(metaData.type == H264FRAMETYPE_IFRAME){
+      result = metaData;
+      n--;
+      if(n<=0){
+        break;
+      }
+    }
+    index--;
+  }
+  return result;
+}
+
+//获得距离指定视频帧最近的后一个关键帧
+-(H264FrameMetaData*) getBackSmallframeByIndex:(int)frameIndex
+{
+  int index = frameIndex+1;
+  long length = [self.metaSmallData count];
+  while(index<length){
+    H264FrameMetaData* metaData = [self.metaSmallData objectAtIndex:index];
+    if(metaData.type == H264FRAMETYPE_IFRAME){
+      return metaData;
+    }
+    index++;
+  }
+  return nil;
+}
+
+//获得距离指定视频帧后n个关键帧的视频帧，如果到达文件尾部，则可以小于n
+-(H264FrameMetaData*)getBackSmallframeByIndex:(int)frameIndex andDistance:(int)distance
+{
+  H264FrameMetaData* result = nil;
+  int n = distance;
+  int index = frameIndex+1;
+  long length = [self.metaSmallData count];
+  while (index < length) {
+    H264FrameMetaData* metaData = [self.metaSmallData objectAtIndex:index];
+    if(metaData.type == H264FRAMETYPE_IFRAME){
+      result = metaData;
+      n--;
+      if(n<=0){
+        break;
+      }
+    }
+    index++;
+  }
+  return result;
+}
+
+//获得距离调用该API时最近的一个关键帧
+-(H264FrameMetaData*) getNewestSmallIFrame
+{
+  long index = [self.metaSmallData count]-1;
+  while (index>=0) {
+    H264FrameMetaData* metaData = [self.metaSmallData objectAtIndex:index];
+    if(metaData.type == H264FRAMETYPE_IFRAME){
+      return metaData;
+    }
+    index--;
+  }
+  return nil;
+}
+
+//获得指定视频帧的下一个视频帧
+-(H264FrameMetaData*) getNextSmallFrameByIndex:(int)frameIndex
+{
+  int index = frameIndex+1;
+  if(index<[self.metaSmallData count]){
+    H264FrameMetaData* metaData = [self.metaSmallData objectAtIndex:index];
+    return metaData;
+  }
+  return nil;
+}
+
+//获得指定视频帧的下一个视频帧
+-(H264FrameMetaData*) getNextBigFrameByIndex:(int)frameIndex
+{
+  int index = frameIndex+1;
+  if(index<[self.metaBigData count]){
+    H264FrameMetaData* metaData = [self.metaBigData objectAtIndex:index];
+    return metaData;
+  }
+  return nil;
+}
+
+//距离绝对时间戳最近的一帧关键视频帧
+-(H264FrameMetaData*)getSmallIFrameByTimestamp:(int64_t)timestamp
+{
+  H264FrameMetaData* result = nil;
+  long index = [self.metaSmallData count]-1;
+  while (index>=0) {
+    H264FrameMetaData* metaData = [self.metaSmallData objectAtIndex:index];
+    if(metaData.type == H264FRAMETYPE_IFRAME){
+      result = metaData;
+      if(metaData.absoluteTime <= timestamp){
+        break;
+      }
+    }
+    index--;
+  }
+  return result;
+}
+
+//距离绝对时间戳最近的一帧关键视频帧
+-(H264FrameMetaData*)getBigIFrameByTimestamp:(int64_t)timestamp
+{
+  H264FrameMetaData* result = nil;
+  long index = [self.metaBigData count]-1;
+  while (index>=0) {
+    H264FrameMetaData* metaData = [self.metaBigData objectAtIndex:index];
+    if(metaData.type == H264FRAMETYPE_IFRAME){
+      result = metaData;
+      if(metaData.absoluteTime <= timestamp){
+        break;
+      }
+    }
+    index--;
+  }
+  return result;
+}
+
+//从文件系统获得一帧小流视频数据
+-(NSData*) getFrameDataFromSmallFile:(long)position length:(int)length
+{
+  /*void* buffer = malloc(length);
+  fseek(_h264SmallFile, position, 0);
+  fread(buffer, 1, length, _h264SmallFile);
+  NSData* data = [[NSData alloc] initWithBytesNoCopy:buffer length:length];
+  return data;*/
+  
+  [mSmallVideoFileHandle seekToFileOffset:position];
+  NSData *data = [mSmallVideoFileHandle readDataOfLength:length];
+  return data;
+}
+
+//从文件系统获得一帧大流视频数据
+-(NSData*) getFrameDataFromBigFile:(long)position length:(int)length
+{
+  void* buffer = malloc(length);
+   fseek(_h264BigFile, position, 0);
+   fread(buffer, 1, length, _h264BigFile);
+   NSData* data = [[NSData alloc] initWithBytesNoCopy:buffer length:length];
+   return data;
+}
+
+
+//集锦服务器相关接口
+-(void)setSPSPPSToHighlightServer:(NSData*)pps sps:(NSData*)sps
+{
+  mHighlightPPS = pps;
+  mHighlightSPS = sps;
+}
+
+-(void)enterH264DataToHighlightServer:(NSData*)data isKeyFrame:(BOOL)isKeyFrame
+{
+  if(isHighlightServerConnected && canSendHighlightH264){
+    [self.highlightClient clientSendPacket:SEND_SMALL_H264SDATA data:data];
+  }
 }
 
 
 //h264encodeDelegate
 -(void)dataEncodeToH264:(const void*)data length:(size_t)length
 {
-  [self writeH264Data:data length:length];
+ 
 }
 
 -(void)rtmpSpsPps:(const uint8_t*)pps ppsLen:(size_t)ppsLen sps:(const uint8_t*)sps spsLen:(size_t)spsLen timestramp:(Float64)miliseconds;
@@ -447,11 +1042,12 @@
   
   free(metabuffer);
   
-  if(isServerConnect && canSendBigH264){
-    NSData* ppsData = [[NSData alloc] initWithBytes:pps length:ppsLen];
-    NSData* spsData = [[NSData alloc] initWithBytes:sps length:spsLen];
-    [self send:SEND_BIG_H264DATA data:ppsData];
-    [self send:SEND_BIG_H264DATA data:spsData];
+  mDirectServerBigPPS = [[NSData alloc] initWithBytes:pps length:ppsLen];
+  mDirectServerBigSPS = [[NSData alloc] initWithBytes:sps length:spsLen];
+  
+  if(isDirectServerConnected && canSendBigH264){
+    //[self.localClient clientSendPacket:SEND_BIG_H264DATA data:mDirectServerPPS];
+    //[self.localClient clientSendPacket:SEND_BIG_H264DATA data:mDirectServerSPS];
   }
 }
 -(void)rtmpH264:(const void*)data length:(size_t)length isKeyFrame:(bool)isKeyFrame timestramp:(Float64)miliseconds pts:(int64_t) pts dts:(int64_t) dts
@@ -513,83 +1109,155 @@
   
   free(metabuffer);
   
-  if(isServerConnect && canSendBigH264){
+  if(isDirectServerConnected && canSendBigH264){
     NSData* frameData = [[NSData alloc] initWithBytes:data length:length];
-    [self send:SEND_BIG_H264DATA data:frameData];
+    [self.localClient clientSendPacket:SEND_BIG_H264DATA data:frameData];
   }
 }
 
 -(void)rtmpSmallSpsPps:(const uint8_t*)pps ppsLen:(size_t)ppsLen sps:(const uint8_t*)sps spsLen:(size_t)spsLen timestramp:(Float64)miliseconds
 {
-  if(isServerConnect && canSendSmallH264){
-    NSData* ppsData = [[NSData alloc] initWithBytes:pps length:ppsLen];
+  //每一帧的分隔符
+  const Byte frameSpliter[] = "\x00\x00\x00\x01";
+  int64_t currentTimeMills = [[NSDate date] timeIntervalSince1970] * 1000;
+  int size = [H264FrameMetaData size];
+  uint8_t* metabuffer = (uint8_t*)malloc(size);
+  //记录sps元数据
+  H264FrameMetaData* smallSpsMetaData = [[H264FrameMetaData alloc] init];
+  smallSpsMetaData.type = 2;
+  smallSpsMetaData.absoluteTime = currentTimeMills;
+  smallSpsMetaData.relativeTime = -1;
+  smallSpsMetaData.frameIndex = mSmallFrameCount;
+  mSmallFrameCount++;
+  smallSpsMetaData.IFrameIndex = -1;
+  smallSpsMetaData.position = currentSmallFileLength;
+  smallSpsMetaData.length = (int)(4+spsLen);
+  smallSpsMetaData.duration = 0;
+  currentSmallFileLength += (4+spsLen);
+  [self.metaSmallData addObject:smallSpsMetaData];
+  [self saveH264FrameMetaDataToBytes:metabuffer metaData:smallSpsMetaData];
+  //保存sps元数据到本地磁盘
+  fwrite(metabuffer, 1, size, _metaSmallFile);
+  //保存原始数据
+  fwrite(frameSpliter, 1, 4, _h264SmallFile);
+  fwrite(sps, 1, spsLen, _h264SmallFile);
+  
+  //记录pps元数据
+  H264FrameMetaData* smallPpsMetaData = [[H264FrameMetaData alloc] init];
+  smallPpsMetaData.type = 1;
+  smallPpsMetaData.absoluteTime = currentTimeMills;
+  smallPpsMetaData.relativeTime = -1;
+  smallPpsMetaData.frameIndex = mSmallFrameCount;
+  mSmallFrameCount++;
+  smallPpsMetaData.IFrameIndex = -1;
+  smallPpsMetaData.position = currentSmallFileLength;
+  smallPpsMetaData.length = (int)(4+ppsLen);
+  smallPpsMetaData.duration = 0;
+  currentSmallFileLength += (4+ppsLen);
+  
+  [self.metaSmallData addObject:smallPpsMetaData];
+  [self saveH264FrameMetaDataToBytes:metabuffer metaData:smallPpsMetaData];
+  //保存pps元数据到本地磁盘
+  fwrite(metabuffer, 1, size, _metaSmallFile);
+  //保存原始数据
+  fwrite(frameSpliter, 1, 4, _h264SmallFile);
+  fwrite(pps, 1, ppsLen, _h264SmallFile);
+  
+  free(metabuffer);
+  
+  mDirectServerSmallPPS = [[NSData alloc] initWithBytes:pps length:ppsLen];
+  mDirectServerSmallSPS = [[NSData alloc] initWithBytes:sps length:spsLen];
+  
+  //导播服务器数据
+  if(isDirectServerConnected && canSendSmallH264){
+    /*NSData* ppsData = [[NSData alloc] initWithBytes:pps length:ppsLen];
     NSData* spsData = [[NSData alloc] initWithBytes:sps length:spsLen];
-    [self send:SEND_SMALL_H264SDATA data:ppsData];
-    [self send:SEND_SMALL_H264SDATA data:spsData];
+    [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:ppsData];
+    [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:spsData];*/
   }
+  
+  //集锦服务器数据
+  NSData* ppsData = [[NSData alloc] initWithBytes:pps length:ppsLen];
+  NSData* spsData = [[NSData alloc] initWithBytes:sps length:spsLen];
+  [self setSPSPPSToHighlightServer:ppsData sps:spsData];
 }
 -(void)rtmpSmallH264:(const void*)data length:(size_t)length isKeyFrame:(bool)isKeyFrame timestramp:(Float64)miliseconds pts:(int64_t) pts dts:(int64_t) dts
 {
-  if(isServerConnect && canSendSmallH264){
-    NSData* frameData = [[NSData alloc] initWithBytes:data length:length];
-    [self send:SEND_SMALL_H264SDATA data:frameData];
+  const Byte frameSpliter[] = "\x00\x00\x00\x01";
+  int64_t currentTimeMills = [[NSDate date] timeIntervalSince1970] * 1000;
+  int size = [H264FrameMetaData size];
+  uint8_t* metabuffer = (uint8_t*)malloc(size);
+  if(mInitSmallRelativeTime == -1){
+    //保存第一帧到来的绝对时间
+    mInitSmallRelativeTime = currentTimeMills;
   }
-}
-
-//h264数据存入文件
--(void)writeH264Data:(const void*)data length:(size_t)length
-{
-  return;
-  const Byte bytes[] = "\x00\x00\x00\x01";
-  //本地存储
-  if(_h264BigFile){
-    fwrite(bytes, 1, 4, _h264BigFile);
-    fwrite(data, 1, length, _h264BigFile);
+  
+  int32_t relativeTime = (int32_t)(currentTimeMills - mInitSmallRelativeTime);
+  H264FrameMetaData* smallMetaData = [[H264FrameMetaData alloc] init];
+  if(isKeyFrame){
+    smallMetaData.type = 3;
+    smallMetaData.absoluteTime = currentTimeMills;
+    smallMetaData.relativeTime = relativeTime;
+    smallMetaData.frameIndex = mSmallFrameCount;
+    lastSmallIFrameIndex = mSmallFrameCount;
+    mSmallFrameCount++;
+    smallMetaData.IFrameIndex = -1;
+    smallMetaData.position = currentSmallFileLength;
+    smallMetaData.length = (int)(4+length);
+    if(mlastSmallFrameRelativeTime == -1){
+      smallMetaData.duration = 0;
+    }else{
+      smallMetaData.duration = relativeTime - mlastSmallFrameRelativeTime;
+    }
+    currentSmallFileLength += (4+length);
   }else{
-    NSLog(@"_h264File null error, check if it open successed");
+    smallMetaData.type = 4;
+    smallMetaData.absoluteTime = currentTimeMills;
+    smallMetaData.relativeTime = relativeTime;
+    smallMetaData.frameIndex = mSmallFrameCount;
+    mSmallFrameCount++;
+    smallMetaData.IFrameIndex = lastSmallIFrameIndex;
+    smallMetaData.position = currentSmallFileLength;
+    smallMetaData.length = (int)(4+length);
+    if(mlastSmallFrameRelativeTime == -1){
+      smallMetaData.duration = 0;
+    }else{
+      smallMetaData.duration = relativeTime - mlastSmallFrameRelativeTime;
+    }
+    currentSmallFileLength += (4+length);
+  }
+  //保存本帧相对时间，供下一帧计算持续时间
+  mlastSmallFrameRelativeTime = (int)relativeTime;
+  
+  [self.metaSmallData addObject:smallMetaData];
+  [self saveH264FrameMetaDataToBytes:metabuffer metaData:smallMetaData];
+  //保存视频帧元数据到本地磁盘
+  fwrite(metabuffer, 1, size, _metaSmallFile);
+  //保存原始数据
+  fwrite(frameSpliter, 1, 4, _h264SmallFile);
+  fwrite(data, 1, length, _h264SmallFile);
+  
+  free(metabuffer);
+  
+  //导播服务器数据
+  if(isDirectServerConnected && canSendSmallH264){
+    //预览数据只发送I帧
+    if(isKeyFrame){
+      NSData* frameData = [[NSData alloc] initWithBytes:data length:length];
+      [self.localClient clientSendPacket:SEND_SMALL_H264SDATA data:frameData];
+    }
+  }
+  
+  //集锦服务器数据
+  NSData* frameData = [[NSData alloc] initWithBytes:data length:length];
+  if(isKeyFrame){
+    [self enterH264DataToHighlightServer:frameData isKeyFrame:isKeyFrame];
   }
 }
-
--(void)viewWillAppear:(BOOL)animated
-{
-  mInitBigRelativeTime = -1;      //以第一个大流I帧的绝对编码时间为初始值
-  mInitSmallRelativeTime = -1;     //以第一个小流I帧的绝对编码时间为初始值
-  mlastBigFrameRelativeTime = -1;   //上一帧的相对时间
-  mlastSmallFrameRelativeTime = -1;  //上一帧的相对时间
-  [self.encode startH264EncodeSession];
-  [self.smallEncode startH264EncodeSession];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-  //初始化录制模块
-  self.record = [[CameraSlowMotionRecord alloc] initWithPreview:self.containerpreview isSlowMotion:false];
-  self.record.delegate = self;
-  [self.record startCapture];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-  [self.record stopCapture];
-  [self.encode stopH264EncodeSession];
-  [self.smallEncode stopH264EncodeSession];
-}
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+  
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -82,4 +82,6 @@ export const admin_op = {
     substitution:15,        //换人
     mvpofgame:16,     //本场MVP
     update_point:17,  //更新球员得分，数据类型：[{point,section,time}]
+    update_attacktime:18,  //更新24秒
+    update_nextsection:19, //进入下一节
 }

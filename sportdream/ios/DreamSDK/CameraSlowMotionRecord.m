@@ -12,6 +12,7 @@
 @interface CameraSlowMotionRecord()
 @property (nonatomic,strong) dispatch_queue_t videoQueue;
 @property (nonatomic,strong) AVCaptureSession* captureSession;
+@property (nonatomic,strong) AVCaptureDevice* videoDevice;
 @property (nonatomic,strong) AVCaptureDeviceInput* videoInput;
 @property (nonatomic,strong) AVCaptureVideoDataOutput* videoDataOutput;
 @property (nonatomic,strong) UIView* preview;
@@ -28,8 +29,8 @@
   if(self){
     self.preview = preview;
     _isSlowMotion = isSlowMotion;
-    AVCaptureDevice* videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    self.videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
+    self.videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    self.videoInput = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:nil];
     dispatch_queue_t captureQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
     [self.videoDataOutput setSampleBufferDelegate:self queue:captureQueue];
@@ -60,20 +61,34 @@
     [self.captureSession commitConfiguration];
     
     if(_isSlowMotion){
-      [self configureCameraFor60FrameRate:videoDevice];
+      [self configureCameraFor60FrameRate:self.videoDevice];
     }else{
-      if ( [videoDevice lockForConfiguration:NULL] == YES ) {
-        videoDevice.activeVideoMinFrameDuration = CMTimeMake(1, 25);
-        [videoDevice unlockForConfiguration];
+      if ( [self.videoDevice lockForConfiguration:NULL] == YES ) {
+        self.videoDevice.activeVideoMinFrameDuration = CMTimeMake(1, 24);
+        [self.videoDevice unlockForConfiguration];
       }
     }
-  
     AVCaptureVideoPreviewLayer* previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.captureSession];
     [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [previewLayer setFrame:self.preview.frame];
     [self.preview.layer addSublayer:previewLayer];
+    previewLayer.connection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
   }
   return self;
+}
+
+-(void)zoom:(float)scale
+{
+  float minScale = 1;
+  float maxScale = self.videoDevice.activeFormat.videoMaxZoomFactor;
+  if([self.videoDevice lockForConfiguration:nil]){
+    float currentZoomFactor = self.videoDevice.videoZoomFactor;
+    float result = currentZoomFactor*scale;
+    if(result>=minScale && result<=maxScale){
+      self.videoDevice.videoZoomFactor = result;
+    }
+    [self.videoDevice unlockForConfiguration];
+  }
 }
 
 //设置视频配置信息，横竖屏设置

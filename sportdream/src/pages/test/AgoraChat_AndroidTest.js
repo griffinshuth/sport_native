@@ -11,7 +11,7 @@ import {
     WhiteSpace,
     Toast
 } from 'antd-mobile'
-var AgorachatView = requireNativeComponent("AgorachatView",null);
+import AgorachatNativeView from '../../NativeViews/AgorachatView'
 import ToolBar from '../../Components/ToolBar'
 
 export default class App extends React.Component{
@@ -57,12 +57,12 @@ export default class App extends React.Component{
             <View style={{flex:1}}>
                 <ToolBar title="视频聊天" navigation={this.props.navigation}/>
                <Button onClick={()=>{this.setState({status:2})}}>离开房间</Button>
-                <AgorachatView uid={0} status={this.state.status} channel={this.state.channel} style={{width:240,height:320}}/>
+                <AgorachatNativeView uid={0} status={this.state.status} channel={this.state.channel} style={{width:240,height:320}}/>
                 {
                     this.state.players.map((item)=>{
                         return <View key={item}>
                             <WhiteSpace/>
-                            <AgorachatView uid={item} status={0} channel={this.state.channel} style={{width:120,height:160}}/>
+                            <AgorachatNativeView uid={item} status={0} channel={this.state.channel} style={{width:120,height:160}}/>
                         </View>
                     })
                 }

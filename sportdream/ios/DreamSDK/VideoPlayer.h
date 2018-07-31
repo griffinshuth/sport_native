@@ -12,9 +12,10 @@
 #import "FileDecoder.h"
 
 @protocol VideoPlayerDelegate <NSObject>
-- (void)didCompletePlayingMovie;
+- (void)didPlayAutoCompleted;
+- (void)didPlayManualStop;
 - (void)didVideoOutput:(CMSampleBufferRef)videoData;
-- (void)didAudioOutput:(CMSampleBufferRef)audioData;
+-(void)filePCMDataAfterProcess:(AudioBuffer) buffer;
 @end
 
 @interface VideoPlayer : NSObject<FileDecoderDelegate>

@@ -69,16 +69,31 @@ export default {
                 return state;
             }
             if(currentsectiontime == 0){
-                currentsectiontime = 12*60;
-                currentsection++;
-                return {...state,isTimerStart,currentsection,currentsectiontime}
+                return state;
             }
             return {...state,...payload}
+        },
+        nextSection(state,{payload}){
+            let {currentsectiontime,currentsection} = state;
+            if(currentsection == 4 && currentsectiontime == 0){
+                //比赛结束
+                return state;
+            }
+            if(currentsectiontime != 0){
+                //时间没有走完
+                return state;
+            }
+            currentsectiontime = 12*60;
+            currentsection++;
+            return {...state,currentsection,currentsectiontime}
         },
         countdown(state,{payload}){
             var t = state.currentsectiontime - payload.time;
             if(t<60){
                 t = t.toFixed(1);
+            }
+            if(t<0){
+                t = 0;
             }
             if(t>0){
                 return {...state,currentsectiontime:t};
@@ -90,12 +105,15 @@ export default {
             return {...state,...payload}
         },
         reset24(state,{payload}){
-            return {...state,...payload}
+            return {...state,currentattacktime:24,ballowner:0}
         },
         countdown24(state,{payload}){
             var t = state.currentattacktime - payload.time;
             if(t<5){
                 t = t.toFixed(1);
+            }
+            if(t<0){
+                t = 0;
             }
             if(t>0){
                 return {...state,currentattacktime:t};
@@ -350,6 +368,67 @@ export default {
                 team2timeout:gameinfo.roomInfo.team2timeout
             }
             yield put({type:'init',payload:final_state})
+        },
+        *sectiontimeUpdateToServer({payload},{put,call}){
+            const {game_uid,currentsectiontime,time} = payload;
+            yield put({type:'countdown',payload:{time:time}});
+            var nextsectiontime = currentsectiontime-time;
+            if(nextsectiontime<60){
+                nextsectiontime = nextsectiontime.toFixed(1);
+            }
+            if(nextsectiontime<0){
+                nextsectiontime = 0;
+            }
+            var admin_result = yield call(()=>post("/adminGame",{
+                game_uid:game_uid,
+                optype:admin_op.update_time,
+                meta:{
+                    currentsectiontime:nextsectiontime
+                }
+            }));
+        },
+        *time24UpdateToServer({payload},{put,call}){
+            const {game_uid,currentattacktime,time} = payload;
+            yield put({type:'countdown24',payload:{time:time}});
+            var nextattacktime = currentattacktime - time;
+            if(nextattacktime<5){
+                nextattacktime = nextattacktime.toFixed(1);
+            }
+            if(nextattacktime<0){
+                nextattacktime = 0;
+            }
+            var admin_result = yield call(()=>post("/adminGame",{
+                game_uid:game_uid,
+                optype:admin_op.update_attacktime,
+                meta:{
+                    currentattacktime:nextattacktime
+                }
+            }));
+        },
+        *reset24UpdateToServer({payload},{put,call}){
+            const {game_uid} = payload;
+            yield put({type:'reset24',payload:{}});
+            var admin_result = yield call(()=>post("/adminGame",{
+                game_uid:game_uid,
+                optype:admin_op.update_ballcontrol,
+                meta:{
+                    ballowner:0,
+                    currentattacktime:24
+                }
+            }))
+        },
+        *nextSectionUpdateServer({payload},{put,call}){
+            const {game_uid,currentsection} = payload;
+            var currentsectiontime = 12*60;
+            var nextSection = currentsection+1;
+            var admin_result = yield call(()=>post("/adminGame",{
+                game_uid:game_uid,
+                optype:admin_op.update_nextsection,
+                meta:{
+                    currentsectiontime:currentsectiontime,
+                    currentsection:nextSection
+                }
+            }))
         }
     }
 }

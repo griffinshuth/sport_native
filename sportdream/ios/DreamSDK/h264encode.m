@@ -155,7 +155,7 @@ void encodeCallback(void *userData, void *sourceFrameRefCon, OSStatus status, VT
   status += VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_DataRateLimits, (__bridge CFArrayRef)@[@(bitrate*2/8), @1]);
   NSLog(@"set bitrate   return: %d", (int)status);
   // 设置关键帧间隔，即gop size
-  status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge CFTypeRef)@(framerate*2));
+  status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, (__bridge CFTypeRef)@(framerate));
   // 设置帧率，只用于初始化session，不是实际FPS
   status = VTSessionSetProperty(_encodeSession, kVTCompressionPropertyKey_ExpectedFrameRate, (__bridge CFTypeRef)@(framerate));
   NSLog(@"set framerate return: %d", (int)status);

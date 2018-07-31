@@ -10,6 +10,8 @@
 #import "h264encode.h"
 
 @interface FFmpegPushClient : NSObject<h264encodeDelegate>
+-(instancetype) init __attribute__((unavailable("init not available, call initWithUrl instead")));
+-(id)initWithUrl:(NSString*)urlOrFileName isRtmp:(BOOL)isRtmp;
 -(void)startStreaming;
 -(void)stopStreaming;
 -(BOOL)isPushing;

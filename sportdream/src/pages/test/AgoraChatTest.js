@@ -11,18 +11,14 @@ import {
 } from 'react-native'
 import {
     WhiteSpace,
+    Button,
     Toast
 } from 'antd-mobile'
 import Orientation from 'react-native-orientation';
 
 import ToolBar from '../../Components/ToolBar'
-import Button from "antd-mobile/es/button/index.native";
-var AgorachatView = requireNativeComponent('AgorachatView', null);
+import AgorachatNativeView from '../../NativeViews/AgorachatView'
 var AgorachatModule = NativeModules.AgorachatViewManager;
-
-//百度语音识别
-var BaiduASRModule = NativeModules.BaiduASRModule;
-const BaiduASRModuleEmitter = new NativeEventEmitter(BaiduASRModule);
 
 export default class App extends React.Component{
     constructor(props){
@@ -32,18 +28,6 @@ export default class App extends React.Component{
             isPushing:false
         }
 
-    }
-
-    onVoiceRecognize = (result)=>{
-        Toast.info(JSON.parse(result.data).results_recognition[0],1);
-        console.log(result.data)
-        var command = JSON.parse(result.data).results_recognition[0];
-        if(command == "sorry"){
-            BaiduASRModule.speak(command)
-        }
-        if(command == "ok"){
-            BaiduASRModule.speak(command)
-        }
     }
 
     record = ()=>{
@@ -83,13 +67,6 @@ export default class App extends React.Component{
                 }
             }
         );
-
-        //
-        /*BaiduASRModule.startListen();
-        this.subscription = BaiduASRModuleEmitter.addListener(
-            'onVoiceRecognize',
-            this.onVoiceRecognize
-        );*/
     }
 
     componentWillUnmount(){
@@ -102,21 +79,17 @@ export default class App extends React.Component{
         this.didOffline_subscription.remove();
 
         AgorachatModule.destroyAgora();
-
-        //
-        /*BaiduASRModule.endListen();
-        this.subscription.remove();*/
     }
 
     render(){
         return (
         <View style={{flex:1}}>
-            <AgorachatView uid={0} style={{width:160,height:120}}/>
+            <AgorachatNativeView uid={0} style={{width:160,height:120}}/>
             {
                 this.state.players.map((item)=>{
                     return <View key={item}>
                         <WhiteSpace/>
-                        <AgorachatView uid={item} style={{width:160,height:120}}/>
+                        <AgorachatNativeView uid={item} style={{width:160,height:120}}/>
                     </View>
                 })
             }

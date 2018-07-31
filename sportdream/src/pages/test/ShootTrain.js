@@ -3,7 +3,8 @@ import {
     View,
     Text,
     NativeModules,
-    NativeEventEmitter
+    NativeEventEmitter,
+    Platform
 } from 'react-native'
 import {
     Flex,
@@ -33,9 +34,12 @@ export default class App extends React.Component{
     }
 
     onVoiceRecognize = (result)=>{
-        Toast.info(JSON.parse(result.data).results_recognition[0],1);
-        console.log(result.data)
-        var command = JSON.parse(result.data).results_recognition[0];
+        if(Platform.OS == 'ios'){
+            var command = JSON.parse(result.data).results_recognition[0];
+        }else{
+            var command = result.RecognizeResult;
+        }
+        Toast.info(command);
         if(command == "sorry"){
             this.state.shoot++;
             this.setState({shoot:this.state.shoot})
@@ -50,23 +54,34 @@ export default class App extends React.Component{
     }
 
     componentDidMount(){
-        BaiduASRModule.startListen();
+        if(Platform.OS == 'ios'){
+            BaiduASRModule.startListen();
+            this.getBrightness();
+        }else{
+            BaiduASRModule.init();
+            BaiduASRModule.initTTS();
+        }
+
         this.subscription = BaiduASRModuleEmitter.addListener(
             'onVoiceRecognize',
             this.onVoiceRecognize
         );
-        this.getBrightness();
     }
 
     componentWillUnmount(){
-        BaiduASRModule.endListen();
+        if(Platform.OS == 'ios'){
+            BaiduASRModule.endListen();
+        }else{
+            BaiduASRModule.destroy();
+            BaiduASRModule.destroyTTS();
+        }
         this.subscription.remove();
     }
 
     render(){
         return (
             <View style={{flex:1}}>
-                {this.state.valueSlide >= 50?<ToolBar title="绘图API" navigation={this.props.navigation}/>:null}
+                {this.state.valueSlide >= 50?<ToolBar title="智能投篮训练" navigation={this.props.navigation}/>:null}
                 <View>
                     <WhiteSpace/>
                     <Slider
@@ -76,8 +91,10 @@ export default class App extends React.Component{
                         max={100}
                         onChange={(value)=>{
                             var t = value/100;
-                            BaiduASRModule.brightness(t);
                             this.setState({valueSlide:value})
+                            if(Platform.OS == 'ios'){
+                                BaiduASRModule.brightness(t);
+                            }
                         }}
                     />
                     <WhiteSpace/>

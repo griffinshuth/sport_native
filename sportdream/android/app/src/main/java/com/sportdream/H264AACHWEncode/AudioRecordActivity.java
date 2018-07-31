@@ -20,6 +20,7 @@ import com.sportdream.DreamSDK.Delegate.AudioRecorderDelegate;
 import com.sportdream.R;
 import com.sportdream.network.LocalWifiNetworkThread;
 import com.sportdream.network.LocalWifiSocketHandler;
+import com.sportdream.network.PacketIDDef;
 
 /**
  * Created by lili on 2018/2/3.
@@ -39,10 +40,20 @@ public class AudioRecordActivity extends Activity implements LocalWifiSocketHand
     private Button record_btn;
     private AudioTrack audioTrack;
 
+    String mDeviceID;
+    int mRoomID;
+    int CameraType;
+    String CameraName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.live_commentors);
+
+        mDeviceID = getIntent().getStringExtra("deviceID");
+        mRoomID = getIntent().getIntExtra("roomID",0);
+        CameraType = getIntent().getIntExtra("CameraType",0);
+        CameraName = getIntent().getStringExtra("CameraName");
 
         record_btn = (Button)findViewById(R.id.record_btn);
         record_status = (TextView)findViewById(R.id.record_status);
@@ -130,6 +141,10 @@ public class AudioRecordActivity extends Activity implements LocalWifiSocketHand
 
     //delegate
     public void DirectServerConnected(){
+        //发送登录信息
+        String json = "{\"id\":\"liveCommentorLogin\",\"deviceID\":\"%s\",\"type\":%d,\"name\":\"%s\",\"subtype\":%d}";
+        String json_str = String.format(json,mDeviceID,CameraType,CameraName,-1);
+        send(PacketIDDef.JSON_MESSAGE,json_str.getBytes());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -140,6 +155,16 @@ public class AudioRecordActivity extends Activity implements LocalWifiSocketHand
     }
     public void DataReceived(short PacketID,byte[] data){
 
+    }
+
+    public void DirectServerDisconnected(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                isServerConnected = false;
+                network_status.setText("服务器连接断开");
+            }
+        });
     }
 
     public void dataWithADTSFromAACEncoder(byte[] aacData)

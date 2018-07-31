@@ -3,9 +3,12 @@ import {connect} from 'dva'
 import {
     View,
     Text,
+    TextInput,
     StyleSheet,
     NativeModules,
-    NativeEventEmitter
+    NativeEventEmitter,
+    requireNativeComponent,
+    Platform
 } from 'react-native'
 import {
     Button,
@@ -13,42 +16,90 @@ import {
     WhiteSpace
 } from 'antd-mobile'
 import ToolBar from '../../Components/ToolBar'
-var LocalNetModule = NativeModules.LocalNetModule;
-const LocalNetModuleEmitter = new NativeEventEmitter(LocalNetModule);
+import LocalClientModule from "../NativeModules/LocalClientModule"
+
+const LocalClientModuleEmitter = new NativeEventEmitter(LocalClientModule);
 
 @connect(({appNS})=>({appNS}))
 export default class App extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            ip:"",
+            isConnect:false,
+            connectStatus:"没有连接服务器",
+        }
+    }
     componentDidMount(){
-        this.serverDiscovered_handler = LocalNetModuleEmitter.addListener("serverDiscovered",this.serverDiscovered);
-        this.clientReceiveData_handler = LocalNetModuleEmitter.addListener("clientReceiveData",this.clientReceiveData);
-        LocalNetModule.startClient(4567,5678);
+        LocalClientModule.startClient(8888,6666);
+        this.onSearchServerTimeout_handler = LocalClientModuleEmitter.addListener("onSearchServerTimeout",this.onSearchServerTimeout);
+        this.LocalClientSocketConnected_handler = LocalClientModuleEmitter.addListener("clientSocketConnected",this.LocalClientSocketConnected);
+        this.LocalClientSocketDataa_handler = LocalClientModuleEmitter.addListener("clientReceiveData",this.LocalClientSocketData);
+        this.LocalClientSocketClosed_handler = LocalClientModuleEmitter.addListener("clientSocketDisconnect",this.LocalClientSocketClosed);
     }
     componentWillUnmount(){
-        this.serverDiscovered_handler.remove();
-        this.clientReceiveData_handler.remove();
-        LocalNetModule.stopClient();
+        LocalClientModule.stopClient();
+        this.onSearchServerTimeout_handler.remove();
+        this.LocalClientSocketConnected_handler.remove();
+        this.LocalClientSocketDataa_handler.remove();
+        this.LocalClientSocketClosed_handler.remove();
     }
-    search = ()=>{
-        LocalNetModule.searchServer();
+
+    onSearchServerTimeout = ()=>{
+        Toast.info("搜索失败")
     }
-    send = ()=>{
-        var clientID = this.props.appNS.clientID;
-        var json = {id:"login",deviceID:clientID,name:"技术统计"}
-        var str = JSON.stringify(json);
-        LocalNetModule.clientSend(str);
+
+    LocalClientSocketConnected = ()=>{
+        this.setState({
+            isConnect:true,
+            connectStatus:"服务器连接成功"
+        })
+        LocalClientModule.commonLogin(this.props.appNS.clientID);
     }
-    serverDiscovered = ()=>{
-        Toast.info("server discovered")
-    }
-    clientReceiveData = (result)=>{
+
+    LocalClientSocketData = (result)=>{
         Toast.info(result.data);
     }
+
+    LocalClientSocketClosed = ()=>{
+        this.setState({
+            isConnect:false,
+            connectStatus:"服务器连接断开"
+        })
+    }
+
+    connect = ()=>{
+        if(!this.state.isConnect && this.state.ip != ""){
+            LocalClientModule.connectServer(this.state.ip);
+        }
+    }
+
+    searchServer = ()=>{
+        LocalClientModule.searchServer();
+    }
+
+    send = ()=>{
+        if(this.state.isConnect){
+            var json = {id:"test",extra:"sport"}
+            var str = JSON.stringify(json);
+            LocalClientModule.clientSend(str);
+        }
+    }
+
     render(){
         return (
             <View>
                 <ToolBar title="热点客户端" navigation={this.props.navigation}/>
                 <View>
-                    <Button onClick={this.search}>搜索和连接热点服务器</Button>
+                    <TextInput
+                        style={{height: 40}}
+                        placeholder="输入服务器IP地址"
+                        onChangeText={(ip) => this.setState({ip})}
+                        value={this.state.ip}
+                    />
+                    <View><Text>{this.state.connectStatus}</Text></View>
+                    <Button onClick={this.connect}>连接指定IP的服务器</Button>
+                    <Button onClick={this.searchServer}>搜索导播服务器</Button>
                     <WhiteSpace/>
                     <Button onClick={this.send}>发送</Button>
                 </View>

@@ -46,6 +46,7 @@ import io.netty.util.Constant;
  */
 
 public class AgoraRemoteCamera extends Activity implements AGEventHandler {
+    private String mAgoraChannelName;
     private GridVideoViewContainer mGridVideoViewContainer;
     private RelativeLayout mSmallVideoViewDock;
     private final HashMap<Integer, SurfaceView> mUidsList = new HashMap<>(); // uid = 0 || uid == EngineConfig.mUid
@@ -80,7 +81,7 @@ public class AgoraRemoteCamera extends Activity implements AGEventHandler {
 
     public void initUIandEvent(){
         event().addEventHandler(this);
-        String roomName = "test";
+        String roomName = mAgoraChannelName;
         doConfigEngine(Constants.CLIENT_ROLE_BROADCASTER);
         mGridVideoViewContainer = (GridVideoViewContainer)findViewById(R.id.grid_video_view_container);
         mGridVideoViewContainer.setItemEventHandler(new VideoViewEventListener() {
@@ -117,6 +118,7 @@ public class AgoraRemoteCamera extends Activity implements AGEventHandler {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        mAgoraChannelName = getIntent().getStringExtra("AgoraChannelName");
         final View layout = findViewById(Window.ID_ANDROID_CONTENT);
         ViewTreeObserver vto = layout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){

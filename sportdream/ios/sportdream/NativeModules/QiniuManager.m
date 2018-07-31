@@ -17,10 +17,10 @@ RCT_EXPORT_MODULE(QiniuModule);
   return @[@"uploadProgress"];
 }
 
-RCT_EXPORT_METHOD(upload:(NSString*)filepath resolver:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(upload:(NSString*)filepath uploadTokenUrl:(NSString*)uploadTokenUrl resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSURL *url = [NSURL URLWithString:@"http://192.168.0.104/getUploadToken?bucket=grassroot"];
+  NSURL *url = [NSURL URLWithString:uploadTokenUrl];
   NSMutableURLRequest * theRequest = [NSMutableURLRequest requestWithURL:url];
   NSURLResponse *response = nil;
   NSError *error = nil;
@@ -37,7 +37,6 @@ RCT_EXPORT_METHOD(upload:(NSString*)filepath resolver:(RCTPromiseResolveBlock)re
   [upManager putFile:filepath key:nil token:token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
     NSLog(@"info ===== %@", info);
     NSLog(@"resp ===== %@", resp);
-      //[self sendEventWithName:@"uploadsuccessed" body:@{@"name": resp[@"key"]}];
     resolve(@{@"name": resp[@"key"]});
   }
               option:uploadOption];
@@ -84,28 +83,34 @@ RCT_EXPORT_METHOD(gotoARCameraView)
   [delegate gotoARCameraViewController];
 }
 
-RCT_EXPORT_METHOD(gotoCameraOnStand)
+RCT_EXPORT_METHOD(gotoCameraOnStand:(NSString*)deviceID cameraType:(int)cameraType cameraName:(NSString*)cameraName roomID:(int)roomID isSlowMotion:(BOOL)isSlowMotion ip:(NSString*)ip)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
-  [delegate gotoCameraOnStandViewController];
+  [delegate gotoCameraOnStandViewController:deviceID cameraType:cameraType cameraName:cameraName roomID:roomID isSlowMotion:isSlowMotion ip:ip];
 }
 
-RCT_EXPORT_METHOD(gotoDirectorServer)
+RCT_EXPORT_METHOD(gotoDirectorServer:(NSString*)channelName)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
-  [delegate gotoDirectorServerViewController];
+  [delegate gotoDirectorServerViewController:channelName];
 }
 
-RCT_EXPORT_METHOD(gotoCommentators)
+RCT_EXPORT_METHOD(gotoCommentators:(NSString*)channelName)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
-  [delegate gotoCommentatorsViewController];
+  [delegate gotoCommentatorsViewController:channelName];
 }
 
-RCT_EXPORT_METHOD(gotoLiveCommentators)
+RCT_EXPORT_METHOD(gotoCheerleader:(NSString*)channelName)
 {
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
-  [delegate gotoLiveCommentatorsViewController];
+  [delegate gotoCheerLeaderViewController:channelName];
+}
+
+RCT_EXPORT_METHOD(gotoLiveCommentators:(NSString*)deviceID cameraType:(int)cameraType cameraName:(NSString*)cameraName roomID:(int)roomID)
+{
+  AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate gotoLiveCommentatorsViewController:deviceID cameraType:cameraType cameraName:cameraName roomID:roomID];
 }
 
 

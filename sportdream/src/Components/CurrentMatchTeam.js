@@ -1,4 +1,4 @@
-import React from 'react'
+/*import React from 'react'
 import PropTypes from 'prop-types'
 import {
     View,
@@ -152,3 +152,4 @@ const CurrentMatchTeam = ({teamindex,teaminfo,teamcurrentscore,teamMembers,roomI
 }
 
 export default CurrentMatchTeam
+*/

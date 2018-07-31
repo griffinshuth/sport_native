@@ -19,7 +19,6 @@ import ToolBar from '../../Components/ToolBar'
 import {get,post} from '../../fetch'
 
 var QiniuPushView = requireNativeComponent('QiniuPushView', null);
-var QiniuPlayView = requireNativeComponent('QiniuPlayView', null);
 
 export default class App extends React.Component{
     constructor(props){

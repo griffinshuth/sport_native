@@ -1,0 +1,798 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2287F80D20E08AB6002CBE9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2287F80C20E08AB6002CBE9A /* AppDelegate.m */; };
+		2287F81020E08AB6002CBE9A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2287F80F20E08AB6002CBE9A /* ViewController.m */; };
+		2287F81320E08AB6002CBE9A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2287F81120E08AB6002CBE9A /* Main.storyboard */; };
+		2287F81520E08AB6002CBE9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2287F81420E08AB6002CBE9A /* Assets.xcassets */; };
+		2287F81820E08AB6002CBE9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2287F81620E08AB6002CBE9A /* LaunchScreen.storyboard */; };
+		2287F81B20E08AB6002CBE9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2287F81A20E08AB6002CBE9A /* main.m */; };
+		2287F82320E08C18002CBE9A /* FootballRobots.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2287F82220E08C18002CBE9A /* FootballRobots.mm */; };
+		2287F82620E08C2E002CBE9A /* RobotMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F82420E08C2E002CBE9A /* RobotMain.cpp */; };
+		2287F8A220E092B8002CBE9A /* Plotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F82820E092B0002CBE9A /* Plotter.cpp */; };
+		2287F8A320E092B8002CBE9A /* ServerParam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F82A20E092B0002CBE9A /* ServerParam.cpp */; };
+		2287F8A420E092B8002CBE9A /* BehaviorShoot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F82E20E092B0002CBE9A /* BehaviorShoot.cpp */; };
+		2287F8A520E092B8002CBE9A /* Strategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F83020E092B0002CBE9A /* Strategy.cpp */; };
+		2287F8A620E092B8002CBE9A /* Trainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F83120E092B1002CBE9A /* Trainer.cpp */; };
+		2287F8A720E092B8002CBE9A /* Tackler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F83720E092B1002CBE9A /* Tackler.cpp */; };
+		2287F8A820E092B8002CBE9A /* InterceptInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F83820E092B1002CBE9A /* InterceptInfo.cpp */; };
+		2287F8A920E092B8002CBE9A /* Kicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F83B20E092B1002CBE9A /* Kicker.cpp */; };
+		2287F8AA20E092B8002CBE9A /* TimeTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F83C20E092B1002CBE9A /* TimeTest.cpp */; };
+		2287F8AB20E092B8002CBE9A /* ActionEffector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84020E092B1002CBE9A /* ActionEffector.cpp */; };
+		2287F8AC20E092B8002CBE9A /* BehaviorIntercept.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84120E092B1002CBE9A /* BehaviorIntercept.cpp */; };
+		2287F8AD20E092B8002CBE9A /* ParamEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84520E092B2002CBE9A /* ParamEngine.cpp */; };
+		2287F8AE20E092B8002CBE9A /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84620E092B2002CBE9A /* Player.cpp */; };
+		2287F8AF20E092B8002CBE9A /* Formation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84720E092B2002CBE9A /* Formation.cpp */; };
+		2287F8B020E092B8002CBE9A /* CommandSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84920E092B2002CBE9A /* CommandSender.cpp */; };
+		2287F8B120E092B8002CBE9A /* Agent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84B20E092B2002CBE9A /* Agent.cpp */; };
+		2287F8B220E092B8002CBE9A /* DecisionTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84C20E092B2002CBE9A /* DecisionTree.cpp */; };
+		2287F8B320E092B8002CBE9A /* Evaluation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84D20E092B2002CBE9A /* Evaluation.cpp */; };
+		2287F8B420E092B8002CBE9A /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84E20E092B2002CBE9A /* Geometry.cpp */; };
+		2287F8B520E092B8002CBE9A /* BehaviorBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F84F20E092B2002CBE9A /* BehaviorBase.cpp */; };
+		2287F8B620E092B8002CBE9A /* DynamicDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85020E092B2002CBE9A /* DynamicDebug.cpp */; };
+		2287F8B720E092B8002CBE9A /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85120E092B2002CBE9A /* Logger.cpp */; };
+		2287F8B820E092B8002CBE9A /* BehaviorBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85420E092B3002CBE9A /* BehaviorBlock.cpp */; };
+		2287F8B920E092B8002CBE9A /* WorldState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85620E092B3002CBE9A /* WorldState.cpp */; };
+		2287F8BA20E092B8002CBE9A /* BehaviorHold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85720E092B3002CBE9A /* BehaviorHold.cpp */; };
+		2287F8BB20E092B8002CBE9A /* Simulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85920E092B3002CBE9A /* Simulator.cpp */; };
+		2287F8BC20E092B8002CBE9A /* BaseState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85A20E092B3002CBE9A /* BaseState.cpp */; };
+		2287F8BD20E092B8002CBE9A /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F85C20E092B3002CBE9A /* Thread.cpp */; };
+		2287F8BE20E092B8002CBE9A /* BehaviorDefense.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F86120E092B4002CBE9A /* BehaviorDefense.cpp */; };
+		2287F8BF20E092B8002CBE9A /* BehaviorPass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F86220E092B4002CBE9A /* BehaviorPass.cpp */; };
+		2287F8C020E092B8002CBE9A /* PositionInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F86420E092B4002CBE9A /* PositionInfo.cpp */; };
+		2287F8C120E092B8002CBE9A /* CommunicateSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F86520E092B4002CBE9A /* CommunicateSystem.cpp */; };
+		2287F8C220E092B8002CBE9A /* Observer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F86820E092B4002CBE9A /* Observer.cpp */; };
+		2287F8C320E092B8002CBE9A /* Analyser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F86B20E092B4002CBE9A /* Analyser.cpp */; };
+		2287F8C420E092B8002CBE9A /* Coach.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F86C20E092B4002CBE9A /* Coach.cpp */; };
+		2287F8C520E092B8002CBE9A /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87020E092B5002CBE9A /* Client.cpp */; };
+		2287F8C620E092B8002CBE9A /* BehaviorPenalty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87120E092B5002CBE9A /* BehaviorPenalty.cpp */; };
+		2287F8C720E092B8002CBE9A /* PlayerParam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87220E092B5002CBE9A /* PlayerParam.cpp */; };
+		2287F8C820E092B8002CBE9A /* DecisionData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87320E092B5002CBE9A /* DecisionData.cpp */; };
+		2287F8C920E092B8002CBE9A /* InfoState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87620E092B5002CBE9A /* InfoState.cpp */; };
+		2287F8CA20E092B8002CBE9A /* Parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87720E092B5002CBE9A /* Parser.cpp */; };
+		2287F8CB20E092B8002CBE9A /* BehaviorFormation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87A20E092B5002CBE9A /* BehaviorFormation.cpp */; };
+		2287F8CC20E092B8002CBE9A /* BehaviorGoalie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F87F20E092B6002CBE9A /* BehaviorGoalie.cpp */; };
+		2287F8CD20E092B8002CBE9A /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88120E092B6002CBE9A /* Types.cpp */; };
+		2287F8CE20E092B8002CBE9A /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88220E092B6002CBE9A /* Utilities.cpp */; };
+		2287F8CF20E092B8002CBE9A /* FormationTactics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88320E092B6002CBE9A /* FormationTactics.cpp */; };
+		2287F8D020E092B8002CBE9A /* InterceptModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88520E092B6002CBE9A /* InterceptModel.cpp */; };
+		2287F8D120E092B8002CBE9A /* WorldModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88A20E092B7002CBE9A /* WorldModel.cpp */; };
+		2287F8D220E092B8002CBE9A /* VisualSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88B20E092B7002CBE9A /* VisualSystem.cpp */; };
+		2287F8D320E092B8002CBE9A /* Dasher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88C20E092B7002CBE9A /* Dasher.cpp */; };
+		2287F8D420E092B8002CBE9A /* BehaviorPosition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88D20E092B7002CBE9A /* BehaviorPosition.cpp */; };
+		2287F8D520E092B8002CBE9A /* BehaviorSetplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F88E20E092B7002CBE9A /* BehaviorSetplay.cpp */; };
+		2287F8D620E092B8002CBE9A /* BehaviorDribble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89020E092B7002CBE9A /* BehaviorDribble.cpp */; };
+		2287F8D720E092B8002CBE9A /* BasicCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89420E092B7002CBE9A /* BasicCommand.cpp */; };
+		2287F8D820E092B8002CBE9A /* NetworkTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89520E092B7002CBE9A /* NetworkTest.cpp */; };
+		2287F8D920E092B8002CBE9A /* Net.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89820E092B8002CBE9A /* Net.cpp */; };
+		2287F8DA20E092B8002CBE9A /* BehaviorMark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89920E092B8002CBE9A /* BehaviorMark.cpp */; };
+		2287F8DB20E092B8002CBE9A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89A20E092B8002CBE9A /* main.cpp */; };
+		2287F8DC20E092B8002CBE9A /* PlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89C20E092B8002CBE9A /* PlayerState.cpp */; };
+		2287F8DD20E092B8002CBE9A /* UDPSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89E20E092B8002CBE9A /* UDPSocket.cpp */; };
+		2287F8DE20E092B8002CBE9A /* BehaviorAttack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F89F20E092B8002CBE9A /* BehaviorAttack.cpp */; };
+		2287F95420E37747002CBE9A /* ConfFilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F95220E37747002CBE9A /* ConfFilePath.cpp */; };
+		2287F96120E469DC002CBE9A /* 442_Attack.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95520E469DB002CBE9A /* 442_Attack.conf */; };
+		2287F96220E469DC002CBE9A /* server.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95620E469DB002CBE9A /* server.conf */; };
+		2287F96320E469DC002CBE9A /* 433_Defend.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95720E469DB002CBE9A /* 433_Defend.conf */; };
+		2287F96420E469DC002CBE9A /* train.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95820E469DB002CBE9A /* train.conf */; };
+		2287F96520E469DC002CBE9A /* eps01.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95920E469DB002CBE9A /* eps01.conf */; };
+		2287F96620E469DC002CBE9A /* 433_Attack.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95A20E469DB002CBE9A /* 433_Attack.conf */; };
+		2287F96720E469DC002CBE9A /* 442_Defend.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95B20E469DB002CBE9A /* 442_Defend.conf */; };
+		2287F96820E469DC002CBE9A /* kicker_value.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95C20E469DB002CBE9A /* kicker_value.conf */; };
+		2287F96920E469DC002CBE9A /* sensitivity.net in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95D20E469DB002CBE9A /* sensitivity.net */; };
+		2287F96A20E469DC002CBE9A /* eps001.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95E20E469DB002CBE9A /* eps001.conf */; };
+		2287F96B20E469DC002CBE9A /* player.conf in Resources */ = {isa = PBXBuildFile; fileRef = 2287F95F20E469DB002CBE9A /* player.conf */; };
+		2287F96C20E469DC002CBE9A /* sensitivity.train in Resources */ = {isa = PBXBuildFile; fileRef = 2287F96020E469DC002CBE9A /* sensitivity.train */; };
+		2287F97220E8D9CF002CBE9A /* PthreadKeys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2287F97120E8D9CF002CBE9A /* PthreadKeys.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2287F80820E08AB6002CBE9A /* FootballAgentDemo2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FootballAgentDemo2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2287F80B20E08AB6002CBE9A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2287F80C20E08AB6002CBE9A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2287F80E20E08AB6002CBE9A /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		2287F80F20E08AB6002CBE9A /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		2287F81220E08AB6002CBE9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2287F81420E08AB6002CBE9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2287F81720E08AB6002CBE9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2287F81920E08AB6002CBE9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2287F81A20E08AB6002CBE9A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2287F82120E08C18002CBE9A /* FootballRobots.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FootballRobots.h; sourceTree = "<group>"; };
+		2287F82220E08C18002CBE9A /* FootballRobots.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FootballRobots.mm; sourceTree = "<group>"; };
+		2287F82420E08C2E002CBE9A /* RobotMain.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RobotMain.cpp; sourceTree = "<group>"; };
+		2287F82520E08C2E002CBE9A /* RobotMain.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RobotMain.hpp; sourceTree = "<group>"; };
+		2287F82820E092B0002CBE9A /* Plotter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Plotter.cpp; sourceTree = "<group>"; };
+		2287F82920E092B0002CBE9A /* BehaviorFormation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorFormation.h; sourceTree = "<group>"; };
+		2287F82A20E092B0002CBE9A /* ServerParam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServerParam.cpp; sourceTree = "<group>"; };
+		2287F82B20E092B0002CBE9A /* InterceptModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterceptModel.h; sourceTree = "<group>"; };
+		2287F82C20E092B0002CBE9A /* Tackler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tackler.h; sourceTree = "<group>"; };
+		2287F82D20E092B0002CBE9A /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
+		2287F82E20E092B0002CBE9A /* BehaviorShoot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorShoot.cpp; sourceTree = "<group>"; };
+		2287F82F20E092B0002CBE9A /* Dasher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dasher.h; sourceTree = "<group>"; };
+		2287F83020E092B0002CBE9A /* Strategy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Strategy.cpp; sourceTree = "<group>"; };
+		2287F83120E092B1002CBE9A /* Trainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Trainer.cpp; sourceTree = "<group>"; };
+		2287F83220E092B1002CBE9A /* BaseState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseState.h; sourceTree = "<group>"; };
+		2287F83320E092B1002CBE9A /* WorldModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldModel.h; sourceTree = "<group>"; };
+		2287F83420E092B1002CBE9A /* BehaviorBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorBlock.h; sourceTree = "<group>"; };
+		2287F83520E092B1002CBE9A /* PlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerState.h; sourceTree = "<group>"; };
+		2287F83620E092B1002CBE9A /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		2287F83720E092B1002CBE9A /* Tackler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tackler.cpp; sourceTree = "<group>"; };
+		2287F83820E092B1002CBE9A /* InterceptInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InterceptInfo.cpp; sourceTree = "<group>"; };
+		2287F83920E092B1002CBE9A /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+		2287F83A20E092B1002CBE9A /* CommunicateSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunicateSystem.h; sourceTree = "<group>"; };
+		2287F83B20E092B1002CBE9A /* Kicker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Kicker.cpp; sourceTree = "<group>"; };
+		2287F83C20E092B1002CBE9A /* TimeTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeTest.cpp; sourceTree = "<group>"; };
+		2287F83D20E092B1002CBE9A /* InfoState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoState.h; sourceTree = "<group>"; };
+		2287F83E20E092B1002CBE9A /* BehaviorBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorBase.h; sourceTree = "<group>"; };
+		2287F83F20E092B1002CBE9A /* Strategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Strategy.h; sourceTree = "<group>"; };
+		2287F84020E092B1002CBE9A /* ActionEffector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActionEffector.cpp; sourceTree = "<group>"; };
+		2287F84120E092B1002CBE9A /* BehaviorIntercept.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorIntercept.cpp; sourceTree = "<group>"; };
+		2287F84220E092B1002CBE9A /* BehaviorHold.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorHold.h; sourceTree = "<group>"; };
+		2287F84320E092B1002CBE9A /* Net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Net.h; sourceTree = "<group>"; };
+		2287F84420E092B2002CBE9A /* BehaviorPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorPosition.h; sourceTree = "<group>"; };
+		2287F84520E092B2002CBE9A /* ParamEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParamEngine.cpp; sourceTree = "<group>"; };
+		2287F84620E092B2002CBE9A /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		2287F84720E092B2002CBE9A /* Formation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Formation.cpp; sourceTree = "<group>"; };
+		2287F84820E092B2002CBE9A /* CommandSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandSender.h; sourceTree = "<group>"; };
+		2287F84920E092B2002CBE9A /* CommandSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandSender.cpp; sourceTree = "<group>"; };
+		2287F84A20E092B2002CBE9A /* BehaviorGoalie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorGoalie.h; sourceTree = "<group>"; };
+		2287F84B20E092B2002CBE9A /* Agent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Agent.cpp; sourceTree = "<group>"; };
+		2287F84C20E092B2002CBE9A /* DecisionTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DecisionTree.cpp; sourceTree = "<group>"; };
+		2287F84D20E092B2002CBE9A /* Evaluation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Evaluation.cpp; sourceTree = "<group>"; };
+		2287F84E20E092B2002CBE9A /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
+		2287F84F20E092B2002CBE9A /* BehaviorBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorBase.cpp; sourceTree = "<group>"; };
+		2287F85020E092B2002CBE9A /* DynamicDebug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DynamicDebug.cpp; sourceTree = "<group>"; };
+		2287F85120E092B2002CBE9A /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
+		2287F85220E092B3002CBE9A /* BehaviorSetplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorSetplay.h; sourceTree = "<group>"; };
+		2287F85320E092B3002CBE9A /* Kicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Kicker.h; sourceTree = "<group>"; };
+		2287F85420E092B3002CBE9A /* BehaviorBlock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorBlock.cpp; sourceTree = "<group>"; };
+		2287F85520E092B3002CBE9A /* BehaviorDefense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorDefense.h; sourceTree = "<group>"; };
+		2287F85620E092B3002CBE9A /* WorldState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldState.cpp; sourceTree = "<group>"; };
+		2287F85720E092B3002CBE9A /* BehaviorHold.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorHold.cpp; sourceTree = "<group>"; };
+		2287F85820E092B3002CBE9A /* BehaviorIntercept.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorIntercept.h; sourceTree = "<group>"; };
+		2287F85920E092B3002CBE9A /* Simulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Simulator.cpp; sourceTree = "<group>"; };
+		2287F85A20E092B3002CBE9A /* BaseState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseState.cpp; sourceTree = "<group>"; };
+		2287F85B20E092B3002CBE9A /* BehaviorMark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorMark.h; sourceTree = "<group>"; };
+		2287F85C20E092B3002CBE9A /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Thread.cpp; sourceTree = "<group>"; };
+		2287F85D20E092B3002CBE9A /* UDPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPSocket.h; sourceTree = "<group>"; };
+		2287F85E20E092B3002CBE9A /* PositionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionInfo.h; sourceTree = "<group>"; };
+		2287F85F20E092B3002CBE9A /* TimeTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeTest.h; sourceTree = "<group>"; };
+		2287F86020E092B4002CBE9A /* BehaviorAttack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorAttack.h; sourceTree = "<group>"; };
+		2287F86120E092B4002CBE9A /* BehaviorDefense.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorDefense.cpp; sourceTree = "<group>"; };
+		2287F86220E092B4002CBE9A /* BehaviorPass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorPass.cpp; sourceTree = "<group>"; };
+		2287F86320E092B4002CBE9A /* Coach.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coach.h; sourceTree = "<group>"; };
+		2287F86420E092B4002CBE9A /* PositionInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PositionInfo.cpp; sourceTree = "<group>"; };
+		2287F86520E092B4002CBE9A /* CommunicateSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommunicateSystem.cpp; sourceTree = "<group>"; };
+		2287F86620E092B4002CBE9A /* ActionEffector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionEffector.h; sourceTree = "<group>"; };
+		2287F86720E092B4002CBE9A /* BallState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BallState.h; sourceTree = "<group>"; };
+		2287F86820E092B4002CBE9A /* Observer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Observer.cpp; sourceTree = "<group>"; };
+		2287F86920E092B4002CBE9A /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
+		2287F86A20E092B4002CBE9A /* InterceptInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterceptInfo.h; sourceTree = "<group>"; };
+		2287F86B20E092B4002CBE9A /* Analyser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Analyser.cpp; sourceTree = "<group>"; };
+		2287F86C20E092B4002CBE9A /* Coach.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coach.cpp; sourceTree = "<group>"; };
+		2287F86D20E092B4002CBE9A /* ServerParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerParam.h; sourceTree = "<group>"; };
+		2287F86E20E092B5002CBE9A /* BehaviorPenalty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorPenalty.h; sourceTree = "<group>"; };
+		2287F86F20E092B5002CBE9A /* Formation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Formation.h; sourceTree = "<group>"; };
+		2287F87020E092B5002CBE9A /* Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Client.cpp; sourceTree = "<group>"; };
+		2287F87120E092B5002CBE9A /* BehaviorPenalty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorPenalty.cpp; sourceTree = "<group>"; };
+		2287F87220E092B5002CBE9A /* PlayerParam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerParam.cpp; sourceTree = "<group>"; };
+		2287F87320E092B5002CBE9A /* DecisionData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DecisionData.cpp; sourceTree = "<group>"; };
+		2287F87420E092B5002CBE9A /* BehaviorDribble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorDribble.h; sourceTree = "<group>"; };
+		2287F87520E092B5002CBE9A /* Analyser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Analyser.h; sourceTree = "<group>"; };
+		2287F87620E092B5002CBE9A /* InfoState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InfoState.cpp; sourceTree = "<group>"; };
+		2287F87720E092B5002CBE9A /* Parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parser.cpp; sourceTree = "<group>"; };
+		2287F87820E092B5002CBE9A /* VisualSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualSystem.h; sourceTree = "<group>"; };
+		2287F87920E092B5002CBE9A /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		2287F87A20E092B5002CBE9A /* BehaviorFormation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorFormation.cpp; sourceTree = "<group>"; };
+		2287F87B20E092B5002CBE9A /* WorldState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorldState.h; sourceTree = "<group>"; };
+		2287F87C20E092B6002CBE9A /* DynamicDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicDebug.h; sourceTree = "<group>"; };
+		2287F87D20E092B6002CBE9A /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		2287F87E20E092B6002CBE9A /* Agent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Agent.h; sourceTree = "<group>"; };
+		2287F87F20E092B6002CBE9A /* BehaviorGoalie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorGoalie.cpp; sourceTree = "<group>"; };
+		2287F88020E092B6002CBE9A /* Simulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simulator.h; sourceTree = "<group>"; };
+		2287F88120E092B6002CBE9A /* Types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Types.cpp; sourceTree = "<group>"; };
+		2287F88220E092B6002CBE9A /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utilities.cpp; sourceTree = "<group>"; };
+		2287F88320E092B6002CBE9A /* FormationTactics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FormationTactics.cpp; sourceTree = "<group>"; };
+		2287F88420E092B6002CBE9A /* DecisionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecisionData.h; sourceTree = "<group>"; };
+		2287F88520E092B6002CBE9A /* InterceptModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InterceptModel.cpp; sourceTree = "<group>"; };
+		2287F88620E092B6002CBE9A /* DecisionTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecisionTree.h; sourceTree = "<group>"; };
+		2287F88720E092B6002CBE9A /* FormationTactics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormationTactics.h; sourceTree = "<group>"; };
+		2287F88820E092B6002CBE9A /* Evaluation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Evaluation.h; sourceTree = "<group>"; };
+		2287F88920E092B6002CBE9A /* BehaviorPass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorPass.h; sourceTree = "<group>"; };
+		2287F88A20E092B7002CBE9A /* WorldModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldModel.cpp; sourceTree = "<group>"; };
+		2287F88B20E092B7002CBE9A /* VisualSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VisualSystem.cpp; sourceTree = "<group>"; };
+		2287F88C20E092B7002CBE9A /* Dasher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dasher.cpp; sourceTree = "<group>"; };
+		2287F88D20E092B7002CBE9A /* BehaviorPosition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorPosition.cpp; sourceTree = "<group>"; };
+		2287F88E20E092B7002CBE9A /* BehaviorSetplay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorSetplay.cpp; sourceTree = "<group>"; };
+		2287F88F20E092B7002CBE9A /* BehaviorShoot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BehaviorShoot.h; sourceTree = "<group>"; };
+		2287F89020E092B7002CBE9A /* BehaviorDribble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorDribble.cpp; sourceTree = "<group>"; };
+		2287F89120E092B7002CBE9A /* PlayerParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerParam.h; sourceTree = "<group>"; };
+		2287F89220E092B7002CBE9A /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
+		2287F89320E092B7002CBE9A /* BasicCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicCommand.h; sourceTree = "<group>"; };
+		2287F89420E092B7002CBE9A /* BasicCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicCommand.cpp; sourceTree = "<group>"; };
+		2287F89520E092B7002CBE9A /* NetworkTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkTest.cpp; sourceTree = "<group>"; };
+		2287F89620E092B7002CBE9A /* NetworkTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkTest.h; sourceTree = "<group>"; };
+		2287F89720E092B7002CBE9A /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = "<group>"; };
+		2287F89820E092B8002CBE9A /* Net.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Net.cpp; sourceTree = "<group>"; };
+		2287F89920E092B8002CBE9A /* BehaviorMark.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorMark.cpp; sourceTree = "<group>"; };
+		2287F89A20E092B8002CBE9A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2287F89B20E092B8002CBE9A /* Observer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Observer.h; sourceTree = "<group>"; };
+		2287F89C20E092B8002CBE9A /* PlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerState.cpp; sourceTree = "<group>"; };
+		2287F89D20E092B8002CBE9A /* Trainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Trainer.h; sourceTree = "<group>"; };
+		2287F89E20E092B8002CBE9A /* UDPSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPSocket.cpp; sourceTree = "<group>"; };
+		2287F89F20E092B8002CBE9A /* BehaviorAttack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BehaviorAttack.cpp; sourceTree = "<group>"; };
+		2287F8A020E092B8002CBE9A /* ParamEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParamEngine.h; sourceTree = "<group>"; };
+		2287F8A120E092B8002CBE9A /* Plotter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plotter.h; sourceTree = "<group>"; };
+		2287F95220E37747002CBE9A /* ConfFilePath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConfFilePath.cpp; sourceTree = "<group>"; };
+		2287F95320E37747002CBE9A /* ConfFilePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConfFilePath.hpp; sourceTree = "<group>"; };
+		2287F95520E469DB002CBE9A /* 442_Attack.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 442_Attack.conf; sourceTree = "<group>"; };
+		2287F95620E469DB002CBE9A /* server.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = server.conf; sourceTree = "<group>"; };
+		2287F95720E469DB002CBE9A /* 433_Defend.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 433_Defend.conf; sourceTree = "<group>"; };
+		2287F95820E469DB002CBE9A /* train.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = train.conf; sourceTree = "<group>"; };
+		2287F95920E469DB002CBE9A /* eps01.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = eps01.conf; sourceTree = "<group>"; };
+		2287F95A20E469DB002CBE9A /* 433_Attack.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 433_Attack.conf; sourceTree = "<group>"; };
+		2287F95B20E469DB002CBE9A /* 442_Defend.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 442_Defend.conf; sourceTree = "<group>"; };
+		2287F95C20E469DB002CBE9A /* kicker_value.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = kicker_value.conf; sourceTree = "<group>"; };
+		2287F95D20E469DB002CBE9A /* sensitivity.net */ = {isa = PBXFileReference; lastKnownFileType = file; path = sensitivity.net; sourceTree = "<group>"; };
+		2287F95E20E469DB002CBE9A /* eps001.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = eps001.conf; sourceTree = "<group>"; };
+		2287F95F20E469DB002CBE9A /* player.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = player.conf; sourceTree = "<group>"; };
+		2287F96020E469DC002CBE9A /* sensitivity.train */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sensitivity.train; sourceTree = "<group>"; };
+		2287F97020E8CEAD002CBE9A /* PthreadKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PthreadKeys.h; sourceTree = "<group>"; };
+		2287F97120E8D9CF002CBE9A /* PthreadKeys.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PthreadKeys.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2287F80520E08AB6002CBE9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2287F7FF20E08AB6002CBE9A = {
+			isa = PBXGroup;
+			children = (
+				2287F80A20E08AB6002CBE9A /* FootballAgentDemo */,
+				2287F80920E08AB6002CBE9A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2287F80920E08AB6002CBE9A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2287F80820E08AB6002CBE9A /* FootballAgentDemo2.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2287F80A20E08AB6002CBE9A /* FootballAgentDemo */ = {
+			isa = PBXGroup;
+			children = (
+				2287F93220E29F62002CBE9A /* conf */,
+				2287F82720E08C3A002CBE9A /* src */,
+				2287F80B20E08AB6002CBE9A /* AppDelegate.h */,
+				2287F80C20E08AB6002CBE9A /* AppDelegate.m */,
+				2287F80E20E08AB6002CBE9A /* ViewController.h */,
+				2287F80F20E08AB6002CBE9A /* ViewController.m */,
+				2287F81120E08AB6002CBE9A /* Main.storyboard */,
+				2287F81420E08AB6002CBE9A /* Assets.xcassets */,
+				2287F81620E08AB6002CBE9A /* LaunchScreen.storyboard */,
+				2287F81920E08AB6002CBE9A /* Info.plist */,
+				2287F81A20E08AB6002CBE9A /* main.m */,
+				2287F82120E08C18002CBE9A /* FootballRobots.h */,
+				2287F82220E08C18002CBE9A /* FootballRobots.mm */,
+				2287F82420E08C2E002CBE9A /* RobotMain.cpp */,
+				2287F82520E08C2E002CBE9A /* RobotMain.hpp */,
+			);
+			path = FootballAgentDemo;
+			sourceTree = "<group>";
+		};
+		2287F82720E08C3A002CBE9A /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2287F84020E092B1002CBE9A /* ActionEffector.cpp */,
+				2287F86620E092B4002CBE9A /* ActionEffector.h */,
+				2287F84B20E092B2002CBE9A /* Agent.cpp */,
+				2287F87E20E092B6002CBE9A /* Agent.h */,
+				2287F86B20E092B4002CBE9A /* Analyser.cpp */,
+				2287F87520E092B5002CBE9A /* Analyser.h */,
+				2287F86720E092B4002CBE9A /* BallState.h */,
+				2287F85A20E092B3002CBE9A /* BaseState.cpp */,
+				2287F83220E092B1002CBE9A /* BaseState.h */,
+				2287F89420E092B7002CBE9A /* BasicCommand.cpp */,
+				2287F89320E092B7002CBE9A /* BasicCommand.h */,
+				2287F89F20E092B8002CBE9A /* BehaviorAttack.cpp */,
+				2287F86020E092B4002CBE9A /* BehaviorAttack.h */,
+				2287F84F20E092B2002CBE9A /* BehaviorBase.cpp */,
+				2287F83E20E092B1002CBE9A /* BehaviorBase.h */,
+				2287F85420E092B3002CBE9A /* BehaviorBlock.cpp */,
+				2287F83420E092B1002CBE9A /* BehaviorBlock.h */,
+				2287F86120E092B4002CBE9A /* BehaviorDefense.cpp */,
+				2287F85520E092B3002CBE9A /* BehaviorDefense.h */,
+				2287F89020E092B7002CBE9A /* BehaviorDribble.cpp */,
+				2287F87420E092B5002CBE9A /* BehaviorDribble.h */,
+				2287F87A20E092B5002CBE9A /* BehaviorFormation.cpp */,
+				2287F82920E092B0002CBE9A /* BehaviorFormation.h */,
+				2287F87F20E092B6002CBE9A /* BehaviorGoalie.cpp */,
+				2287F84A20E092B2002CBE9A /* BehaviorGoalie.h */,
+				2287F85720E092B3002CBE9A /* BehaviorHold.cpp */,
+				2287F84220E092B1002CBE9A /* BehaviorHold.h */,
+				2287F84120E092B1002CBE9A /* BehaviorIntercept.cpp */,
+				2287F85820E092B3002CBE9A /* BehaviorIntercept.h */,
+				2287F89920E092B8002CBE9A /* BehaviorMark.cpp */,
+				2287F85B20E092B3002CBE9A /* BehaviorMark.h */,
+				2287F86220E092B4002CBE9A /* BehaviorPass.cpp */,
+				2287F88920E092B6002CBE9A /* BehaviorPass.h */,
+				2287F87120E092B5002CBE9A /* BehaviorPenalty.cpp */,
+				2287F86E20E092B5002CBE9A /* BehaviorPenalty.h */,
+				2287F88D20E092B7002CBE9A /* BehaviorPosition.cpp */,
+				2287F84420E092B2002CBE9A /* BehaviorPosition.h */,
+				2287F88E20E092B7002CBE9A /* BehaviorSetplay.cpp */,
+				2287F85220E092B3002CBE9A /* BehaviorSetplay.h */,
+				2287F82E20E092B0002CBE9A /* BehaviorShoot.cpp */,
+				2287F88F20E092B7002CBE9A /* BehaviorShoot.h */,
+				2287F87020E092B5002CBE9A /* Client.cpp */,
+				2287F83620E092B1002CBE9A /* Client.h */,
+				2287F86C20E092B4002CBE9A /* Coach.cpp */,
+				2287F86320E092B4002CBE9A /* Coach.h */,
+				2287F84920E092B2002CBE9A /* CommandSender.cpp */,
+				2287F84820E092B2002CBE9A /* CommandSender.h */,
+				2287F86520E092B4002CBE9A /* CommunicateSystem.cpp */,
+				2287F83A20E092B1002CBE9A /* CommunicateSystem.h */,
+				2287F88C20E092B7002CBE9A /* Dasher.cpp */,
+				2287F82F20E092B0002CBE9A /* Dasher.h */,
+				2287F87320E092B5002CBE9A /* DecisionData.cpp */,
+				2287F88420E092B6002CBE9A /* DecisionData.h */,
+				2287F84C20E092B2002CBE9A /* DecisionTree.cpp */,
+				2287F88620E092B6002CBE9A /* DecisionTree.h */,
+				2287F85020E092B2002CBE9A /* DynamicDebug.cpp */,
+				2287F87C20E092B6002CBE9A /* DynamicDebug.h */,
+				2287F84D20E092B2002CBE9A /* Evaluation.cpp */,
+				2287F88820E092B6002CBE9A /* Evaluation.h */,
+				2287F84720E092B2002CBE9A /* Formation.cpp */,
+				2287F86F20E092B5002CBE9A /* Formation.h */,
+				2287F88320E092B6002CBE9A /* FormationTactics.cpp */,
+				2287F88720E092B6002CBE9A /* FormationTactics.h */,
+				2287F84E20E092B2002CBE9A /* Geometry.cpp */,
+				2287F89220E092B7002CBE9A /* Geometry.h */,
+				2287F87620E092B5002CBE9A /* InfoState.cpp */,
+				2287F83D20E092B1002CBE9A /* InfoState.h */,
+				2287F83820E092B1002CBE9A /* InterceptInfo.cpp */,
+				2287F86A20E092B4002CBE9A /* InterceptInfo.h */,
+				2287F88520E092B6002CBE9A /* InterceptModel.cpp */,
+				2287F82B20E092B0002CBE9A /* InterceptModel.h */,
+				2287F83B20E092B1002CBE9A /* Kicker.cpp */,
+				2287F85320E092B3002CBE9A /* Kicker.h */,
+				2287F85120E092B2002CBE9A /* Logger.cpp */,
+				2287F86920E092B4002CBE9A /* Logger.h */,
+				2287F89A20E092B8002CBE9A /* main.cpp */,
+				2287F89820E092B8002CBE9A /* Net.cpp */,
+				2287F84320E092B1002CBE9A /* Net.h */,
+				2287F89520E092B7002CBE9A /* NetworkTest.cpp */,
+				2287F89620E092B7002CBE9A /* NetworkTest.h */,
+				2287F86820E092B4002CBE9A /* Observer.cpp */,
+				2287F89B20E092B8002CBE9A /* Observer.h */,
+				2287F84520E092B2002CBE9A /* ParamEngine.cpp */,
+				2287F8A020E092B8002CBE9A /* ParamEngine.h */,
+				2287F87720E092B5002CBE9A /* Parser.cpp */,
+				2287F89720E092B7002CBE9A /* Parser.h */,
+				2287F84620E092B2002CBE9A /* Player.cpp */,
+				2287F87D20E092B6002CBE9A /* Player.h */,
+				2287F87220E092B5002CBE9A /* PlayerParam.cpp */,
+				2287F89120E092B7002CBE9A /* PlayerParam.h */,
+				2287F89C20E092B8002CBE9A /* PlayerState.cpp */,
+				2287F83520E092B1002CBE9A /* PlayerState.h */,
+				2287F82820E092B0002CBE9A /* Plotter.cpp */,
+				2287F8A120E092B8002CBE9A /* Plotter.h */,
+				2287F86420E092B4002CBE9A /* PositionInfo.cpp */,
+				2287F85E20E092B3002CBE9A /* PositionInfo.h */,
+				2287F82A20E092B0002CBE9A /* ServerParam.cpp */,
+				2287F86D20E092B4002CBE9A /* ServerParam.h */,
+				2287F85920E092B3002CBE9A /* Simulator.cpp */,
+				2287F88020E092B6002CBE9A /* Simulator.h */,
+				2287F83020E092B0002CBE9A /* Strategy.cpp */,
+				2287F83F20E092B1002CBE9A /* Strategy.h */,
+				2287F83720E092B1002CBE9A /* Tackler.cpp */,
+				2287F82C20E092B0002CBE9A /* Tackler.h */,
+				2287F85C20E092B3002CBE9A /* Thread.cpp */,
+				2287F82D20E092B0002CBE9A /* Thread.h */,
+				2287F83C20E092B1002CBE9A /* TimeTest.cpp */,
+				2287F85F20E092B3002CBE9A /* TimeTest.h */,
+				2287F83120E092B1002CBE9A /* Trainer.cpp */,
+				2287F89D20E092B8002CBE9A /* Trainer.h */,
+				2287F88120E092B6002CBE9A /* Types.cpp */,
+				2287F87920E092B5002CBE9A /* Types.h */,
+				2287F89E20E092B8002CBE9A /* UDPSocket.cpp */,
+				2287F85D20E092B3002CBE9A /* UDPSocket.h */,
+				2287F88220E092B6002CBE9A /* Utilities.cpp */,
+				2287F83920E092B1002CBE9A /* Utilities.h */,
+				2287F88B20E092B7002CBE9A /* VisualSystem.cpp */,
+				2287F87820E092B5002CBE9A /* VisualSystem.h */,
+				2287F88A20E092B7002CBE9A /* WorldModel.cpp */,
+				2287F83320E092B1002CBE9A /* WorldModel.h */,
+				2287F85620E092B3002CBE9A /* WorldState.cpp */,
+				2287F87B20E092B5002CBE9A /* WorldState.h */,
+				2287F95220E37747002CBE9A /* ConfFilePath.cpp */,
+				2287F95320E37747002CBE9A /* ConfFilePath.hpp */,
+				2287F97020E8CEAD002CBE9A /* PthreadKeys.h */,
+				2287F97120E8D9CF002CBE9A /* PthreadKeys.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		2287F93220E29F62002CBE9A /* conf */ = {
+			isa = PBXGroup;
+			children = (
+				2287F95A20E469DB002CBE9A /* 433_Attack.conf */,
+				2287F95720E469DB002CBE9A /* 433_Defend.conf */,
+				2287F95520E469DB002CBE9A /* 442_Attack.conf */,
+				2287F95B20E469DB002CBE9A /* 442_Defend.conf */,
+				2287F95920E469DB002CBE9A /* eps01.conf */,
+				2287F95E20E469DB002CBE9A /* eps001.conf */,
+				2287F95C20E469DB002CBE9A /* kicker_value.conf */,
+				2287F95F20E469DB002CBE9A /* player.conf */,
+				2287F95D20E469DB002CBE9A /* sensitivity.net */,
+				2287F96020E469DC002CBE9A /* sensitivity.train */,
+				2287F95620E469DB002CBE9A /* server.conf */,
+				2287F95820E469DB002CBE9A /* train.conf */,
+			);
+			path = conf;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2287F80720E08AB6002CBE9A /* FootballAgentDemo2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2287F81E20E08AB6002CBE9A /* Build configuration list for PBXNativeTarget "FootballAgentDemo2" */;
+			buildPhases = (
+				2287F80420E08AB6002CBE9A /* Sources */,
+				2287F80520E08AB6002CBE9A /* Frameworks */,
+				2287F80620E08AB6002CBE9A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FootballAgentDemo2;
+			productName = FootballAgentDemo;
+			productReference = 2287F80820E08AB6002CBE9A /* FootballAgentDemo2.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2287F80020E08AB6002CBE9A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = lili;
+				TargetAttributes = {
+					2287F80720E08AB6002CBE9A = {
+						CreatedOnToolsVersion = 9.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 2287F80320E08AB6002CBE9A /* Build configuration list for PBXProject "FootballAgentDemo2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2287F7FF20E08AB6002CBE9A;
+			productRefGroup = 2287F80920E08AB6002CBE9A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2287F80720E08AB6002CBE9A /* FootballAgentDemo2 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2287F80620E08AB6002CBE9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2287F96120E469DC002CBE9A /* 442_Attack.conf in Resources */,
+				2287F81820E08AB6002CBE9A /* LaunchScreen.storyboard in Resources */,
+				2287F96720E469DC002CBE9A /* 442_Defend.conf in Resources */,
+				2287F96320E469DC002CBE9A /* 433_Defend.conf in Resources */,
+				2287F96A20E469DC002CBE9A /* eps001.conf in Resources */,
+				2287F96C20E469DC002CBE9A /* sensitivity.train in Resources */,
+				2287F81520E08AB6002CBE9A /* Assets.xcassets in Resources */,
+				2287F96B20E469DC002CBE9A /* player.conf in Resources */,
+				2287F81320E08AB6002CBE9A /* Main.storyboard in Resources */,
+				2287F96420E469DC002CBE9A /* train.conf in Resources */,
+				2287F96920E469DC002CBE9A /* sensitivity.net in Resources */,
+				2287F96220E469DC002CBE9A /* server.conf in Resources */,
+				2287F96820E469DC002CBE9A /* kicker_value.conf in Resources */,
+				2287F96520E469DC002CBE9A /* eps01.conf in Resources */,
+				2287F96620E469DC002CBE9A /* 433_Attack.conf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2287F80420E08AB6002CBE9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2287F8AA20E092B8002CBE9A /* TimeTest.cpp in Sources */,
+				2287F8BB20E092B8002CBE9A /* Simulator.cpp in Sources */,
+				2287F8B420E092B8002CBE9A /* Geometry.cpp in Sources */,
+				2287F8B520E092B8002CBE9A /* BehaviorBase.cpp in Sources */,
+				2287F8B920E092B8002CBE9A /* WorldState.cpp in Sources */,
+				2287F8C320E092B8002CBE9A /* Analyser.cpp in Sources */,
+				2287F8D220E092B8002CBE9A /* VisualSystem.cpp in Sources */,
+				2287F81020E08AB6002CBE9A /* ViewController.m in Sources */,
+				2287F8DA20E092B8002CBE9A /* BehaviorMark.cpp in Sources */,
+				2287F95420E37747002CBE9A /* ConfFilePath.cpp in Sources */,
+				2287F8AE20E092B8002CBE9A /* Player.cpp in Sources */,
+				2287F8AF20E092B8002CBE9A /* Formation.cpp in Sources */,
+				2287F8DB20E092B8002CBE9A /* main.cpp in Sources */,
+				2287F8D420E092B8002CBE9A /* BehaviorPosition.cpp in Sources */,
+				2287F8A620E092B8002CBE9A /* Trainer.cpp in Sources */,
+				2287F8A520E092B8002CBE9A /* Strategy.cpp in Sources */,
+				2287F8CD20E092B8002CBE9A /* Types.cpp in Sources */,
+				2287F8CB20E092B8002CBE9A /* BehaviorFormation.cpp in Sources */,
+				2287F8AC20E092B8002CBE9A /* BehaviorIntercept.cpp in Sources */,
+				2287F82620E08C2E002CBE9A /* RobotMain.cpp in Sources */,
+				2287F97220E8D9CF002CBE9A /* PthreadKeys.cpp in Sources */,
+				2287F8C920E092B8002CBE9A /* InfoState.cpp in Sources */,
+				2287F8D520E092B8002CBE9A /* BehaviorSetplay.cpp in Sources */,
+				2287F8CA20E092B8002CBE9A /* Parser.cpp in Sources */,
+				2287F8A320E092B8002CBE9A /* ServerParam.cpp in Sources */,
+				2287F8A920E092B8002CBE9A /* Kicker.cpp in Sources */,
+				2287F81B20E08AB6002CBE9A /* main.m in Sources */,
+				2287F8BF20E092B8002CBE9A /* BehaviorPass.cpp in Sources */,
+				2287F8CC20E092B8002CBE9A /* BehaviorGoalie.cpp in Sources */,
+				2287F8B320E092B8002CBE9A /* Evaluation.cpp in Sources */,
+				2287F8C520E092B8002CBE9A /* Client.cpp in Sources */,
+				2287F8CF20E092B8002CBE9A /* FormationTactics.cpp in Sources */,
+				2287F8C620E092B8002CBE9A /* BehaviorPenalty.cpp in Sources */,
+				2287F80D20E08AB6002CBE9A /* AppDelegate.m in Sources */,
+				2287F8C720E092B8002CBE9A /* PlayerParam.cpp in Sources */,
+				2287F8C020E092B8002CBE9A /* PositionInfo.cpp in Sources */,
+				2287F8BD20E092B8002CBE9A /* Thread.cpp in Sources */,
+				2287F8D020E092B8002CBE9A /* InterceptModel.cpp in Sources */,
+				2287F8D920E092B8002CBE9A /* Net.cpp in Sources */,
+				2287F8A220E092B8002CBE9A /* Plotter.cpp in Sources */,
+				2287F8A820E092B8002CBE9A /* InterceptInfo.cpp in Sources */,
+				2287F8C120E092B8002CBE9A /* CommunicateSystem.cpp in Sources */,
+				2287F8BA20E092B8002CBE9A /* BehaviorHold.cpp in Sources */,
+				2287F8B020E092B8002CBE9A /* CommandSender.cpp in Sources */,
+				2287F8D720E092B8002CBE9A /* BasicCommand.cpp in Sources */,
+				2287F8AB20E092B8002CBE9A /* ActionEffector.cpp in Sources */,
+				2287F8B720E092B8002CBE9A /* Logger.cpp in Sources */,
+				2287F82320E08C18002CBE9A /* FootballRobots.mm in Sources */,
+				2287F8DC20E092B8002CBE9A /* PlayerState.cpp in Sources */,
+				2287F8B220E092B8002CBE9A /* DecisionTree.cpp in Sources */,
+				2287F8D320E092B8002CBE9A /* Dasher.cpp in Sources */,
+				2287F8AD20E092B8002CBE9A /* ParamEngine.cpp in Sources */,
+				2287F8D820E092B8002CBE9A /* NetworkTest.cpp in Sources */,
+				2287F8D120E092B8002CBE9A /* WorldModel.cpp in Sources */,
+				2287F8D620E092B8002CBE9A /* BehaviorDribble.cpp in Sources */,
+				2287F8BC20E092B8002CBE9A /* BaseState.cpp in Sources */,
+				2287F8C420E092B8002CBE9A /* Coach.cpp in Sources */,
+				2287F8C220E092B8002CBE9A /* Observer.cpp in Sources */,
+				2287F8C820E092B8002CBE9A /* DecisionData.cpp in Sources */,
+				2287F8DE20E092B8002CBE9A /* BehaviorAttack.cpp in Sources */,
+				2287F8B120E092B8002CBE9A /* Agent.cpp in Sources */,
+				2287F8CE20E092B8002CBE9A /* Utilities.cpp in Sources */,
+				2287F8B620E092B8002CBE9A /* DynamicDebug.cpp in Sources */,
+				2287F8DD20E092B8002CBE9A /* UDPSocket.cpp in Sources */,
+				2287F8BE20E092B8002CBE9A /* BehaviorDefense.cpp in Sources */,
+				2287F8B820E092B8002CBE9A /* BehaviorBlock.cpp in Sources */,
+				2287F8A720E092B8002CBE9A /* Tackler.cpp in Sources */,
+				2287F8A420E092B8002CBE9A /* BehaviorShoot.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2287F81120E08AB6002CBE9A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2287F81220E08AB6002CBE9A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2287F81620E08AB6002CBE9A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2287F81720E08AB6002CBE9A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2287F81C20E08AB6002CBE9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		2287F81D20E08AB6002CBE9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2287F81F20E08AB6002CBE9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MH4ZLK687Z;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				INFOPLIST_FILE = FootballAgentDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sport.SportNative.FootballAgentDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2287F82020E08AB6002CBE9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MH4ZLK687Z;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				INFOPLIST_FILE = FootballAgentDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sport.SportNative.FootballAgentDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2287F80320E08AB6002CBE9A /* Build configuration list for PBXProject "FootballAgentDemo2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2287F81C20E08AB6002CBE9A /* Debug */,
+				2287F81D20E08AB6002CBE9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2287F81E20E08AB6002CBE9A /* Build configuration list for PBXNativeTarget "FootballAgentDemo2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2287F81F20E08AB6002CBE9A /* Debug */,
+				2287F82020E08AB6002CBE9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2287F80020E08AB6002CBE9A /* Project object */;
+}

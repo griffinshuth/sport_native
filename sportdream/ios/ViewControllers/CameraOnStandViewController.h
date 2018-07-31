@@ -10,6 +10,7 @@
 #import "CameraSlowMotionRecord.h"
 #import "h264encode.h"
 #import "LocalWifiNetwork.h"
+#import "MBProgressHUD.h"
 
 @interface H264FrameMetaData : NSObject
 @property (nonatomic,assign) int8_t  type;  //帧类型：1代表pps,2 代表sps,3代表I帧，4代表P帧
@@ -25,16 +26,20 @@
 
 enum CameraType
 {
-  CameraType_NORMAL,
-  CameraType_COLSE_UP,
-  CameraType_GLOBAL,
-  CameraType_PARTIAL,
+  CameraType_MAIN,     //主镜头
+  CameraType_BALL,     //跟踪篮球或足球
+  CameraType_PART,     //局部赛场镜头
+  CameraType_FEATURE,  //人物特写镜头
+  CameraType_AUDIENCE, //观众镜头
+  CameraType_MOVE,     //移动镜头，无特定功能，比较自由
 };
 
 @interface CameraOnStandViewController : UIViewController<CameraSlowMotionRecordDelegate,h264encodeDelegate,LocalWifiNetworkDelegate>
 @property (nonatomic,strong) NSString* mDeviceID;
 @property (nonatomic,assign) int mRoomID;
-@property (nonatomic,strong) NSString* mPositionName;
 @property (nonatomic,strong) NSString* mCameraName;
 @property (nonatomic,assign) int mCameraType;
+@property (nonatomic,strong) NSString* highlightIP;
+@property (nonatomic,assign) BOOL isSlowMotion;
+@property (nonatomic,assign) BOOL canAutoGenerateHighlight;
 @end

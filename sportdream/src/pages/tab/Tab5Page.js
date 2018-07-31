@@ -25,10 +25,10 @@ import ImagePicker from 'react-native-image-crop-picker';
 var QiniuModule = NativeModules.QiniuModule;
 const QiniuModuleEmitter = new NativeEventEmitter(QiniuModule);
 
-import {get,post} from '../../fetch'
+import {get,post,uploadurl,cloudStorageDomain} from '../../fetch'
 const createAction = type => payload => ({type,payload})
 
-var domain = "http://grassroot.qiniudn.com/"
+var domain = cloudStorageDomain
 
 import {NavigationActions} from 'react-navigation'
 import {connect} from 'dva'
@@ -71,7 +71,7 @@ export default class Tab5Page extends Component{
     }
 
     headImageUpload = async(nativepath)=>{
-        var result = await QiniuModule.upload(nativepath);
+        var result = await QiniuModule.upload(nativepath,uploadurl);
         var url = domain + result.name;
         //Toast.info(result.name);
         var result = await post("/updateHeaderImage",{token:this.props.appNS.token,url:url})

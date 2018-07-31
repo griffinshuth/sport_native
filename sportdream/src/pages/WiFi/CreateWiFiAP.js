@@ -1,5 +1,8 @@
 import React from 'react'
-import {} from 'antd-mobile'
+import {
+    Button,
+    Toast
+} from 'antd-mobile'
 import {
     View,
     Text,
@@ -18,19 +21,23 @@ export default class App extends React.Component{
         }
     }
 
-    getApState = async()=>{
-        var result = await WiFiAPModule.getWifiAPConfig();
-        this.setState({apState:JSON.stringify(result)})
-    }
-
     componentDidMount(){
-        this.getApState();
+        WiFiAPModule.getWifiApState().then((state)=>{
+            if(state){
+                Toast.info("热点开启中")
+            }else{
+                Toast.info("热点关闭中")
+            }
+        })
     }
     render(){
         return (
             <View>
                 <ToolBar title="创建热点" navigation={this.props.navigation}/>
                 <Text>{this.state.apState}</Text>
+                <Button onClick={()=>{
+                    WiFiAPModule.openAPUI();
+                }}>打开热点</Button>
             </View>
         )
     }

@@ -8,9 +8,9 @@
 
 #import "LocalWifiNetwork.h"
 
-//const int UdpPort = 8888;
-//const int VideoUdpPort = 9888;
-//const int TcpPort = 6666;
+const int default_udp_port = 8888;   //接收客户端查询服务器IP的udp端口号
+const int director_tcp_port = 6666; //导播服务器tcp端口
+const int android_temp_tcp_port = 3333; //由于android手机无法收到udp数据，所以使用tcp连接发服务器ip发送给android客户端
 
 @interface LocalWifiNetwork() <GCDAsyncUdpSocketDelegate,GCDAsyncSocketDelegate>
 
@@ -24,18 +24,18 @@
   NSString* serverIP;  //要连接的服务器IP，只有客户端模式有效
   GCDAsyncUdpSocket* udpSocket;//如果是客户端模式，则代表发送广播包，并接受服务器IP，如果是服务器模式，则代表接受广播包，并回应客户端
   GCDAsyncSocket *tcpSocket; //客户端模式则为发起连接的一方，服务器模式则为接受连接的一方
-  //GCDAsyncUdpSocket* udpVideoSocket; //只有服务器模式使用，代表接受音视频数据
   SocketBuffer* socketBuffer; //客户端模式使用
   NSMutableArray *connectedSockets; //服务器模式使用
   GCDAsyncSocket *androidTempTcpSocket; //服务器模式使用只用于android端
 }
 
+//默认初始化函数，使用默认的udp和tcp端口号
 -(id)initWithType:(BOOL)isServer
 {
   self = [super init];
   if(self){
-    UdpPort = 8888;
-    TcpPort = 6666;
+    UdpPort = default_udp_port;
+    TcpPort = director_tcp_port;
     _isServer = isServer;
     udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     [udpSocket bindToPort:UdpPort error:nil];
@@ -63,6 +63,7 @@
   return self;
 }
 
+//启动服务器
 -(id)initServerWithUdpPort:(int)udp TcpPort:(int)tcp
 {
   self = [super self];
@@ -92,6 +93,7 @@
   return self;
 }
 
+//启动客户端
 -(id)initClientWithUdpPort:(int)udp TcpPort:(int)tcp
 {
   self = [super self];
@@ -151,6 +153,16 @@
   }
 }
 
+-(void)connectServerByIP:(NSString*)ip
+{
+  if(!_isServer){
+    NSError* error = nil;
+    if(![tcpSocket connectToHost:ip onPort:TcpPort error:&error]){
+      NSLog(@"Error connecting: %@", error);
+    }
+  }
+}
+
 -(void)sendUDPData:(NSString*)str ip:(NSString*)ip port:(int)port
 {
   NSData *data =[str dataUsingEncoding:NSUTF8StringEncoding];
@@ -181,7 +193,7 @@
       [self.delegate broadcastReceived:self ip:ip];
     }else if([aStr isEqualToString:@"androidbroadcast"]){
       NSError *error = nil;
-      if ([androidTempTcpSocket connectToHost:ip onPort:3333 error:&error])
+      if ([androidTempTcpSocket connectToHost:ip onPort:android_temp_tcp_port error:&error])
       {
         NSLog(@"Error connecting: %@", error);
       }

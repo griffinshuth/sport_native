@@ -50,7 +50,7 @@ public class QiniuModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void upload(final String filepath, final Promise promise){
+    public void upload(final String filepath,final String uploadTokenUrl, final Promise promise){
 
         new Thread(){
             @Override
@@ -59,7 +59,7 @@ public class QiniuModule extends ReactContextBaseJavaModule {
                 String token = null;
                 byte[] b = null;
                 try {
-                    URL url = new URL("http://192.168.0.104/getUploadToken?bucket=grassroot");
+                    URL url = new URL(uploadTokenUrl);
                     URLConnection conn = url.openConnection();
                     HttpURLConnection httpconn = (HttpURLConnection)conn;
                     httpconn.setConnectTimeout(6000);
@@ -137,11 +137,17 @@ public class QiniuModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void h264Record(){
+    public void h264Record(String deviceID,int CameraType,String CameraName,int roomID,String highlightIP){
         Activity currentActivity = getCurrentActivity();
         try{
             Class recordActivity = Class.forName("com.sportdream.H264AACHWEncode.RecordActivity");
+            //Class recordActivity = Class.forName("com.sportdream.Activity.H264PlayerActivity");
             Intent intent = new Intent(currentActivity,recordActivity);
+            intent.putExtra("deviceID", deviceID);
+            intent.putExtra("CameraType", CameraType);
+            intent.putExtra("CameraName",CameraName);
+            intent.putExtra("roomID",roomID);
+            intent.putExtra("highlightIP",highlightIP);
             currentActivity.startActivity(intent);
         }catch (Exception e){
             throw new JSApplicationIllegalArgumentException(
@@ -150,11 +156,12 @@ public class QiniuModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void agoraRemoteCamera(){
+    public void agoraRemoteCamera(String AgoraChannelName){
         Activity currentActivity = getCurrentActivity();
         try{
             Class recordActivity = Class.forName("com.sportdream.Activity.AgoraRemoteCamera");
             Intent intent = new Intent(currentActivity,recordActivity);
+            intent.putExtra("AgoraChannelName",AgoraChannelName);
             currentActivity.startActivity(intent);
         }catch (Exception e){
             throw new JSApplicationIllegalArgumentException(
@@ -163,11 +170,15 @@ public class QiniuModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void liveCommentorsActivity(){
+    public void liveCommentorsActivity(String deviceID,int CameraType,String CameraName,int roomID){
         Activity currentActivity = getCurrentActivity();
         try{
             Class recordActivity = Class.forName("com.sportdream.H264AACHWEncode.AudioRecordActivity");
             Intent intent = new Intent(currentActivity,recordActivity);
+            intent.putExtra("deviceID", deviceID);
+            intent.putExtra("CameraType", CameraType);
+            intent.putExtra("CameraName",CameraName);
+            intent.putExtra("roomID",roomID);
             currentActivity.startActivity(intent);
         }catch (Exception e){
             throw new JSApplicationIllegalArgumentException(

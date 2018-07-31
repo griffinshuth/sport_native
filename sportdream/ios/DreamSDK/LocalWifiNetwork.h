@@ -31,6 +31,7 @@
 -(id)initClientWithUdpPort:(int)udp TcpPort:(int)tcp;
 -(void)searchServer;
 -(void)searchDirectorServer;
+-(void)connectServerByIP:(NSString*)ip;
 -(void)clientSendPacket:(uint16_t)packetID data:(NSData*)data;
 -(void)serverSendPacket:(uint16_t)packetID data:(NSData*)data sock:(GCDAsyncSocket *)sock;
 @end
