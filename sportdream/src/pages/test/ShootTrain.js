@@ -81,7 +81,7 @@ export default class App extends React.Component{
     render(){
         return (
             <View style={{flex:1}}>
-                {this.state.valueSlide >= 50?<ToolBar title="智能投篮训练" navigation={this.props.navigation}/>:null}
+                {this.state.valueSlide >= 50?<ToolBar title="智能投篮传球和运球训练" navigation={this.props.navigation}/>:null}
                 <View>
                     <WhiteSpace/>
                     <Slider
