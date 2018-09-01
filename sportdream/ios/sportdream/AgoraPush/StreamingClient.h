@@ -18,5 +18,6 @@ extern int const PCMDataSendLength;
 -(void)startStreaming;
 -(void)stopStreaming;
 - (void)sendYUVData:(unsigned char *)pYUVBuff dataLength:(unsigned int)length;
+- (void)sendRGBAData:(unsigned char *)pRGBABuff dataLength:(unsigned int)length;
 - (void)sendPCMData:(unsigned char*)pPCMData dataLength:(unsigned int)length;
 @end

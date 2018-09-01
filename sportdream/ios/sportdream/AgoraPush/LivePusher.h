@@ -7,10 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface LivePusher : NSObject
 + (void)start:(NSString*)urlOrFileName isRtmp:(BOOL)isRtmp;
 + (void)stop;
++(void)setPlayerNames:(NSString*)myname othername:(NSString*)othername;
++(void)setMatchScores:(int)myscore otherscore:(int)otherscore;
++(void)setMatchTime:(int)currentTime;
 + (void)addLocalYBuffer:(void *)yBuffer
                 uBuffer:(void *)uBuffer
                 vBuffer:(void *)vBuffer

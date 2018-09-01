@@ -15,7 +15,7 @@
 #define kDesiredHeight                                              720.0f
 #define kFrameRate                                                  30.0f
 #define kMaxVideoBitRate                                            650 * 1024
-#define kAVGVideoBitRate                                            1600 * 1024
+#define kAVGVideoBitRate                                            1000 * 1024
 #define kAudioSampleRate                                            44100
 #define kAudioChannels                                              1
 #define kAudioBitRate                                               64000

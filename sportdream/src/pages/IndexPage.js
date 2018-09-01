@@ -60,6 +60,7 @@ export default class IndexPage extends Component {
 
     render() {
         return (
+            <View style={{flex:1}}>
             <TabBar
                 unselectedTintColor="#949494"
                 tintColor="#33A3F4"
@@ -77,7 +78,7 @@ export default class IndexPage extends Component {
                 <TabBar.Item
                     icon={require('../assets/images/tab/group.png')}
                     selectedIcon={require('../assets/images/tab/group_sel.png')}
-                    title="关系"
+                    title="练习"
                     badge={2}
                     selected={this.state.selectedTab === 'redTab'}
                     onPress={() => this.onChangeTab('redTab')}
@@ -87,7 +88,7 @@ export default class IndexPage extends Component {
                 <TabBar.Item
                     icon={require('../assets/images/tab/match.png')}
                     selectedIcon={require('../assets/images/tab/match_sel.png')}
-                    title="比赛"
+                    title="好友"
                     selected={this.state.selectedTab === 'greenTab'}
                     onPress={() => this.onChangeTab('greenTab')}
                 >
@@ -96,7 +97,7 @@ export default class IndexPage extends Component {
                 <TabBar.Item
                     icon={require('../assets/images/tab/shoot.png')}
                     selectedIcon={require('../assets/images/tab/shoot_sel.png')}
-                    title="基本功"
+                    title="消息"
                     selected={this.state.selectedTab === 'Tab4'}
                     onPress={() => this.onChangeTab('Tab4')}
                 >
@@ -112,6 +113,7 @@ export default class IndexPage extends Component {
                     <Tab5Page navigation={this.props.navigation} />
                 </TabBar.Item>
             </TabBar>
+            </View>
         )
     }
 }

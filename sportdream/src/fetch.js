@@ -1,5 +1,5 @@
-var release = "http://sportlive.2310live.com"
-var debug = "http://192.168.0.108"
+var release = "http://sportlive.2310live.com" //101.200.217.82
+var debug = "http://192.168.1.5"
 var server = debug;  //此处是切换服务器地址的地方
 
 export var serverurl = server;

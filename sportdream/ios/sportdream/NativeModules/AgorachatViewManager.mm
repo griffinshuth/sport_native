@@ -160,6 +160,18 @@ RCT_EXPORT_METHOD(initAgora)
   [self.agoraKit enableVideo];
   [self.agoraKit setVideoProfile:AgoraRtc_VideoProfile_360P_4 swapWidthAndHeight:false];
   [self.agoraKit enableAudio];
+  //[self.agoraKit switchCamera];
+}
+
+RCT_EXPORT_METHOD(initAgoraWithoutAudio)
+{
+  self.agoraKit = [AgoraRtcEngineKit sharedEngineWithAppId:@"b46966ee5e7e493496a97ddf6f19b87f" delegate:self];
+  [self.agoraKit setChannelProfile:AgoraRtc_ChannelProfile_LiveBroadcasting];
+  [self.agoraKit setClientRole:AgoraRtc_ClientRole_Broadcaster withKey:nil];
+  [self.agoraKit setMixedAudioFrameParametersWithSampleRate:44100 samplesPerCall:1024];
+  [self.agoraKit enableVideo];
+  [self.agoraKit setVideoProfile:AgoraRtc_VideoProfile_360P_11 swapWidthAndHeight:false];
+  [self.agoraKit disableAudio];
   [self.agoraKit switchCamera];
 }
 
@@ -173,7 +185,8 @@ RCT_EXPORT_METHOD(joinChannel:(NSString*)name)
   [self.agoraKit joinChannelByKey:nil channelName:name info:nil uid:0 joinSuccess:^(NSString* channel,
                                                                                          NSUInteger uid,NSInteger elapsed){
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-  }];
+    NSNumber *myuid = [NSNumber numberWithUnsignedInteger:uid];
+    [self.bridge.eventDispatcher sendAppEventWithName:@"joinChannelSuccess" body:@{@"myuid": myuid}];  }];
   
   [AGVideoProcessing registerPreprocessing:self.agoraKit];
 }
@@ -186,12 +199,19 @@ RCT_EXPORT_METHOD(leaveChannel)
   }];
 }
 
-RCT_EXPORT_METHOD(startRCTRecord)
+RCT_EXPORT_METHOD(startRCTRecord:(NSString*)filename resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 {
   //[self startRecord];
-  NSString* url = @"rtmp://pili-publish.2310live.com/grasslive/singlematch_roomid";
-  [LivePusher start:url isRtmp:true];
+  //NSString* url = @"rtmp://pili-publish.2310live.com/grasslive/singlematch_roomid";
+  NSString* url = filename;
+  [LivePusher start:url isRtmp:false];
   signal(SIGPIPE, SignalHandler);
+  
+  NSArray *documentsPathArr = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *document = [documentsPathArr lastObject];
+    NSString* absoluteUrl = [document stringByAppendingPathComponent:url];
+  resolve(@{@"localpath": absoluteUrl});
 }
 
 RCT_EXPORT_METHOD(stopRCTRecord)
@@ -199,6 +219,21 @@ RCT_EXPORT_METHOD(stopRCTRecord)
   //[self stopRecord];
   [LivePusher stop];
   signal(SIGPIPE, SIG_DFL);
+}
+
+RCT_EXPORT_METHOD(setPlayerNames:(NSString*)myname othername:(NSString*)othername)
+{
+  [LivePusher setPlayerNames:myname othername:othername];
+}
+
+RCT_EXPORT_METHOD(setMatchScores:(int)myscore otherscore:(int)otherscore)
+{
+  [LivePusher setMatchScores:myscore otherscore:otherscore];
+}
+
+RCT_EXPORT_METHOD(setMatchTime:(int)currentTime)
+{
+  [LivePusher setMatchTime:currentTime];
 }
 
 void SignalHandler(int signal) {

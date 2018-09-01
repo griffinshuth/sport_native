@@ -14,6 +14,7 @@
 #import "FFmpegPushClient.h"
 
 @interface LivePusher ()
+//@property (strong,nonatomic) StreamingClient* client;
 @property (strong,nonatomic) FFmpegPushClient* client;
 @property (assign,nonatomic) BOOL isPushing;
 
@@ -38,6 +39,11 @@
 @implementation LivePusher
 {
   uint8* argb_buffer;
+  NSString* _myname;
+  NSString* _othername;
+  int _myscore;
+  int _otherscore;
+  int _currentMatchTime;
 }
 -(id)init
 {
@@ -107,12 +113,45 @@
   [[self sharedPusher] stop];
 }
 
++(void)setPlayerNames:(NSString*)myname othername:(NSString*)othername
+{
+  [[self sharedPusher] setPlayerNames:myname othername:othername];
+}
+
+-(void)setPlayerNames:(NSString*)myname othername:(NSString*)othername
+{
+  _myname = myname;
+  _othername = othername;
+}
+
++(void)setMatchScores:(int)myscore otherscore:(int)otherscore
+{
+  [[self sharedPusher] setMatchScores:myscore otherscore:otherscore];
+}
+
+-(void)setMatchScores:(int)myscore otherscore:(int)otherscore
+{
+  _myscore = myscore;
+  _otherscore = otherscore;
+}
+
++(void)setMatchTime:(int)currentTime
+{
+  [[self sharedPusher] setMatchTime:currentTime];
+}
+
+-(void)setMatchTime:(int)currentTime
+{
+  _currentMatchTime = currentTime;
+}
+
 - (void)start:(NSString*)urlOrFileName isRtmp:(BOOL)isRtmp
 {
   if (self.isPushing) {
     return;
   }
   self.client = [[FFmpegPushClient alloc] initWithUrl:urlOrFileName isRtmp:isRtmp];
+  //self.client = [[StreamingClient alloc] init];
   [self.client startStreaming];
   self.isPushing = YES;
   
@@ -132,6 +171,14 @@
   });
   dispatch_resume(timer2);
   self.audioPublishTimer = timer2;
+  
+  //设置叠加层信息
+  _myname = @"";
+  _othername = @"";
+  _myscore = 0;
+  _otherscore = 0;
+  _currentMatchTime = 0;
+  
 }
 
 - (void)stop
@@ -150,6 +197,12 @@
   self.localVideoBuffer = nil;
   [self.remoteVideoBuffers removeAllObjects];
   self.remoteVideoBuffers = nil;
+  
+  _myname = nil;
+  _othername = nil;
+  _myscore = 0;
+  _otherscore = 0;
+  _currentMatchTime = 0;
 }
 
 #pragma mark add video data
@@ -320,8 +373,56 @@
       }
     }
     
+    //绘制文字图层
+    uint8_t* overlay = (uint8_t*)malloc(_screen_width*_screen_height*4);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef BitmapContext = CGBitmapContextCreate(overlay, _screen_width, _screen_height, 8, _screen_width*4, colorSpace, kCGImageAlphaNoneSkipLast);
+    CGColorSpaceRelease(colorSpace);
+    CGContextTranslateCTM(BitmapContext, 0.0, _screen_height);
+    CGContextScaleCTM(BitmapContext, 1.0, -1.0);
+    UIGraphicsPushContext(BitmapContext);
+    //开始绘制
+    NSTextAlignment alignment = NSTextAlignmentLeft;
+    NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraphStyle.alignment = alignment;
+    NSDictionary* attributes = @{
+                                 NSFontAttributeName:[UIFont systemFontOfSize:30],
+                                 NSForegroundColorAttributeName:[UIColor redColor],
+                                 NSParagraphStyleAttributeName:paragraphStyle
+                                 };
+    //绘制当前时间
+    CGRect timeRect = CGRectMake(0, 0, 200, 50);
+    NSString* timeText = [NSString stringWithFormat:@"时间：%d",_currentMatchTime];
+    [timeText drawInRect:timeRect withAttributes:attributes];
+    //绘制本方的名字和分数
+    CGRect mynameRect = CGRectMake(50, 50, 200, 50);
+    NSString* mynameText = [NSString stringWithFormat:@"名字：%@",_myname];
+    [mynameText drawInRect:mynameRect withAttributes:attributes];
+    CGRect myscoreRect = CGRectMake(50, 100, 200, 50);
+    NSString* myscoreText = [NSString stringWithFormat:@"得分：%d",_myscore];
+    [myscoreText drawInRect:myscoreRect withAttributes:attributes];
+    //绘制对方的名字和分数
+    CGRect othernameRect = CGRectMake(690, 50, 200, 50);
+    NSString* othernameText = [NSString stringWithFormat:@"名字：%@",_othername];
+    [othernameText drawInRect:othernameRect withAttributes:attributes];
+    CGRect otherscoreRect = CGRectMake(690, 100, 200, 50);
+    NSString* otherscoreText = [NSString stringWithFormat:@"得分：%d",_otherscore];
+    [otherscoreText drawInRect:otherscoreRect withAttributes:attributes];
+    UIGraphicsPopContext();
+    CGContextRelease(BitmapContext);
+    //绘制结束
+    for(int i=0;i<_screen_width*_screen_height;i=i+4){
+      if(overlay[i+3] == 0){
+        continue;
+      }
+      argb_buffer[i] = overlay[i];
+      argb_buffer[i+1] = overlay[i+1];
+      argb_buffer[i+2] = overlay[i+2];
+    }
+    
     [self pushVideoRGBAData:argb_buffer dataLength:_screen_width*_screen_height*4];
     free(local_argb);
+    free(overlay);
   }
   
 }

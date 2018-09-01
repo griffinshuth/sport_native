@@ -7,12 +7,14 @@ import {
     NativeModules,
     NativeAppEventEmitter,
     NativeEventEmitter,
-    Platform
+    Platform,
+    Dimensions
 } from 'react-native'
 import {
     WhiteSpace,
     Button,
-    Toast
+    Toast,
+    Flex
 } from 'antd-mobile'
 import Orientation from 'react-native-orientation';
 
@@ -24,6 +26,7 @@ export default class App extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            myuid:null,
             players : [],
             isPushing:false
         }
@@ -40,15 +43,25 @@ export default class App extends React.Component{
     }
 
     componentWillMount(){
+
         AgorachatModule.initAgora();
+
     }
 
     componentDidMount(){
         if(Platform.OS != 'ios'){
             return;
         }
+        this.setState({players:[...this.state.players,0]})
         Orientation.lockToLandscape();
         AgorachatModule.joinChannel("test")
+        this.joinChannelSuccess_subscription = NativeAppEventEmitter.addListener(
+            'joinChannelSuccess',
+            (data)=>{
+                //Toast.info(data.myuid);
+                this.setState({myuid:data.myuid});
+            }
+        )
         this.firstRemoteVideoDecoded_subscription = NativeAppEventEmitter.addListener(
             'firstRemoteVideoDecoded',
             (data) => {
@@ -82,17 +95,18 @@ export default class App extends React.Component{
     }
 
     render(){
+        var {height, width} = Dimensions.get('window');
         return (
         <View style={{flex:1}}>
-            <AgorachatNativeView uid={0} style={{width:160,height:120}}/>
+            <Flex>
             {
                 this.state.players.map((item)=>{
-                    return <View key={item}>
-                        <WhiteSpace/>
-                        <AgorachatNativeView uid={item} style={{width:160,height:120}}/>
-                    </View>
+                    return <Flex.Item key={item}>
+                        <AgorachatNativeView uid={item} style={{height:height}}/>
+                    </Flex.Item>
                 })
             }
+            </Flex>
             <View style={{position:'absolute',bottom:0,right:0}}>
                 <Button onClick={()=>{this.props.navigation.goBack()}} size="large">返回</Button>
                 <WhiteSpace/>

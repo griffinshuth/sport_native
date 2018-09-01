@@ -8,6 +8,7 @@
 
 #import "QiniuManager.h"
 #import "AppDelegate.h"
+#import <Photos/photos.h>
 
 @implementation QiniuManager
 RCT_EXPORT_MODULE(QiniuModule);
@@ -40,6 +41,45 @@ RCT_EXPORT_METHOD(upload:(NSString*)filepath uploadTokenUrl:(NSString*)uploadTok
     resolve(@{@"name": resp[@"key"]});
   }
               option:uploadOption];
+}
+
+RCT_EXPORT_METHOD(getFilePathByAssetsPath:(NSString*)path width:(int)width height:(int)height resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSURL* url = [[NSURL alloc] initWithString:path];
+  NSArray* array = [[NSArray alloc] initWithObjects:url, nil];
+  PHFetchResult* result = [PHAsset fetchAssetsWithALAssetURLs:array options:nil];
+  long count = result.count;
+  [[PHImageManager defaultManager] requestImageForAsset:result.firstObject targetSize:CGSizeMake(width, height) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable Image, NSDictionary * _Nullable info) {
+    if (![[info objectForKey:PHImageResultIsDegradedKey] boolValue]) {
+      NSString *filePath = nil;
+      NSData *data = nil;
+      /*if (UIImagePNGRepresentation(Image) == nil) {
+        data = UIImageJPEGRepresentation(Image, 1.0);
+      } else {
+        data = UIImagePNGRepresentation(Image);
+      }*/
+      
+      data = UIImageJPEGRepresentation(Image, 0.5);
+      
+      //图片保存的路径
+      //这里将图片放在沙盒的documents文件夹中
+      NSString *DocumentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+      
+      //文件管理器
+      NSFileManager *fileManager = [NSFileManager defaultManager];
+      
+      //把刚刚图片转换的data对象拷贝至沙盒中
+      [fileManager createDirectoryAtPath:DocumentsPath withIntermediateDirectories:YES attributes:nil error:nil];
+      NSString *ImagePath = [[NSString alloc] initWithFormat:@"/uploadcache.jpeg"];
+      [fileManager createFileAtPath:[DocumentsPath stringByAppendingString:ImagePath] contents:data attributes:nil];
+      
+      //得到选择后沙盒中图片的完整路径
+      filePath = [[NSString alloc] initWithFormat:@"%@%@", DocumentsPath, ImagePath];
+      
+      resolve(@{@"FilePath": filePath,@"filelen":[NSNumber numberWithLong:data.length]});
+    }
+  }];
 }
 
 RCT_EXPORT_METHOD(Zhibo:(NSString*)url)
@@ -112,13 +152,6 @@ RCT_EXPORT_METHOD(gotoLiveCommentators:(NSString*)deviceID cameraType:(int)camer
   AppDelegate* delegate =  (AppDelegate*)[UIApplication sharedApplication].delegate;
   [delegate gotoLiveCommentatorsViewController:deviceID cameraType:cameraType cameraName:cameraName roomID:roomID];
 }
-
-
-
-
-
-
-
 
 
 

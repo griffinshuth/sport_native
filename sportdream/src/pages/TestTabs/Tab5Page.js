@@ -103,13 +103,14 @@ export default class Tab5Page extends Component{
                                 >
                                 </Image>
                             </View>
+                            <View style={{height:200,width:100,backgroundColor:'red'}}></View>
                             <View style={{flex:1,alignItems:'center'}}>
                                 <TouchableHighlight onPress={()=>{
                                     //Toast.info("上传头像")
                                     ImagePicker.openPicker({
                                         //multiple: true
-                                        cropping: true,
-                                        compressImageQuality:0.1
+                                        //cropping: true
+                                        compressImageQuality:0.5
                                     }).then(image => {
                                         //Toast.info(JSON.stringify(image));
                                         if(image){
@@ -125,6 +126,7 @@ export default class Tab5Page extends Component{
                                 <WhiteSpace/>
                                 <Button size="small" type="primary">{this.props.user.nickname}</Button>
                             </View>
+                            <View style={{height:200,width:100,backgroundColor:'blue'}}></View>
                         </View>
                         <List renderHeader={() => '个人'}>
                             <List.Item

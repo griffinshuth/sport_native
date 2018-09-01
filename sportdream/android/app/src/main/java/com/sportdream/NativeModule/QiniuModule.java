@@ -1,8 +1,15 @@
 package com.sportdream.NativeModule;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.baidu.location.c.a;
@@ -13,6 +20,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.qiniu.android.http.ResponseInfo;
@@ -20,6 +28,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
+import com.qiniu.android.utils.StringUtils;
 
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
@@ -27,6 +36,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,12 +51,31 @@ import java.io.File;
  */
 
 public class QiniuModule extends ReactContextBaseJavaModule {
+    private ReactApplicationContext context;
     public QiniuModule(ReactApplicationContext reactContext){
         super(reactContext);
+        context = reactContext;
     }
     @Override
     public String getName(){
         return "QiniuModule";
+    }
+
+    protected void sendEvent(String eventName, @Nullable WritableMap params){
+        context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName,params);
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = context.getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+
+            cursor.close();
+        }
+        return path;
     }
 
     @ReactMethod
@@ -130,10 +159,52 @@ public class QiniuModule extends ReactContextBaseJavaModule {
                         new UpProgressHandler(){
                             public void progress(String key, double percent){
                                 Log.i("qiniu", key + ": " + percent);
+                                WritableMap params = Arguments.createMap();
+                                params.putDouble("percent",percent);
+                                sendEvent("uploadProgress", params);
                             }
                         }, null));
             }
         }.start();
+    }
+
+    @ReactMethod
+    public void getFilePathByAssetsPath(String path,int width,int height,final Promise promise)
+    {
+        Uri url = Uri.parse(path);
+        String filpath = getImagePath(url,null);
+        //压缩图片，保存到临时文件
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(filpath, options);// 此时返回bm为空
+        options.inJustDecodeBounds = false;
+        int w = options.outWidth;
+        int h = options.outHeight;
+        options.inSampleSize = 2;
+        bitmap = BitmapFactory.decodeFile(filpath, options);
+        String savePath = context.getApplicationContext().getFilesDir()
+                .getAbsolutePath()
+                + "/cache/uploadimage/";
+        File filePic;
+        try {
+            filePic = new File(savePath +  "Cacheuploadimage.jpg");
+            if (!filePic.exists()) {
+                filePic.getParentFile().mkdirs();
+                filePic.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(filePic);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            fos.flush();
+            fos.close();
+
+            String pathresult = filePic.getAbsolutePath();
+            WritableMap map = Arguments.createMap();
+            map.putString("FilePath",pathresult);
+            promise.resolve(map);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @ReactMethod

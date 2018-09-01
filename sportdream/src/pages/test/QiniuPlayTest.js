@@ -36,11 +36,13 @@ export default class App extends React.Component{
         }
     }
     getLiveUrl = async()=>{
-        var play = await post("/getRTMPPlayURL",{streamname:"singlematch_roomid"})
-        this.setState({playUrl:play.url,loading:false})
+        var play = "http://grassroot.qiniudn.com/lpskitnvD0R7qadwy14vfhgLxGGP" //await post("/getRTMPPlayURL",{streamname:"test2"})
+        this.setState({playUrl:play,loading:false})
     }
 
     componentWillMount(){
+        this.getLiveUrl();
+        return;
         var url = this.props.navigation.state.params.url;
         if(url){
             this.setState({playUrl:url,loading:false})

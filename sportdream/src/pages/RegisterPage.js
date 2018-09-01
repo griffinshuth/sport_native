@@ -231,10 +231,6 @@ export default class RegisterPage extends Component{
                         <List.Item arrow="horizontal">性别</List.Item>
                     </Picker>
                 </List>
-                <ImagePicker
-                    files={this.state.images}
-                    onChange={this.onImageChange}
-                />
                 <WhiteSpace/>
                 <Button onClick={this.onRegister} type="primary" loading={false} style={{marginHorizontal:10}}>注册</Button>
             </ScrollView>

@@ -22,6 +22,8 @@ import CountModel from './models/CountModel'
 import TempModel from './models/TempModel'
 import UserModel from './models/UserModel'
 import CurrentAdminMatchModel from './models/CurrentAdminMatchModel'
+import TimeLineModel from './models/TimeLineModel'
+import NearByModel from './models/NearByModel'
 import Router from './router'
 
 const app = create({
@@ -36,6 +38,8 @@ app.model(CountModel);
 app.model(TempModel);
 app.model(UserModel);
 app.model(CurrentAdminMatchModel);
+app.model(TimeLineModel);
+app.model(NearByModel);
 
 //app.router(()=><Router/>)
 app.start();

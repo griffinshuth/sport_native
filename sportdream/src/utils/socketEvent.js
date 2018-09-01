@@ -18,6 +18,9 @@ export const clientEvent = {
     updateBlock:17,
     updateSubstitution:18,
     updateMVPofGame:19,
+    updatebeforetime:20,
+    updatecountdowntime:21,
+    updateShootScore:22
 }
 
 //服务器收到的事件
@@ -44,7 +47,11 @@ export const serverEvent = {
     updateBlock:20,
     updateSubstitution:21,
     updateMVPofGame:22,
-    unsetPermission:23
+    unsetPermission:23,
+    enterShootMatch:24,
+    startShootMatch:25,
+    ShootMatchUpdateScore:26,
+    ShootMatchVideoUrl:27,
 }
 
 export const permissionType = {

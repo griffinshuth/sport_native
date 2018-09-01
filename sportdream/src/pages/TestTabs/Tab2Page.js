@@ -27,6 +27,15 @@ import {
 
 @connect()
 export default class Tab2Page extends Component{
+    static navigationOptions = {
+        tabBarLabel:'关系',
+        tabBarIcon: ({ focused, tintColor }) =>
+            <Image
+                style={[styles.icon, { tintColor: focused ? tintColor : 'gray' }]}
+                source={require('../../assets/images/relation.png')}
+            />,
+    }
+
     constructor(props){
         super(props);
     }

@@ -30,7 +30,7 @@ export default class App extends React.Component{
     }
 
     getLiveUrl = async()=>{
-        var push = await post("/getPublishURL",{streamname:"test2"})
+        var push = "rtmp://pili-publish.2310live.com/grasslive/test2" //await post("/getPublishURL",{streamname:"test2"})
         this.setState({pushUrl:push.url,loading:false})
     }
 

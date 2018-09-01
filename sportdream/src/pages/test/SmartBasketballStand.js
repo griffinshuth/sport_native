@@ -30,8 +30,6 @@ import RemoteControlNativeView from '../../NativeViews/RemoteControlView'
 const BLEPeripheralModule = NativeModules.BLEPeripheralModule;
 const BLEPeripheralEmmiter = new NativeEventEmitter(BLEPeripheralModule);
 
-var Sound = require('react-native-sound')
-
 const window = Dimensions.get('window');
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -39,12 +37,15 @@ const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 //智能篮球架uuid
-//var service = "FFE0";
-//var characteristic = "FFE1";
+var service = "FFE0";
+var characteristic = "FFE1";
 
 //P2P
-var service = "00007e57-0000-1000-8000-00805f9b34fb";
-var characteristic = "13333333-3333-3333-3333-333333330003";
+//var service = "00007e57-0000-1000-8000-00805f9b34fb";
+//var characteristic = "13333333-3333-3333-3333-333333330003";
+
+var BaiduASRModule = NativeModules.BaiduASRModule;
+const BaiduASRModuleEmitter = new NativeEventEmitter(BaiduASRModule);
 
 export default class App extends Component {
     constructor(){
@@ -53,8 +54,9 @@ export default class App extends Component {
         this.state = {
             scanning:false,
             peripherals: new Map(),
+            connectedPeripheralId:null,
             appState: '',
-            centrals:[]
+            centrals:[],
         }
 
         this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
@@ -102,37 +104,17 @@ export default class App extends Component {
         }
 
         //播放声音
-        //Sound.setCategory("PlayAndRecord");
-        Sound.setCategory("Playback");
-        this.whoosh = new Sound('silence10sec.mp3', Sound.MAIN_BUNDLE, (error) => {
-            if (error) {
-                console.log('failed to load the sound', error);
-                return;
-            }
-            // loaded successfully
-            console.log('duration in seconds: ' + this.whoosh.getDuration() + 'number of channels: ' + this.whoosh.getNumberOfChannels());
+        if(Platform.OS == 'ios'){
+            BaiduASRModule.startListen();
+        }else{
+            BaiduASRModule.init();
+            BaiduASRModule.initTTS();
+        }
 
-            // Play the sound with an onEnd callback
-            this.whoosh.play((success) => {
-                if (success) {
-                    console.log('successfully finished playing');
-                } else {
-                    console.log('playback failed due to audio decoding errors');
-                    // reset the player to its uninitialized state (android only)
-                    // this is the only option to recover after an error occured and use the player again
-                    this.whoosh.reset();
-                }
-            });
-
-            // Reduce the volume by half
-            this.whoosh.setVolume(0.5);
-
-            // Position the sound to the full right in a stereo field
-            this.whoosh.setPan(1);
-
-            // Loop indefinitely until stop() is called
-            this.whoosh.setNumberOfLoops(-1);
-        });
+        this.subscription = BaiduASRModuleEmitter.addListener(
+            'onVoiceRecognize',
+            this.onVoiceRecognize
+        );
     }
 
     handleAppStateChange(nextAppState) {
@@ -159,15 +141,19 @@ export default class App extends Component {
         this.handlerStop.remove();
         this.handlerDisconnect.remove();
         this.handlerUpdate.remove();
-        this.whoosh.stop(() => {
 
-        });
-        // Release the audio player resource
-        this.whoosh.release();
         const list = Array.from(this.state.peripherals.values());
         for(var i=0;i<list.length;i++){
             BleManager.disconnect(list[i].id);
         }
+
+        if(Platform.OS == 'ios'){
+            BaiduASRModule.endListen();
+        }else{
+            BaiduASRModule.destroy();
+            BaiduASRModule.destroyTTS();
+        }
+        this.subscription.remove();
     }
 
     handleDisconnectedPeripheral(data) {
@@ -176,9 +162,9 @@ export default class App extends Component {
         if (peripheral) {
             peripheral.connected = false;
             peripherals.set(peripheral.id, peripheral);
-            this.setState({peripherals});
+            this.setState({peripherals,connectedPeripheralId:null});
+            this.startScan();
         }
-        console.log('Disconnected from ' + data.peripheral);
     }
 
     bytesToStringcustom(arr) {
@@ -235,15 +221,38 @@ export default class App extends Component {
     handleUpdateValueForCharacteristic(data) {
         //智能篮球架协议解析
         /*console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
-        var msg = "";
-        for(var i=0;i<data.value.length;i++){
-            var t = String.fromCharCode(data.value[i]);
-            msg += t;
-        }
-        Toast.info(msg,1);*/
+         var msg = "";
+         for(var i=0;i<data.value.length;i++){
+         var t = String.fromCharCode(data.value[i]);
+         msg += t;
+         }
+         Toast.info(msg,1);*/
 
         //P2P
-        Toast.info(this.bytesToStringcustom(data.value));
+
+        //Toast.info(this.bytesToStringcustom(data.value));
+
+        var result = this.bytesToStringcustom(data.value);
+        if(result == "started"){
+            BaiduASRModule.speak("go")
+        }else if(result == "down:tosmall"){
+            BaiduASRModule.speak("下面舵机达到最小角度")
+        }else if(result == "down:tobig"){
+            BaiduASRModule.speak("下面舵机达到最大角度")
+        }else if(result == "up:tosmall"){
+            BaiduASRModule.speak("上面舵机达到最小角度")
+        }else if(result == "up:tobig"){
+            BaiduASRModule.speak("上面舵机达到最大角度")
+        }else{
+            var arr = result.split('-');
+            if(arr.length == 2){
+                if(arr[0] == "down:info"){
+                    BaiduASRModule.speak("下面舵机的角度是"+arr[1]+"度");
+                }else if(arr[0] == "up:info"){
+                    BaiduASRModule.speak("上面舵机的角度是"+arr[1]+"度");
+                }
+            }
+        }
     }
 
     handleStopScan() {
@@ -271,6 +280,9 @@ export default class App extends Component {
 
     handleDiscoverPeripheral(peripheral){
         var peripherals = this.state.peripherals;
+        if(peripheral.name != "BT05-A"){
+            return;
+        }
         if (!peripherals.has(peripheral.id)){
             console.log('Got ble peripheral', peripheral);
             peripherals.set(peripheral.id, peripheral);
@@ -279,20 +291,19 @@ export default class App extends Component {
     }
 
     remoteControlCommand = (event)=>{
-        //Toast.info(JSON.stringify(event.nativeEvent));
-        //return;
-        if(!this.activePeripheralid){
-            console.log(this.activePeripheralid)
+        const  connectedPeripheralId = this.state.connectedPeripheralId;
+        if(!connectedPeripheralId){
             Toast.info("没有可用设备",1)
             return;
         }
         var bytearray = [];
+
         if(event.nativeEvent.type == "small"){
-            var msg = "small";
+            var msg = "time:start";
         }else if(event.nativeEvent.type == "big"){
-            var msg = "big"
+            var msg = "time:start"
         }else if(event.nativeEvent.type == "Play"){
-            var msg = "play"
+            var msg = "time:start"
         }
         else{
             Toast.info("远程事件类型无法识别")
@@ -303,8 +314,7 @@ export default class App extends Component {
             var code = msg.charCodeAt(i);
             bytearray.push(code);
         }
-        console.log(this.activePeripheralid);
-        BleManager.write(this.activePeripheralid, service, characteristic, bytearray).then(() => {});
+        BleManager.write(connectedPeripheralId, service, characteristic, bytearray).then(() => {});
     }
 
     connectDevice = (peripheral) => {
@@ -326,8 +336,8 @@ export default class App extends Component {
                         console.log(peripheralInfo);
                         BleManager.startNotification(peripheral.id, service, characteristic).then(() => {
                             console.log('Started notification on ' + peripheral.id);
-                            Toast.info("连接成功",1)
-                            this.activePeripheralid = peripheral.id;
+                            this.setState({connectedPeripheralId:peripheral.id});
+                            Toast.info("连接成功",1);
                         }).catch((error) => {
                             console.log('Notification error', error);
                         });
@@ -341,7 +351,7 @@ export default class App extends Component {
     }
 
     peripheralManagerDidStartAdvertising = ()=>{
-        Toast.info("startPeripheral");
+        Toast.info("startPeripheral",1);
     }
 
     sendToAllSubscribersError = ()=>{
@@ -378,6 +388,62 @@ export default class App extends Component {
         Toast.info(value);
     }
 
+    onVoiceRecognize = (result)=>{
+        if(Platform.OS == 'ios'){
+            var command = JSON.parse(result.data).results_recognition[0];
+        }else{
+            var command = result.RecognizeResult;
+        }
+        //Toast.info(command,1);
+        if(command == "开始"){
+            const connectedPeripheralId = this.state.connectedPeripheralId;
+            if(!connectedPeripheralId){
+                BaiduASRModule.speak("没有可用的篮球架")
+                return;
+            }
+            //BaiduASRModule.speak("命令正在执行")
+            var bytearray = [];
+            var msg = "time:start"
+
+            for(var i=0;i<msg.length;i++){
+                var code = msg.charCodeAt(i);
+                bytearray.push(code);
+            }
+            BleManager.write(connectedPeripheralId, service, characteristic, bytearray).then(() => {});
+        }
+    }
+
+    servo = (position,angle)=>{
+        const connectedPeripheralId = this.state.connectedPeripheralId;
+        if(!connectedPeripheralId){
+            BaiduASRModule.speak("没有可用的篮球架")
+            return;
+        }
+
+        var msg = "";
+        if(position == "down" && angle == "big"){
+            msg = "down:big"
+        }else if(position == "down" && angle == "small"){
+            msg = "down:small"
+        }else if(position == "up" && angle == "big"){
+            msg = "up:big"
+        }else if(position == "up" && angle == "small"){
+            msg = "up:small"
+        }else if(position == "down" && angle == "info"){
+            msg = "down:info"
+        }else if(position == "up" && angle == "info"){
+            msg = "up:info"
+        }
+
+        var bytearray = [];
+
+        for(var i=0;i<msg.length;i++){
+            var code = msg.charCodeAt(i);
+            bytearray.push(code);
+        }
+        BleManager.write(connectedPeripheralId, service, characteristic, bytearray).then(() => {});
+    }
+
     render() {
         const list = Array.from(this.state.peripherals.values());
         const dataSource = ds.cloneWithRows(list);
@@ -387,11 +453,18 @@ export default class App extends Component {
             <View style={styles.container}>
                 <ToolBar title="BLE P2P" navigation={this.props.navigation}/>
                 {Platform.OS == 'ios'?<RemoteControlNativeView onChange={this.remoteControlCommand}/>:null}
-                <TouchableHighlight style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
-                    <Text>Scan Bluetooth ({this.state.scanning ? 'on' : 'off'})</Text>
+                <TouchableHighlight style={{alignItems:'center',justifyContent:'center',marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
+                    <Text>{this.state.scanning ? '正在搜索...' : '搜索篮球架'}</Text>
                 </TouchableHighlight>
+                <Text>{this.state.connectedPeripheralId?"智能篮球架连接成功":"智能篮球架未连接"}</Text>
                 <ScrollView style={styles.scroll}>
                     <Button onClick={()=>{BLEPeripheralModule.notifyAllDevice("大家好")}}>群发</Button>
+                    <Button onClick={()=>{this.servo("down","big")}} title="" onPress="">下面的舵机角度增大</Button>
+                    <Button onClick={()=>{this.servo("down","small")}}  title="" onPress="">下面的舵机角度减小</Button>
+                    <Button onClick={()=>{this.servo("up","big")}}  title="" onPress="">上面的舵机角度增大</Button>
+                    <Button onClick={()=>{this.servo("up","small")}}  title="" onPress="">上面的舵机角度减小</Button>
+                    <Button onClick={()=>{this.servo("down","info")}}  title="" onPress="">获得下面舵机的当前角度</Button>
+                    <Button onClick={()=>{this.servo("up","info")}}  title="" onPress="">获得上面舵机的当前角度</Button>
                     {this.state.centrals.map((item,index)=>{
                         return (
                             <View>
@@ -434,8 +507,6 @@ export default class App extends Component {
                                             });
                                     }}>获得RSSI</Button>
                                     <Button onClick={()=>{
-                                        var json = {user:"科比"};
-                                        var info = JSON.stringify(json);
                                         var info = "time:start";
                                         BleManager.write(item.id, service, characteristic, this.stringToBytecustom(info)).then(() => {});
                                     }}>发送信息</Button>

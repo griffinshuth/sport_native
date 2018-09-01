@@ -11,8 +11,8 @@
 
 
 NSTimeInterval const YUVDataSendTimeInterval = 0.05;
-NSTimeInterval const PCMDataSendTimeInterval = 0.01;
-int const PCMDataSendLength = 2048;
+NSTimeInterval const PCMDataSendTimeInterval = 0.02;
+int const PCMDataSendLength = 1024;
 
 @interface StreamingClient()
   @property (nonatomic,strong) h264encode* encode;
@@ -118,7 +118,7 @@ int const PCMDataSendLength = 2048;
   NSString* documentDictionary = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   _h264File = fopen([[NSString stringWithFormat:@"%@/%@",documentDictionary,@"agorapushvideo.h264"] UTF8String], "ab+");
   _AACFile = fopen([[NSString stringWithFormat:@"%@/%@",documentDictionary,@"agorapushaudio.aac"] UTF8String], "ab+");
-  self.encode = [[h264encode alloc] initEncodeWith:width height:height framerate:25 bitrate:1600*1000];
+  self.encode = [[h264encode alloc] initEncodeWith:width height:height framerate:20 bitrate:1600*1000];
   self.encode.delegate = self;
   [self.encode startH264EncodeSession];
   self.audioEncode = [[AACEncode alloc] init];
@@ -126,7 +126,7 @@ int const PCMDataSendLength = 2048;
   _isAudioHeaderSend = false;
   [self.audioEncode startAACEncodeSession];
   self.rtmpPush = [[RtmpPush alloc] init];
-  [self.rtmpPush startRtmp:@"rtmp://pili-publish.2310live.com/grasslive/test2"];
+  [self.rtmpPush startRtmp:@"rtmp://pili-publish.2310live.com/grasslive/singlematch_roomid"];
 }
 
 -(void)stopStreaming
@@ -146,6 +146,11 @@ int const PCMDataSendLength = 2048;
   //send video data
   NSData *sampleBuffer = [NSData dataWithBytesNoCopy:pYUVBuff length:length];
   [self.encode encodeH264Frame:sampleBuffer];
+}
+
+- (void)sendRGBAData:(unsigned char *)pRGBABuff dataLength:(unsigned int)length
+{
+    [self.encode encodeBytes:pRGBABuff];
 }
 
 - (void)sendPCMData:(unsigned char*)pPCMData dataLength:(unsigned int)length

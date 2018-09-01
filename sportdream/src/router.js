@@ -61,6 +61,16 @@ import LocalClientTest from './pages/test/LocalClientTest'
 import LocalServerTest from './pages/test/LocalServerTest'
 import highlightServer from './pages/test/highlightServer'
 import bleP2PTest from './pages/test/bleP2PTest'
+import SmartBasketballStand from './pages/test/SmartBasketballStand'
+import ShootMatchListPage from './pages/shoot/ShootMatchListPage'
+import CreateShootMatchPage from './pages/shoot/CreateShootMatchPage'
+import NormalBasketCourtShootRoom from './pages/shoot/NormalBasketCourtShootRoom'
+import SmartBasketStandShootRoom from './pages/shoot/SmartBasketStandShootRoom'
+import BasketCourtShootRoomAndroid from './pages/shoot/BasketCourtShootRoomAndroid'
+import CreateTimeLinePage from './pages/Social/CreateTimeLinePage'
+import TimeLinePage from './pages/Social/TimeLinePage'
+import NearbyUsers from './pages/Social/NearbyUsers'
+import otherUserDetails from './pages/Social/otherUserDetails'
 
 const AppNavigator = StackNavigator(
     {
@@ -98,6 +108,16 @@ const AppNavigator = StackNavigator(
         LocalServerTest:{screen:LocalServerTest},
         highlightServer:{screen:highlightServer},
         bleP2PTest:{screen:bleP2PTest},
+        SmartBasketballStand:{screen:SmartBasketballStand},
+        ShootMatchListPage:{screen:ShootMatchListPage},
+        CreateShootMatchPage:{screen:CreateShootMatchPage},
+        NormalBasketCourtShootRoom:{screen:NormalBasketCourtShootRoom},
+        SmartBasketStandShootRoom:{screen:SmartBasketStandShootRoom},
+        BasketCourtShootRoomAndroid:{screen:BasketCourtShootRoomAndroid},
+        CreateTimeLinePage:{screen:CreateTimeLinePage},
+        TimeLinePage:{screen:TimeLinePage},
+        NearbyUsers:{screen:NearbyUsers},
+        otherUserDetails:{screen:otherUserDetails},
     },
     {
         headerMode: 'none',
